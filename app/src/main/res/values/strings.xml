@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Runmate</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Conferma password</string>
 </resources>
