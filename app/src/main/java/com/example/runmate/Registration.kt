@@ -1,5 +1,6 @@
 package com.example.runmate
 
+import android.app.Activity
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -10,7 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-class Registration : AppCompatActivity() {
+class Registration : Activity() {
 
     private lateinit var editEmail: EditText
     private lateinit var editPassword: EditText

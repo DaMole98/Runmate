@@ -1,5 +1,6 @@
 package com.example.runmate
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,7 +13,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-class Login : AppCompatActivity() {
+class Login : Activity() {
 
     private lateinit var editEmail: EditText
     private lateinit var editPassword: EditText
@@ -26,7 +27,8 @@ class Login : AppCompatActivity() {
         super.onStart()
         val currentUser = mAuth.currentUser
         if(currentUser != null){
-            recreate()
+            intent = Intent(applicationContext, Stats::class.java)
+            startActivity(intent)
         }
     }
 
@@ -46,25 +48,27 @@ class Login : AppCompatActivity() {
             val email = editEmail.text
             val password = editPassword.text
 
-            if(email.isNullOrBlank()){
+            if (email.isNullOrBlank()) {
                 Toast.makeText(this, "Inserisci email", Toast.LENGTH_SHORT).show()
             }
             if(password.isNullOrBlank()){
                 Toast.makeText(this, "Inserisci password", Toast.LENGTH_SHORT).show()
             }
 
-            mAuth.signInWithEmailAndPassword(email.toString(), password.toString()).addOnCompleteListener(this){ task ->
-                if(task.isSuccessful) {
+            else{
+                mAuth.signInWithEmailAndPassword(email.toString(), password.toString()).addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
                     val user = mAuth.currentUser
-                    Toast.makeText(baseContext, "Authentication Successful", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(baseContext, "Authentication Successful", Toast.LENGTH_SHORT)
+                        .show()
                     intent = Intent(applicationContext, Stats::class.java)
                     startActivity(intent)
                     finish()
 
-                }
-                else {
+                } else {
                     Toast.makeText(baseContext, "Authentication Failed", Toast.LENGTH_SHORT).show()
                 }
+            }
             }
 
         }
