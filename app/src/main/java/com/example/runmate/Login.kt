@@ -57,7 +57,7 @@ class Login : AppCompatActivity() {
                 if(task.isSuccessful) {
                     val user = mAuth.currentUser
                     Toast.makeText(baseContext, "Authentication Successful", Toast.LENGTH_SHORT).show()
-                    intent = Intent(applicationContext, MainActivity::class.java)
+                    intent = Intent(applicationContext, Stats::class.java)
                     startActivity(intent)
                     finish()
 

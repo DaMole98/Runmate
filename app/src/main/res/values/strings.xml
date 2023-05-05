@@ -5,4 +5,8 @@
     <string name="password">Password</string>
     <string name="hint_username">Username</string>
     <string name="hint_password">Conferma password</string>
+    <string name="StatsB">Stats</string>
+    <string name="TrainingB">Training</string>
+    <string name="ProfileB">Profile</string>
+    <string name="SettingsB">Settings</string>
 </resources>

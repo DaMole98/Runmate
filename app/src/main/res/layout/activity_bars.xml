@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".Stats">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.09" />
+
+    <ImageButton
+        android:id="@+id/statsbutton"
+        android:contentDescription="@string/StatsB"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#00000000"
+        android:padding="0dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/trainingbutton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/guideline2"
+        app:srcCompat="@drawable/stats_color_svg" />
+
+    <ImageButton
+        android:id="@+id/trainingbutton"
+        android:contentDescription="@string/TrainingB"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#00000000"
+        android:padding="0dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/profilebutton"
+        app:layout_constraintStart_toEndOf="@+id/statsbutton"
+        app:layout_constraintTop_toTopOf="@id/guideline2"
+        app:srcCompat="@drawable/training_color_svg" />
+
+    <ImageButton
+        android:id="@+id/profilebutton"
+        android:contentDescription="@string/ProfileB"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#00000000"
+        android:padding="0dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/settingsbutton"
+        app:layout_constraintStart_toEndOf="@+id/trainingbutton"
+        app:layout_constraintTop_toTopOf="@id/guideline2"
+        app:srcCompat="@drawable/user_color_svg" />
+
+    <ImageButton
+        android:id="@+id/settingsbutton"
+        android:contentDescription="@string/SettingsB"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#00000000"
+        android:padding="0dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/profilebutton"
+        app:layout_constraintTop_toTopOf="@id/guideline2"
+        app:srcCompat="@drawable/settings2_color_svg" />
+
+    <ImageView
+        android:id="@+id/titleview"
+        android:contentDescription="@string/app_name"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#00000000"
+        android:padding="15dp"
+        android:scaleType="fitStart"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/runmate_low_resolution_logo_color_on_transparent_background" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
