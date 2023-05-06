@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
     tools:context=".Stats">
 
     <androidx.constraintlayout.widget.Guideline
@@ -23,10 +22,10 @@
 
     <ImageButton
         android:id="@+id/statsbutton"
-        android:contentDescription="@string/StatsB"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#00000000"
+        android:contentDescription="@string/StatsB"
         android:padding="0dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -37,10 +36,10 @@
 
     <ImageButton
         android:id="@+id/trainingbutton"
-        android:contentDescription="@string/TrainingB"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#00000000"
+        android:contentDescription="@string/TrainingB"
         android:padding="0dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -51,10 +50,10 @@
 
     <ImageButton
         android:id="@+id/profilebutton"
-        android:contentDescription="@string/ProfileB"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#00000000"
+        android:contentDescription="@string/ProfileB"
         android:padding="0dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -65,10 +64,10 @@
 
     <ImageButton
         android:id="@+id/settingsbutton"
-        android:contentDescription="@string/SettingsB"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#00000000"
+        android:contentDescription="@string/SettingsB"
         android:padding="0dp"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -79,10 +78,10 @@
 
     <ImageView
         android:id="@+id/titleview"
-        android:contentDescription="@string/app_name"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#00000000"
+        android:contentDescription="@string/app_name"
         android:padding="15dp"
         android:scaleType="fitStart"
         app:layout_constraintBottom_toTopOf="@+id/guideline"

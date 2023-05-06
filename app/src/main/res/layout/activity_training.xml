@@ -3,6 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:ignore="MissingDefaultResource">
+    tools:context=".Training">
     <include layout="@layout/activity_bars"></include>
 </androidx.constraintlayout.widget.ConstraintLayout>

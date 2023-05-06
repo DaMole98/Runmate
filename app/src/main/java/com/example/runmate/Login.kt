@@ -2,28 +2,25 @@ package com.example.runmate
 
 import android.app.Activity
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
-import com.google.android.material.textfield.TextInputEditText
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-class Login : Activity() {
+class Login : AppCompatActivity() {
 
     private lateinit var editEmail: EditText
     private lateinit var editPassword: EditText
     private lateinit var login_btn: Button
     private lateinit var register_btn: Button
     private lateinit var mAuth: FirebaseAuth
-    private lateinit var textView: TextView
 
 
-    override fun onStart(){
+   override fun onStart(){
         super.onStart()
         val currentUser = mAuth.currentUser
         if(currentUser != null){
@@ -31,7 +28,6 @@ class Login : Activity() {
             startActivity(intent)
         }
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +54,6 @@ class Login : Activity() {
             else{
                 mAuth.signInWithEmailAndPassword(email.toString(), password.toString()).addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    val user = mAuth.currentUser
                     Toast.makeText(baseContext, "Authentication Successful", Toast.LENGTH_SHORT)
                         .show()
                     intent = Intent(applicationContext, Stats::class.java)

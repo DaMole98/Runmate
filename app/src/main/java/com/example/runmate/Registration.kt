@@ -50,7 +50,7 @@ class Registration : Activity() {
                 return@setOnClickListener
             }
 
-            mAuth.createUserWithEmailAndPassword(email.toString(), email.toString())
+            mAuth.createUserWithEmailAndPassword(email.toString(), password.toString())
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         val user = mAuth.currentUser

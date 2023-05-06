@@ -45,6 +45,18 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+        <activity
+            android:name=".Settings"
+            android:exported="false" />
+        <activity
+            android:name=".Profile"
+            android:exported="false" />
+        <activity
+            android:name=".Training"
+            android:exported="false" />
+        <activity
+            android:name=".Stats"
+            android:exported="false" />
     </application>
 
 </manifest>
