@@ -26,10 +26,11 @@ class Training : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val settings = findViewById<ImageButton>(R.id.settingsbutton)
+
+        /*val settings = findViewById<ImageButton>(R.id.settingsbutton)
         settings.setOnClickListener {
             val intent = Intent(this, Settings::class.java)
             startActivity(intent)
-        }
+        }*/
     }
 }

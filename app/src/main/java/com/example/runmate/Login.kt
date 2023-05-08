@@ -24,7 +24,7 @@ class Login : AppCompatActivity() {
         super.onStart()
         val currentUser = mAuth.currentUser
         if(currentUser != null){
-            intent = Intent(applicationContext, Stats::class.java)
+            intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
         }
     }
@@ -45,7 +45,7 @@ class Login : AppCompatActivity() {
             val password = editPassword.text
 
             if (email.isNullOrBlank()) {
-                Toast.makeText(this, "Inserisci email", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Inserisci e-mail", Toast.LENGTH_SHORT).show()
             }
             if(password.isNullOrBlank()){
                 Toast.makeText(this, "Inserisci password", Toast.LENGTH_SHORT).show()
@@ -54,14 +54,14 @@ class Login : AppCompatActivity() {
             else{
                 mAuth.signInWithEmailAndPassword(email.toString(), password.toString()).addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(baseContext, "Authentication Successful", Toast.LENGTH_SHORT)
+                    Toast.makeText(baseContext, "Accesso completato", Toast.LENGTH_SHORT)
                         .show()
-                    intent = Intent(applicationContext, Stats::class.java)
+                    intent = Intent(applicationContext, MainActivity::class.java)
                     startActivity(intent)
                     finish()
 
                 } else {
-                    Toast.makeText(baseContext, "Authentication Failed", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(baseContext, "Accesso fallito", Toast.LENGTH_SHORT).show()
                 }
             }
             }

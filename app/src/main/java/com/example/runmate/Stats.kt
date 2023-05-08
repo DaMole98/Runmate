@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.transition.Explode
+import android.view.Window
 import android.widget.ImageButton
 
 class Stats : AppCompatActivity() {
@@ -26,10 +28,11 @@ class Stats : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val settings = findViewById<ImageButton>(R.id.settingsbutton)
+        this.overridePendingTransition(R.anim.lefttoright, R.anim.righttoleft);
+        /*val settings = findViewById<ImageButton>(R.id.settingsbutton)
         settings.setOnClickListener {
             val intent = Intent(this, Settings::class.java)
             startActivity(intent)
-        }
+        }*/
     }
 }

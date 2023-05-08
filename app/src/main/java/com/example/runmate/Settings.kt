@@ -11,8 +11,8 @@ class Settings : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        val btn = findViewById<ImageButton>(R.id.settingsbutton)
-        btn.setImageResource(R.drawable.settings_black)
+        /*val btn = findViewById<ImageButton>(R.id.settingsbutton)
+        btn.setImageResource(R.drawable.settings_black)*/
 
         val training = findViewById<ImageButton>(R.id.trainingbutton)
         training.setOnClickListener {
