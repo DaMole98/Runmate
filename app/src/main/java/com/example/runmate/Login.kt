@@ -24,7 +24,7 @@ class Login : Activity() {
         super.onStart()
         val currentUser = mAuth.currentUser
         if(currentUser != null){
-            intent = Intent(applicationContext, Stats::class.java)
+            intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
             finish()
 
@@ -56,7 +56,7 @@ class Login : Activity() {
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this){ task ->
                 if(task.isSuccessful) {
                     Toast.makeText(baseContext, "Benvenuto in Runmate!", Toast.LENGTH_SHORT).show()
-                    intent = Intent(applicationContext, Stats::class.java)
+                    intent = Intent(applicationContext, MainActivity::class.java)
                     startActivity(intent)
                     finish()
 
