@@ -1,6 +1,7 @@
 package com.example.runmate
 
 import android.app.Activity
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -18,6 +19,7 @@ class Registration : Activity() {
     private lateinit var editConfirmPassword: EditText
     private lateinit var register_btn: Button
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var back_btn : Button
     private lateinit var textView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +31,12 @@ class Registration : Activity() {
         editPassword = findViewById<EditText>(R.id.password)
         editConfirmPassword = findViewById<EditText>(R.id.confirm_password)
         register_btn = findViewById(R.id.btn_register)
+        back_btn = findViewById(R.id.btn_back)
+
+        back_btn.setOnClickListener {
+            intent = Intent(applicationContext, Login::class.java)
+            startActivity(intent)
+        }
 
         register_btn.setOnClickListener {
             val email = editEmail.text.toString()
@@ -54,7 +62,8 @@ class Registration : Activity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         val user = mAuth.currentUser
-
+                        intent = Intent(applicationContext, Login::class.java)
+                        startActivity(intent)
                     } else {
                         Toast.makeText(
                             baseContext,
