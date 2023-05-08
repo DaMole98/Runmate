@@ -8,7 +8,7 @@ import android.transition.Explode
 import android.view.Window
 import android.widget.ImageButton
 
-class Stats : AppCompatActivity() {
+class Stats : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_stats)
