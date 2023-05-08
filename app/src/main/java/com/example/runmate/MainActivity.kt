@@ -1,8 +1,8 @@
 package com.example.runmate
 
 import android.app.Activity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-
 
 class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {

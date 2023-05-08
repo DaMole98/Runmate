@@ -44,34 +44,38 @@ class Registration : Activity() {
             val confirmPassword = editConfirmPassword.text.toString()
 
             if (email.isNullOrBlank()) {
-                Toast.makeText(this, "Inserisci email", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Inserisci la tua email", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
             if (password.isNullOrBlank()) {
-                Toast.makeText(this, "Inserisci password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Inserisci la password", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
             if (password.isNullOrBlank()) {
                 Toast.makeText(this, "Conferma la password", Toast.LENGTH_SHORT).show()
-            }
-
-            if (password != confirmPassword) {
-                Toast.makeText(this, "La password non corrisponde", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
-            mAuth.createUserWithEmailAndPassword(email.toString(), password.toString())
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        val user = mAuth.currentUser
-                        intent = Intent(applicationContext, Login::class.java)
-                        startActivity(intent)
-                    } else {
-                        Toast.makeText(
-                            baseContext,
-                            "registration failed.",
-                            Toast.LENGTH_SHORT,
-                        ).show()
+            if (password != confirmPassword) {
+                Toast.makeText(this, "La password non corrisponde", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+            if(password.length < 6) {
+                Toast.makeText(this, "La password deve contenere almeno 6 caratteri", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+                mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this)
+                    { task ->
+                        if (task.isSuccessful) {
+                            val user = mAuth.currentUser
+                            Toast.makeText(this, "Benvenuto in Runmate!", Toast.LENGTH_LONG).show()
+                            intent = Intent(applicationContext, Login::class.java)
+                            startActivity(intent)
+                        }
+                        else Toast.makeText(baseContext, "Registrazione fallita.", Toast.LENGTH_SHORT,).show()
                     }
-                }
+
         }
     }
 }
