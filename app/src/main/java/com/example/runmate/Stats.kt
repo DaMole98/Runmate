@@ -1,17 +1,14 @@
 package com.example.runmate
 
-import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.transition.Explode
-import android.view.Window
 import android.widget.ImageButton
 
-class Stats : Activity() {
+class Stats : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_stats)
+        setContentView(R.layout.fragment_stats)
 
         val btn = findViewById<ImageButton>(R.id.statsbutton)
         btn.setImageResource(R.drawable.stats_black)

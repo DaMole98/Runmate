@@ -12,8 +12,9 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-class Registration : Activity() {
+class Registration : AppCompatActivity() {
 
+    private lateinit var editUsername: EditText
     private lateinit var editEmail: EditText
     private lateinit var editPassword: EditText
     private lateinit var editConfirmPassword: EditText
@@ -27,6 +28,7 @@ class Registration : Activity() {
         setContentView(R.layout.activity_registration)
 
         mAuth = Firebase.auth
+        editUsername = findViewById<EditText>(R.id.username)
         editEmail = findViewById<EditText>(R.id.email)
         editPassword = findViewById<EditText>(R.id.password)
         editConfirmPassword = findViewById<EditText>(R.id.confirm_password)
@@ -42,11 +44,19 @@ class Registration : Activity() {
             val email = editEmail.text.toString()
             val password = editPassword.text.toString()
             val confirmPassword = editConfirmPassword.text.toString()
+            val username = editUsername.text.toString()
 
-            if (email.isNullOrBlank()) {
-                Toast.makeText(this, "Inserisci la tua email", Toast.LENGTH_SHORT).show()
+            if(username.isNullOrBlank()){
+                Toast.makeText(this, "Inserisci un nome utente", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
+           // if (username.length > 30){
+           //     Toast.makeText(this, "Il nome utente può contenere al massimo 30 caratteri", Toast.LENGTH_SHORT).show()
+           // }
+           // if (email.isNullOrBlank()) {
+           //     Toast.makeText(this, "Inserisci la tua email", Toast.LENGTH_SHORT).show()
+           //     return@setOnClickListener
+           // }
             if (password.isNullOrBlank()) {
                 Toast.makeText(this, "Inserisci la password", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener

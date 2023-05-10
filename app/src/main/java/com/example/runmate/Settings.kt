@@ -1,15 +1,14 @@
 package com.example.runmate
 
-import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
 
-class Settings : Activity() {
+class Settings : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_settings)
+        setContentView(R.layout.fragment_settings)
 
         /*val btn = findViewById<ImageButton>(R.id.settingsbutton)
         btn.setImageResource(R.drawable.settings_black)*/
