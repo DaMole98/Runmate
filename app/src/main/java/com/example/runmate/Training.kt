@@ -18,7 +18,7 @@ class Training : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_training)
-
+//ciaone
         val btn = findViewById<ImageButton>(R.id.trainingbutton)
         btn.setImageResource(R.drawable.allenamento_black)
 
