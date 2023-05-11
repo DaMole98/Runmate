@@ -11,7 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
-class Login : Activity() {
+class Login : AppCompatActivity() {
 
     private lateinit var editEmail: EditText
     private lateinit var editPassword: EditText
@@ -24,6 +24,9 @@ class Login : Activity() {
         super.onStart()
         val currentUser = mAuth.currentUser
         if(currentUser != null){
+            currentUser.reload()
+            //val name = currentUser.displayName
+            Toast.makeText(baseContext, "Benvenuto", Toast.LENGTH_LONG).show()
             intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
             finish()
@@ -42,7 +45,7 @@ class Login : Activity() {
         loginBtn = findViewById(R.id.btn_login)
 
 
-        loginBtn.setOnClickListener{
+        loginBtn.setOnClickListener{4
             val email = editEmail.text.toString()
             val password = editPassword.text.toString()
 
