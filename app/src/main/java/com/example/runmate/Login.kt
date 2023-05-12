@@ -1,6 +1,6 @@
 package com.example.runmate
 
-import android.app.Activity
+
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -9,8 +9,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ktx.database
+
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.perf.metrics.AddTrace
 
 class Login : AppCompatActivity() {
 
@@ -20,8 +21,8 @@ class Login : AppCompatActivity() {
     private lateinit var registerBtn: Button
     private lateinit var mAuth: FirebaseAuth
 
-
-   override fun onStart(){
+    @AddTrace(name = "OnStartLoginTrace, enabled = true")
+    override fun onStart(){
         super.onStart()
         val currentUser = mAuth.currentUser
         if(currentUser != null){
@@ -35,6 +36,7 @@ class Login : AppCompatActivity() {
         }
     }
 
+    @AddTrace(name = "OnCreateLoginTrace, enabled = true")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loginscreen)

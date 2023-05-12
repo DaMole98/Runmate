@@ -1,7 +1,7 @@
 package com.example.runmate
 
 
-import android.R.attr.name
+import com.google.firebase.perf.FirebasePerformance
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -37,6 +37,9 @@ class Registration : AppCompatActivity() {
         editConfirmPassword = findViewById<EditText>(R.id.confirm_password)
         register_btn = findViewById(R.id.btn_register)
         back_btn = findViewById(R.id.btn_back)
+
+        val fbPer = FirebasePerformance.getInstance()
+        val regTrace = fbPer.newTrace(" user_registration_trace")
 
         back_btn.setOnClickListener {
             intent = Intent(applicationContext, Login::class.java)
@@ -78,6 +81,7 @@ class Registration : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            regTrace.start()
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this)
                     { task ->
                         if (task.isSuccessful) {
@@ -105,6 +109,7 @@ class Registration : AppCompatActivity() {
                             Toast.LENGTH_SHORT
                         ).show()
                     }
+            regTrace.stop()
 
         }
     }
