@@ -57,6 +57,8 @@ dependencies {
     //dependency for performance monitoring
     implementation 'com.google.firebase:firebase-perf-ktx'
 
+    implementation 'com.google.firebase:firebase-database-ktx'
+
 
 
 }

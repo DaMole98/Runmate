@@ -1,16 +1,19 @@
 package com.example.runmate
 
-import android.app.Activity
+
+import android.R.attr.name
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+
 
 class Registration : AppCompatActivity() {
 
@@ -50,13 +53,13 @@ class Registration : AppCompatActivity() {
                 Toast.makeText(this, "Inserisci un nome utente", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-           // if (username.length > 30){
-           //     Toast.makeText(this, "Il nome utente può contenere al massimo 30 caratteri", Toast.LENGTH_SHORT).show()
-           // }
-           // if (email.isNullOrBlank()) {
-           //     Toast.makeText(this, "Inserisci la tua email", Toast.LENGTH_SHORT).show()
-           //     return@setOnClickListener
-           // }
+            if (username.length > 30){
+                Toast.makeText(this, "Il nome utente può contenere al massimo 30 caratteri", Toast.LENGTH_SHORT).show()
+            }
+            if (email.isNullOrBlank()) {
+                Toast.makeText(this, "Inserisci la tua email", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
             if (password.isNullOrBlank()) {
                 Toast.makeText(this, "Inserisci la password", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -79,11 +82,28 @@ class Registration : AppCompatActivity() {
                     { task ->
                         if (task.isSuccessful) {
                             val user = mAuth.currentUser
+                            val database = Firebase.database("https://runmate-b7137-default-rtdb.europe-west1.firebasedatabase.app/").reference
+                            val uid = user!!.uid
+
+                            val userData: MutableMap<String, Any> = HashMap()
+                            userData["uid"] = uid
+                            userData["username"] = username
+                            userData["email"] = email
+
+                            val usersRef = database.child("users")
+                            val userRef = usersRef.child(uid)
+
+                            userRef.setValue(userData)
+
                             Toast.makeText(this, "Benvenuto in Runmate!", Toast.LENGTH_LONG).show()
                             intent = Intent(applicationContext, Login::class.java)
                             startActivity(intent)
                         }
-                        else Toast.makeText(baseContext, "Registrazione fallita.", Toast.LENGTH_SHORT,).show()
+                        else Toast.makeText(
+                            baseContext,
+                            "Registrazione fallita.",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
 
         }

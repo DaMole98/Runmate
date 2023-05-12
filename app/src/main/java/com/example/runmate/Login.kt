@@ -9,6 +9,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class Login : AppCompatActivity() {
@@ -59,6 +60,7 @@ class Login : AppCompatActivity() {
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this){ task ->
                 if(task.isSuccessful) {
                     Toast.makeText(baseContext, "Benvenuto in Runmate!", Toast.LENGTH_SHORT).show()
+
                     intent = Intent(applicationContext, MainActivity::class.java)
                     startActivity(intent)
                     finish()

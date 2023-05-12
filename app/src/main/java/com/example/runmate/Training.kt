@@ -17,22 +17,22 @@ class Training : Activity() {
     private lateinit var tv_totalCalories: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_training)
-//ciaonee
-        val btn = findViewById<ImageButton>(R.id.trainingbutton)
-        btn.setImageResource(R.drawable.allenamento_black)
+        setContentView(R.layout.fragment_training)
 
-        val stats = findViewById<ImageButton>(R.id.statsbutton)
-        stats.setOnClickListener {
-            val intent = Intent(this, Stats::class.java)
-            startActivity(intent)
-        }
-
-        val profile = findViewById<ImageButton>(R.id.profilebutton)
-        profile.setOnClickListener {
-            val intent = Intent(this, Profile::class.java)
-            startActivity(intent)
-        }
+       // val btn = findViewById<ImageButton>(R.id.trainingbutton)
+       // btn.setImageResource(R.drawable.allenamento_black)
+//
+       // val stats = findViewById<ImageButton>(R.id.statsbutton)
+       // stats.setOnClickListener {
+       //     val intent = Intent(this, Stats::class.java)
+       //     startActivity(intent)
+       // }
+//
+       // val profile = findViewById<ImageButton>(R.id.profilebutton)
+       // profile.setOnClickListener {
+       //     val intent = Intent(this, Profile::class.java)
+       //     startActivity(intent)
+       // }
 
         /*val settings = findViewById<ImageButton>(R.id.settingsbutton)
         settings.setOnClickListener {
