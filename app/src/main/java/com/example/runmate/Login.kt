@@ -48,28 +48,27 @@ class Login : AppCompatActivity() {
         loginBtn = findViewById(R.id.btn_login)
 
 
-        loginBtn.setOnClickListener{4
+        loginBtn.setOnClickListener{
             val email = editEmail.text.toString()
             val password = editPassword.text.toString()
 
-            if(email.isNullOrBlank()){
-                Toast.makeText(this, "Inserisci l'email", Toast.LENGTH_SHORT).show()
+            if(email.isNullOrBlank() || password.isNullOrBlank()){
+                Toast.makeText(this, "Inserisci tutti i campi", Toast.LENGTH_SHORT).show()
             }
-            if(password.isNullOrBlank()){
-                Toast.makeText(this, "Inserisci la password", Toast.LENGTH_SHORT).show()
-            }
+            else{
 
-            mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this){ task ->
-                if(task.isSuccessful) {
-                    Toast.makeText(baseContext, "Benvenuto in Runmate!", Toast.LENGTH_SHORT).show()
+                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
+                     if (task.isSuccessful) {
+                         Toast.makeText(baseContext, "Benvenuto in Runmate!", Toast.LENGTH_SHORT).show()
 
-                    intent = Intent(applicationContext, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                         intent = Intent(applicationContext, MainActivity::class.java)
+                         startActivity(intent)
+                         finish()
 
-                }
-                else {
-                    Toast.makeText(baseContext, "Email o password non corretti", Toast.LENGTH_LONG).show()
+                     } else {
+                         Toast.makeText(baseContext, "Email o password non corretti", Toast.LENGTH_LONG)
+                             .show()
+                     }
                 }
             }
 
