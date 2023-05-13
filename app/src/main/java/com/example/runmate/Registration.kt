@@ -80,36 +80,39 @@ class Registration : AppCompatActivity() {
                 Toast.makeText(this, "La password deve contenere almeno 6 caratteri", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
+            else {
 
-            regTrace.start()
+
+                regTrace.start()
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this)
-                    { task ->
-                        if (task.isSuccessful) {
-                            val user = mAuth.currentUser
-                            val database = Firebase.database("https://runmate-b7137-default-rtdb.europe-west1.firebasedatabase.app/").reference
-                            val uid = user!!.uid
+                { task ->
+                    if (task.isSuccessful) {
+                        val user = mAuth.currentUser
+                        val database =
+                            Firebase.database("https://runmate-b7137-default-rtdb.europe-west1.firebasedatabase.app/").reference
+                        val uid = user!!.uid
 
-                            val userData: MutableMap<String, Any> = HashMap()
-                            userData["uid"] = uid
-                            userData["username"] = username
-                            userData["email"] = email
+                        val userData: MutableMap<String, Any> = HashMap()
+                        userData["uid"] = uid
+                        userData["username"] = username
+                        userData["email"] = email
 
-                            val usersRef = database.child("users")
-                            val userRef = usersRef.child(uid)
+                        val usersRef = database.child("users")
+                        val userRef = usersRef.child(uid)
 
-                            userRef.setValue(userData)
+                        userRef.setValue(userData)
 
-                            Toast.makeText(this, "Benvenuto in Runmate!", Toast.LENGTH_LONG).show()
-                            intent = Intent(applicationContext, Login::class.java)
-                            startActivity(intent)
-                        }
-                        else Toast.makeText(
-                            baseContext,
-                            "Registrazione fallita.",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-            regTrace.stop()
+                        Toast.makeText(this, "Benvenuto in Runmate!", Toast.LENGTH_LONG).show()
+                        intent = Intent(applicationContext, Login::class.java)
+                        startActivity(intent)
+                    } else Toast.makeText(
+                        baseContext,
+                        "Registrazione fallita.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+                regTrace.stop()
+            }
 
         }
     }
