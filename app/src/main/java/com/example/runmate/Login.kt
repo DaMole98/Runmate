@@ -8,7 +8,9 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 
 import com.google.firebase.ktx.Firebase
 //import com.google.firebase.perf.metrics.AddTrace
@@ -21,19 +23,6 @@ class Login : AppCompatActivity() {
     private lateinit var registerBtn: Button
     private lateinit var mAuth: FirebaseAuth
 
-    //@AddTrace(name = "OnStartLoginTrace, enabled = true")
-    override fun onStart(){
-        super.onStart()
-        val currentUser = mAuth.currentUser
-        if(currentUser != null){
-            currentUser.reload()
-            //val name = currentUser.displayName
-            Toast.makeText(baseContext, "Benvenuto", Toast.LENGTH_LONG).show()
-            intent = Intent(applicationContext, MainActivity::class.java)
-            startActivity(intent)
-            finish()
-        }
-    }
 
     //@AddTrace(name = "OnCreateLoginTrace, enabled = true")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,32 +35,9 @@ class Login : AppCompatActivity() {
         editPassword = findViewById<EditText>(R.id.password)
         loginBtn = findViewById(R.id.btn_login)
 
+        checkCurrentUser()
 
-        loginBtn.setOnClickListener{
-            val email = editEmail.text.toString()
-            val password = editPassword.text.toString()
-
-            if(email.isNullOrBlank() || password.isNullOrBlank()){
-                Toast.makeText(this, "Inserisci tutti i campi", Toast.LENGTH_SHORT).show()
-            }
-            else{
-
-                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
-                     if (task.isSuccessful) {
-                         Toast.makeText(baseContext, "Benvenuto in Runmate!", Toast.LENGTH_SHORT).show()
-
-                         intent = Intent(applicationContext, MainActivity::class.java)
-                         startActivity(intent)
-                         finish()
-
-                     } else {
-                         Toast.makeText(baseContext, "Email o password non corretti", Toast.LENGTH_LONG)
-                             .show()
-                     }
-                }
-            }
-
-        }
+        login()
 
 
         registerBtn = findViewById(R.id.btn_register)
@@ -82,4 +48,50 @@ class Login : AppCompatActivity() {
         }
 
     }
+
+    private fun checkCurrentUser() {
+        val currentUser = mAuth.currentUser
+        if (currentUser != null) {
+            //var username = getUsernameFromDatabase(currentUser)
+            currentUser.reload()
+            Toast.makeText(baseContext, "Benvenuto", Toast.LENGTH_LONG).show()
+            loadMainActivity()
+
+        }
+    }
+
+    private fun login(){
+
+        loginBtn.setOnClickListener{
+            val email = editEmail.text.toString()
+            val password = editPassword.text.toString()
+
+            if(email.isNullOrBlank() || password.isNullOrBlank()){
+                Toast.makeText(this, "Inserisci tutti i campi", Toast.LENGTH_SHORT).show()
+            }
+            else{
+
+                mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(baseContext, "Benvenuto in Runmate!", Toast.LENGTH_SHORT).show()
+
+                        loadMainActivity()
+
+                    } else {
+                        Toast.makeText(baseContext, "Email o password non corretti", Toast.LENGTH_LONG)
+                            .show()
+                    }
+                }
+            }
+
+        }
+    }
+
+    private fun loadMainActivity(){
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+
 }

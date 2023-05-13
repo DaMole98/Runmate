@@ -88,8 +88,7 @@ class Registration : AppCompatActivity() {
                 { task ->
                     if (task.isSuccessful) {
                         val user = mAuth.currentUser
-                        val database =
-                            Firebase.database("https://runmate-b7137-default-rtdb.europe-west1.firebasedatabase.app/").reference
+                        val database = Firebase.database("https://runmate-b7137-default-rtdb.europe-west1.firebasedatabase.app/").reference
                         val uid = user!!.uid
 
                         val userData: MutableMap<String, Any> = HashMap()
