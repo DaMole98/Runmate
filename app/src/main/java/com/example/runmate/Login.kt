@@ -11,7 +11,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.perf.metrics.AddTrace
+//import com.google.firebase.perf.metrics.AddTrace
 
 class Login : AppCompatActivity() {
 
@@ -21,7 +21,7 @@ class Login : AppCompatActivity() {
     private lateinit var registerBtn: Button
     private lateinit var mAuth: FirebaseAuth
 
-    @AddTrace(name = "OnStartLoginTrace, enabled = true")
+    //@AddTrace(name = "OnStartLoginTrace, enabled = true")
     override fun onStart(){
         super.onStart()
         val currentUser = mAuth.currentUser
@@ -32,11 +32,10 @@ class Login : AppCompatActivity() {
             intent = Intent(applicationContext, MainActivity::class.java)
             startActivity(intent)
             finish()
-
         }
     }
 
-    @AddTrace(name = "OnCreateLoginTrace, enabled = true")
+    //@AddTrace(name = "OnCreateLoginTrace, enabled = true")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loginscreen)
