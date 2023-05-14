@@ -19,10 +19,10 @@ class UserFragment: Fragment(R.layout.fragment_user) {
         val user_view = view.findViewById<TextView>(R.id.user_view)
 
         val username = arguments?.getString("USERNAME", "")
-       // val username = arguments?.getString("USERNAME")
+
 
         user_view.text = "Ciao $username"
-        //var username = arguments?.getString("username")
+
 
 
 

@@ -1,5 +1,6 @@
 package com.example.runmate
 
+import android.app.ProgressDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -17,8 +18,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        loadUsername()
-
         setContentView(R.layout.activity_bottom_nav)
 
         val statsFragment = StatsFragment()
@@ -33,9 +32,14 @@ class MainActivity : AppCompatActivity() {
                 R.id.stats -> setCurrentFragment(statsFragment)
                 R.id.training -> setCurrentFragment(trainingFragment)
                 R.id.user -> {
-                    if(::username.isInitialized) {
+                    if (::username.isInitialized) {
                         userFragment.arguments = bundle
                         setCurrentFragment(userFragment)
+                    } else {
+                        val loadingDialog = ProgressDialog.show(this, "", "Un attimo...", true)
+                        loadUsername({loadingDialog.dismiss()
+                                        userFragment.arguments = bundle
+                                        setCurrentFragment(userFragment)})
                     }
                 }
 
@@ -53,7 +57,8 @@ class MainActivity : AppCompatActivity() {
         }
 
     @AddTrace(name = "loadUsername", enabled = true)
-    private fun loadUsername() {
+    //il parametro è una funzione di callback
+    private fun loadUsername(onLoaded : () -> Unit) {
         val uid = FirebaseAuth.getInstance().currentUser?.uid
         val userRef =
             Firebase.database("https://runmate-b7137-default-rtdb.europe-west1.firebasedatabase.app/")
@@ -62,6 +67,9 @@ class MainActivity : AppCompatActivity() {
         userRef.child("username").get().addOnSuccessListener { dataSnapshot ->
             username = dataSnapshot.getValue(String::class.java).toString()
             bundle.putString("USERNAME", username)
+            onLoaded() // apri lo userFragment una volta terminata la chiamata asincrona al DB
+
         }
     }
+
 }
