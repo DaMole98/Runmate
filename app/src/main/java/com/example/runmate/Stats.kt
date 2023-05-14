@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
+import android.widget.ProgressBar
+import android.widget.TextView
 
 class Stats : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
