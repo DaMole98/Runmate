@@ -1,6 +1,7 @@
 package com.example.runmate
 
 
+import android.content.Context
 import com.google.firebase.perf.FirebasePerformance
 import android.content.Intent
 import android.os.Bundle
@@ -91,11 +92,19 @@ class Registration : AppCompatActivity() {
                         val database = Firebase.database("https://runmate-b7137-default-rtdb.europe-west1.firebasedatabase.app/").reference
                         val uid = user!!.uid
 
+                        //save user data
+                        val sPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+                        val editor = sPref.edit()
+                        editor.putString("username", username)
+                        editor.putString("email", email)
+                        editor.putString("uid", uid)
+                        editor.apply()
+
+                        //push user data into cloud database
                         val userData: MutableMap<String, Any> = HashMap()
                         userData["uid"] = uid
                         userData["username"] = username
                         userData["email"] = email
-
                         val usersRef = database.child("users")
                         val userRef = usersRef.child(uid)
 

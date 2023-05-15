@@ -1,5 +1,6 @@
 package com.example.runmate
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,7 +20,6 @@ class UserFragment: Fragment(R.layout.fragment_user) {
         val user_view = view.findViewById<TextView>(R.id.user_view)
 
         val username = arguments?.getString("USERNAME", "")
-
 
         user_view.text = "Ciao $username"
 
