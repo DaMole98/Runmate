@@ -19,6 +19,7 @@ import androidx.core.app.NotificationCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
@@ -59,9 +60,24 @@ class CaloriesService : Service(), SensorEventListener {
         registerReceiver(shutdownReceiver, IntentFilter("STOP_SERVICE"))
     }
 
+    // TEST
+    private fun detectVirtualSteps(){
+        currentSteps++
+
+        if (isFirstStep) {
+            start = SystemClock.elapsedRealtime()
+            isFirstStep = false
+        }
+        else{
+            end = SystemClock.elapsedRealtime()
+            startCoroutineCalories()
+        }
+    }
+
     override fun onDestroy() {
         super.onDestroy()
 
+        sensorManager?.unregisterListener(this)
         unregisterReceiver(shutdownReceiver)
         job?.cancel()
     }
@@ -75,12 +91,19 @@ class CaloriesService : Service(), SensorEventListener {
 
         // show a notification on the screen and allow the service to work in the background
         startForeground(1, createNotification())
+
+        // TEST
+        /*for (i in 1..10) {
+            detectVirtualSteps()
+            Thread.sleep(1000)
+        }*/
+
         return START_STICKY
     }
 
     private fun createNotification(): Notification {
         val channelId = "RunmateCaloriesService"
-        val channelName = "Runmate Activity Counter"
+        val channelName = "Runmate Activity Tracker"
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
@@ -106,11 +129,10 @@ class CaloriesService : Service(), SensorEventListener {
         if (isFirstStep) {
             start = SystemClock.elapsedRealtime()
             isFirstStep = false
-
-            startCoroutineCalories()
         }
         else{
             end = SystemClock.elapsedRealtime()
+            startCoroutineCalories()
         }
     }
 

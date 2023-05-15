@@ -1,5 +1,6 @@
 package com.example.runmate
 
+import android.content.Context
 import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
@@ -36,8 +37,11 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
         tv_distance_progress = view.findViewById(R.id.tv_distance_stats)
         tv_calories_progress = view.findViewById(R.id.tv_calories_stats)
 
-        // TODO((example call. Current parameters are just for example). This function should be called from CaloriesService or Training with real values)
-        updateStatsUI(6000, 3000, 700f)
+        // TODO((example call. Current parameters are just for example and use "SharedPreferences"). This function should be called from CaloriesService or TrainingFragment with real values)
+        val sharedPref = context?.getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
+        if (sharedPref != null) {
+            updateStatsUI(sharedPref.getInt("totalSteps", 0), sharedPref.getInt("totalDistance", 0), sharedPref.getFloat("totalCalories", 0f))
+        }
 
         return view
     }
