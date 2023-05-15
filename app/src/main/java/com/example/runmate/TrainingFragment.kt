@@ -27,12 +27,17 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
     private var isPaused = false
     private var isServiceStarted = false
     var pauseOffset: Long = 0
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_training, container, false)
 
+        isStarted = false
+        isPaused = false
+        isServiceStarted = false
+
         tv_totalSteps = view.findViewById(R.id.tv_steps_train)
-        tv_totalDistance = view.findViewById(R.id.tv_calories_train)
-        tv_totalCalories = view.findViewById(R.id.tv_distance_train)
+        tv_totalDistance = view.findViewById(R.id.tv_distance_train)
+        tv_totalCalories = view.findViewById(R.id.tv_calories_train)
         chronometer = view.findViewById(R.id.chronometer_train)
 
         chronometer.setOnChronometerTickListener {
@@ -61,12 +66,14 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
                     chronometer.base = SystemClock.elapsedRealtime()
                 else{
                     isPaused = false
+                    requireActivity().sendBroadcast(Intent("TRAINING_PAUSED"))
                     chronometer.base = SystemClock.elapsedRealtime() + pauseOffset
                 }
                 chronometer.start()
             }
             else {
                 btn_play_pause.setImageResource(R.drawable.play_circle)
+                requireActivity().sendBroadcast(Intent("TRAINING_PAUSED"))
                 isPaused = true
                 chronometer.stop()
                 pauseOffset = chronometer.base - SystemClock.elapsedRealtime()
@@ -79,6 +86,22 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
             if (isServiceStarted){
                 isServiceStarted = false
                 requireActivity().sendBroadcast(Intent("STOP_SERVICE"))
+
+                // TODO(save training data somewhere. The following is just a test using "SharedPreferences").
+                val sharedPref = context?.getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
+                sharedPref?.edit()?.apply {
+                    val a = tv_totalSteps.text.toString().toInt()
+                    var input = tv_totalDistance.text.toString()
+                    var regex = Regex("[0-9]+")
+                    val b = regex.find(input)?.value?.toIntOrNull() ?: 0
+                    input = tv_totalCalories.text.toString()
+                    regex = Regex("[0-9]+")
+                    val c = regex.find(input)?.value?.toFloatOrNull() ?: 0f
+                    putInt("totalSteps", a)
+                    putInt("totalDistance", b)
+                    putFloat("totalCalories", c)
+                    apply()
+                }
             }
 
             if (isStarted || isPaused) {
@@ -97,6 +120,7 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
     }
 
     override fun onDestroyView() {
+        requireActivity().sendBroadcast(Intent("STOP_SERVICE"))
         requireActivity().unregisterReceiver(updateUIReceiver)
 
         super.onDestroyView()

@@ -27,6 +27,7 @@ class CaloriesService : Service(), SensorEventListener {
     private var sensorManager: SensorManager? = null
 
     private var isFirstStep = true
+    private var isTrainingPaused = false
     private var job: Job? = null
 
     // timestamps to handle calories computation
@@ -49,6 +50,15 @@ class CaloriesService : Service(), SensorEventListener {
     override fun onCreate() {
         super.onCreate()
 
+        isFirstStep = true
+        isTrainingPaused = false
+        job = null
+
+        currentSteps = 0
+        totalSteps = 0
+        totalDistance = 0
+        totalCalories = 0f
+
         // step sensor registration
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
@@ -58,6 +68,7 @@ class CaloriesService : Service(), SensorEventListener {
         }
 
         registerReceiver(shutdownReceiver, IntentFilter("STOP_SERVICE"))
+        registerReceiver(shutdownReceiver, IntentFilter("TRAINING_PAUSED"))
     }
 
     // TEST
@@ -126,13 +137,14 @@ class CaloriesService : Service(), SensorEventListener {
     override fun onSensorChanged(event: SensorEvent?) {
         currentSteps++
 
-        if (isFirstStep) {
-            start = SystemClock.elapsedRealtime()
-            isFirstStep = false
-        }
-        else{
-            end = SystemClock.elapsedRealtime()
-            startCoroutineCalories()
+        if (!isTrainingPaused) {
+            if (isFirstStep) {
+                start = SystemClock.elapsedRealtime()
+                isFirstStep = false
+            } else {
+                end = SystemClock.elapsedRealtime()
+                startCoroutineCalories()
+            }
         }
     }
 
@@ -189,9 +201,12 @@ class CaloriesService : Service(), SensorEventListener {
         override fun onReceive(context: Context?, intent: Intent?) {
 
             // stop the service
-            if (intent?.action == "STOP_SERVICE")
+            if (intent?.action == "STOP_SERVICE") {
                 stopForeground(STOP_FOREGROUND_REMOVE)
-            stopSelf()
+                stopSelf()
+            }
+            else if (intent?.action == "TRAINING_PAUSED")
+                isTrainingPaused = !isTrainingPaused
         }
     }
 }
