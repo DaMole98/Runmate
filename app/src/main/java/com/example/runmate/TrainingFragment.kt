@@ -54,7 +54,8 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
         btn_play_pause.setOnClickListener {
             if (!isServiceStarted){
                 isServiceStarted = true
-                // Start the service
+
+                // start the service
                 val serviceIntent = Intent(context, CaloriesService::class.java)
                 context?.startService(serviceIntent)
             }
@@ -86,22 +87,6 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
             if (isServiceStarted){
                 isServiceStarted = false
                 requireActivity().sendBroadcast(Intent("STOP_SERVICE"))
-
-                // TODO(save training data somewhere. The following is just a test using "SharedPreferences").
-                val sharedPref = context?.getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
-                sharedPref?.edit()?.apply {
-                    val a = tv_totalSteps.text.toString().toInt()
-                    var input = tv_totalDistance.text.toString()
-                    var regex = Regex("[0-9]+")
-                    val b = regex.find(input)?.value?.toIntOrNull() ?: 0
-                    input = tv_totalCalories.text.toString()
-                    regex = Regex("[0-9]+")
-                    val c = regex.find(input)?.value?.toFloatOrNull() ?: 0f
-                    putInt("totalSteps", a)
-                    putInt("totalDistance", b)
-                    putFloat("totalCalories", c)
-                    apply()
-                }
             }
 
             if (isStarted || isPaused) {
@@ -129,10 +114,10 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
     private val updateUIReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             tv_totalSteps.text = intent?.getIntExtra("totalSteps", 0).toString()
-            tv_totalDistance.text = "${intent?.getIntExtra("totalDistance", 0)} m"
+            tv_totalDistance.text = "${intent?.getIntExtra("totalDistance", 0)}"
 
-            // TODO(tv_totalCalories.text = "${intent?.getFloatExtra("totalCalories", 0f)?.roundToInt()} kcal")
-            tv_totalCalories.text = String.format("%.${3}f kcal", intent?.getFloatExtra("totalCalories", 0f))
+            // TODO(tv_totalCalories.text = "${intent?.getFloatExtra("totalCalories", 0f)?.roundToInt()}")
+            tv_totalCalories.text = String.format("%.${3}f", intent?.getFloatExtra("totalCalories", 0f))
         }
     }
 }

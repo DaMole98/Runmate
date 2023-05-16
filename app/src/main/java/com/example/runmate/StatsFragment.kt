@@ -1,17 +1,16 @@
 package com.example.runmate
 
 import android.content.Context
-import android.content.res.Resources
 import android.os.Bundle
-import android.util.Log
-import android.util.TypedValue
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.constraintlayout.widget.Guideline
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 
 class StatsFragment:Fragment(R.layout.fragment_stats) {
@@ -43,19 +42,30 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
     override fun onResume() {
         super.onResume()
 
-        // TODO((example call. Current parameters are just for example and use "SharedPreferences"). This function should be called from CaloriesService or TrainingFragment with real values)
+        // take stats values from local save and update stats UI
         val sharedPref = context?.getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
         if (sharedPref != null) {
             updateStatsUI(sharedPref.getInt("totalSteps", 0), sharedPref.getInt("totalDistance", 0), sharedPref.getFloat("totalCalories", 0f))
+            updateTVColor(tv_steps_progress, ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.steps)))
+            updateTVColor(tv_distance_progress, ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.distance)))
+            updateTVColor(tv_calories_progress, ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.calories)))
         }
     }
 
-    private fun updateStatsUI(steps: Int, distance: Int, calories: Float){
+    private fun updateStatsUI(steps: Int, distance: Int, calories: Float) {
         pb_steps.progress = (steps.toFloat() / stepsGoal.toFloat() * 100).toInt()
         pb_distance.progress = (distance.toFloat() / distanceGoal.toFloat() * 100).toInt()
         pb_calories.progress = (calories / caloriesGoal.toFloat() * 100).toInt()
         tv_steps_progress.text = "$steps / $stepsGoal passi"
         tv_distance_progress.text = "$distance / $distanceGoal m"
         tv_calories_progress.text = "${calories.toInt()} / $caloriesGoal kcal"
+    }
+
+    // Changes the color of part of the statistics texts
+    private fun updateTVColor(tv: TextView, color: ForegroundColorSpan) {
+        val txt = tv.text
+        val spannableString = SpannableString(txt)
+        spannableString.setSpan(color, 0, txt.indexOf("/"), Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+        tv.text = spannableString
     }
 }
