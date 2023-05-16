@@ -19,7 +19,6 @@ import androidx.core.app.NotificationCompat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
@@ -36,6 +35,7 @@ class CaloriesService : Service(), SensorEventListener {
 
     // constants for calories computation
     // TODO(get these values from the database)
+    private val sex = "Male" // "Female"
     private val h = 180 // [cm]
     private val m = 80f // [kg]
     private val G = 0.01f
@@ -153,29 +153,13 @@ class CaloriesService : Service(), SensorEventListener {
 
     private fun startCoroutineCalories() {
         if (job == null || job?.isCancelled == true) {
-
             job = CoroutineScope(Dispatchers.Default).launch() {
                 while (isActive) {
                     val currentTime = SystemClock.elapsedRealtime()
 
                     // if no steps are taken for 5 seconds
                     if (currentTime - end >= 5000) {
-                        val interval = end - start
-                        val (distance, calories) = computeCalories(interval)
-
-                        totalSteps += currentSteps
-                        totalDistance += distance
-                        totalCalories += calories
-
-                        currentSteps = 0
-
-                        // send broadcast to the activity to update the UI
-                        val intentUI = Intent("UPDATE_UI")
-
-                        intentUI.putExtra("totalSteps", totalSteps)
-                        intentUI.putExtra("totalDistance", totalDistance)
-                        intentUI.putExtra("totalCalories", totalCalories)
-                        sendBroadcast(intentUI)
+                        computeStats()
 
                         job?.cancel()
                         isFirstStep = true
@@ -183,6 +167,26 @@ class CaloriesService : Service(), SensorEventListener {
                 }
             }
         }
+    }
+
+    // Updates stats
+    private fun computeStats(){
+        val interval = end - start
+        val (distance, calories) = computeCalories(interval)
+
+        totalSteps += currentSteps
+        totalDistance += distance
+        totalCalories += calories
+
+        currentSteps = 0
+
+        // send broadcast to the activity to update the UI
+        val intentUI = Intent("UPDATE_UI")
+
+        intentUI.putExtra("totalSteps", totalSteps)
+        intentUI.putExtra("totalDistance", totalDistance)
+        intentUI.putExtra("totalCalories", totalCalories)
+        sendBroadcast(intentUI)
     }
 
     // Computes calories based on the time interval. Returns distance and calories.
@@ -197,11 +201,29 @@ class CaloriesService : Service(), SensorEventListener {
         return Pair(d.toInt(), calories.toFloat())
     }
 
+    // Locally saves stats
+    private fun saveStats(){
+        val sharedPref = getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
+        sharedPref?.edit()?.apply {
+
+            // old values are added to new values
+            putInt("totalSteps", totalSteps + sharedPref.getInt("totalSteps", 0))
+            putInt("totalDistance", totalDistance + sharedPref.getInt("totalDistance", 0))
+            putFloat("totalCalories", totalCalories + sharedPref.getFloat("totalCalories", 0f))
+            apply()
+        }
+    }
+
     private val shutdownReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
 
             // stop the service
             if (intent?.action == "STOP_SERVICE") {
+                if (currentSteps != 0 && currentSteps != 1 && totalSteps != currentSteps) {
+                    computeStats()
+                }
+                if (totalSteps != 0)
+                    saveStats()
                 stopForeground(STOP_FOREGROUND_REMOVE)
                 stopSelf()
             }
