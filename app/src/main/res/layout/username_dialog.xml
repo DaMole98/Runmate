@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+    android:layout_width="@dimen/dialog_width"
+    android:layout_height="@dimen/dialog_height">
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/hint_username"
+        android:inputType="text"
+        android:text=""
+        tools:layout_editor_absoluteX="100dp"
+        tools:layout_editor_absoluteY="80dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+    <!-- app:layout_constraintTop_toTopOf="@id/formTitle" -->
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
