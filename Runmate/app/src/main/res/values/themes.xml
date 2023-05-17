@@ -1,0 +1,20 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <!-- <style name="Theme.Runmate" parent="Theme.MaterialComponents.Light.NoActionBar"> -->
+    <style name="Theme.Runmate" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">#33B5B5</item>
+        <item name="colorPrimaryDark">#33B5B5</item>
+        <item name="colorAccent">#33B5B5</item>
+        <item name="android:fontFamily">@font/rubik</item>
+    </style>
+    <style name="IconButton" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">#33B5B5</item>
+        <item name="colorPrimaryDark">#33B5B5</item>
+        <item name="colorAccent">#33B5B5</item>
+    </style>
+
+    <style name="Toolbar" parent="ThemeOverlay.AppCompat.ActionBar">
+    </style>
+
+</resources>

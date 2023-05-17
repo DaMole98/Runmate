@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MainActivity">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineBottom"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.75" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineTop"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.25" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineEnd"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guidelineStart"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <View
+        android:id="@+id/targetView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/layout_bg"
+        app:layout_constraintBottom_toTopOf="@id/guidelineBottom"
+        app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@id/guidelineTop"
+        />
+
+    <RadioGroup
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/editGender"
+        android:layout_width="0dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="5dp"
+        android:padding="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/guidelineTop"
+        app:layout_constraintStart_toEndOf="@id/textTargetGender"
+        app:layout_constraintEnd_toStartOf="@id/guidelineEnd"
+        >
+        <RadioButton android:id="@+id/man"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Uomo"
+            android:onClick="onRadioButtonClicked"/>
+        <RadioButton android:id="@+id/woman"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Donna"
+            android:onClick="onRadioButtonClicked"
+            />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/editTargetAge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:text="20"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
+        app:layout_constraintStart_toEndOf="@+id/textTargetSteps"
+        app:layout_constraintTop_toBottomOf="@+id/editGender"
+        />
+
+    <EditText
+        android:id="@+id/editTargetWeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:text="50"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
+        app:layout_constraintStart_toEndOf="@+id/textTargetSteps"
+        app:layout_constraintTop_toBottomOf="@+id/editTargetAge"
+        />
+
+    <EditText
+        android:id="@+id/editTargetSteps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:text="10000"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
+        app:layout_constraintStart_toEndOf="@+id/textTargetSteps"
+        app:layout_constraintTop_toBottomOf="@+id/editTargetWeight"
+        />
+
+    <EditText
+        android:id="@+id/editTargetKcal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="200"
+        android:inputType="number"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
+        app:layout_constraintTop_toBottomOf="@+id/editTargetSteps"
+        app:layout_constraintStart_toEndOf="@id/textTargetKcal"/>
+
+    <EditText
+        android:id="@+id/editTargetMeter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="1000"
+        android:inputType="number"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
+        app:layout_constraintTop_toBottomOf="@+id/editTargetKcal"
+        app:layout_constraintStart_toEndOf="@id/textTargetKcal"/>
+    <TextView
+        android:id="@+id/textTargetKcal"
+        android:layout_width="0dp"
+        android:layout_height="43dp"
+        android:fontFamily="@font/rubik"
+        android:text="Kcal giornaliere"
+        android:paddingVertical="15dp"
+        android:paddingStart="5dp"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintEnd_toStartOf="@id/editTargetKcal"
+        app:layout_constraintTop_toBottomOf="@id/textTargetSteps"
+        />
+
+    <TextView
+        android:id="@+id/textTargetMeter"
+        android:layout_width="0dp"
+        android:layout_height="43dp"
+        android:fontFamily="@font/rubik"
+        android:text="Metri al giorno"
+        android:paddingVertical="15dp"
+        android:paddingStart="5dp"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        app:layout_constraintEnd_toStartOf="@id/editTargetMeter"
+        app:layout_constraintTop_toBottomOf="@id/textTargetKcal"
+        />
+
+    <TextView
+        android:id="@+id/textTargetGender"
+        android:layout_width="0dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/rubik"
+        android:text="Sesso"
+        android:paddingVertical="15dp"
+        android:paddingStart="5dp"
+        app:layout_constraintEnd_toStartOf="@id/editTargetSteps"
+        app:layout_constraintStart_toStartOf="@+id/guidelineStart"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop"
+        />
+
+    <TextView
+        android:id="@+id/textTargetAge"
+        android:layout_width="0dp"
+        android:layout_height="43dp"
+        android:fontFamily="@font/rubik"
+        android:text="Età"
+        android:paddingVertical="15dp"
+        android:paddingStart="5dp"
+        app:layout_constraintEnd_toStartOf="@id/editTargetSteps"
+        app:layout_constraintTop_toBottomOf="@+id/textTargetGender"
+        app:layout_constraintStart_toStartOf="@id/guidelineStart"
+        />
+
+    <TextView
+        android:id="@+id/textWeightSteps"
+        android:layout_width="0dp"
+        android:layout_height="43dp"
+        android:fontFamily="@font/rubik"
+        android:paddingVertical="15dp"
+        android:paddingStart="5dp"
+        android:text="Peso (Kg)"
+        app:layout_constraintEnd_toStartOf="@id/editTargetSteps"
+        app:layout_constraintStart_toStartOf="@+id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@+id/textTargetAge" />
+
+    <TextView
+        android:id="@+id/textTargetSteps"
+        android:layout_width="0dp"
+        android:layout_height="43dp"
+        android:fontFamily="@font/rubik"
+        android:text="Passi giornalieri"
+        android:paddingVertical="15dp"
+        android:paddingStart="5dp"
+        app:layout_constraintEnd_toStartOf="@id/editTargetSteps"
+        app:layout_constraintStart_toStartOf="@+id/guidelineStart"
+        app:layout_constraintTop_toBottomOf="@+id/textWeightSteps"
+        />
+
+    <Button
+        android:id="@+id/confirm_target_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#33B5B5"
+        android:fontFamily="@font/rubik"
+        android:text="Conferma"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom"
+        app:layout_constraintEnd_toStartOf="@+id/reset_target_button"
+        app:layout_constraintStart_toStartOf="@+id/guidelineStart"
+        />
+
+    <Button
+        android:id="@+id/reset_target_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#D01414"
+        android:fontFamily="@font/rubik"
+        android:text="Reset"
+        android:textColor="@color/white"
+        app:layout_constraintStart_toEndOf="@id/confirm_target_button"
+        app:layout_constraintBottom_toTopOf="@+id/guidelineBottom"
+        app:layout_constraintEnd_toStartOf="@+id/guidelineEnd" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/Toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:title="Impostazioni"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">Runmate</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="hint_username">Username</string>
+    <string name="hint_password">Conferma password</string>
+    <string name="StatsB">Statistiche</string>
+    <string name="TrainingB">Allenamento</string>
+    <string name="ProfileB">Profilo</string>
+    <string name="SettingsB">Impostazioni</string>
+    <string name="email">Email</string>
+</resources>
