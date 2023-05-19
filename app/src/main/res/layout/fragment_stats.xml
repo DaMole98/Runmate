@@ -19,6 +19,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
+    <View
+        android:id="@+id/v_activities"
+        android:layout_width="0dp"
+        android:layout_height="300dp"
+        android:layout_margin="30dp"
+        android:background="@drawable/layout_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/v_stats" />
+
     <com.google.android.material.progressindicator.CircularProgressIndicator
         android:id="@+id/pb_steps_background"
         android:layout_width="wrap_content"
@@ -158,5 +169,30 @@
         app:layout_constraintStart_toStartOf="@+id/gl_stats_text"
         app:layout_constraintTop_toTopOf="@id/v_stats"
         app:layout_constraintVertical_bias="0.8" />
+
+    <TextView
+        android:id="@+id/tv_activities"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/righteous"
+        android:text="Attività"
+        android:textColor="@color/black"
+        android:textSize="25sp"
+        app:layout_constraintEnd_toEndOf="@+id/v_activities"
+        app:layout_constraintHorizontal_bias="0.1"
+        app:layout_constraintStart_toStartOf="@+id/v_activities"
+        app:layout_constraintTop_toTopOf="@+id/v_activities" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_activities"
+        android:layout_width="300dp"
+        android:layout_height="230dp"
+        app:layout_constraintBottom_toBottomOf="@+id/v_activities"
+        app:layout_constraintEnd_toEndOf="@+id/v_activities"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/v_activities"
+        app:layout_constraintTop_toBottomOf="@+id/tv_activities"
+        app:layout_constraintVertical_bias="0.2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

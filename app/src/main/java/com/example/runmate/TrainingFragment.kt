@@ -6,13 +6,19 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.os.SystemClock
+import android.util.Log
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Chronometer
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -27,6 +33,10 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
     private var isPaused = false
     private var isServiceStarted = false
     var pauseOffset: Long = 0
+
+    companion object {
+        var isTraining = false
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_training, container, false)
@@ -79,6 +89,8 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
                 chronometer.stop()
                 pauseOffset = chronometer.base - SystemClock.elapsedRealtime()
             }
+            //requireActivity().sendBroadcast(Intent("IS_TRAINING"))
+            isTraining = true
             isStarted = !isStarted
         }
 
@@ -97,6 +109,7 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
                 chronometer.base = SystemClock.elapsedRealtime()
                 chronometer.stop()
             }
+            isTraining = false
         }
 
         requireActivity().registerReceiver(updateUIReceiver, IntentFilter("UPDATE_UI"))

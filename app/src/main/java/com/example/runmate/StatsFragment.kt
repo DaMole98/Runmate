@@ -12,6 +12,10 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class StatsFragment:Fragment(R.layout.fragment_stats) {
     private lateinit var pb_steps: ProgressBar
@@ -20,6 +24,7 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
     private lateinit var tv_steps_progress: TextView
     private lateinit var tv_distance_progress: TextView
     private lateinit var tv_calories_progress: TextView
+    private lateinit var rv_activities: RecyclerView
 
     // TODO(get these values from the database or from something else)
     private var stepsGoal = 10000
@@ -35,6 +40,13 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
         tv_steps_progress = view.findViewById(R.id.tv_steps_stats)
         tv_distance_progress = view.findViewById(R.id.tv_distance_stats)
         tv_calories_progress = view.findViewById(R.id.tv_calories_stats)
+        rv_activities = view.findViewById(R.id.rv_activities)
+
+        /*val layoutManager = LinearLayoutManager(requireContext())
+        val dataList: List<String> = listOf("0 passi | 0 m | 0 kcal | 0:00\nWalk | gg/mm/aaaa | 00:00", "Banana", "Orange")
+        val adapter = ActivitiesAdapter(dataList)
+        rv_activities.layoutManager = layoutManager
+        rv_activities.adapter = adapter*/
 
         return view
     }
@@ -45,6 +57,23 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
         // take stats values from local save and update stats UI
         val sharedPref = context?.getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
         if (sharedPref != null) {
+            val layoutManager = LinearLayoutManager(requireContext())
+            val adapter: TrainingAdapter
+
+            val json = sharedPref.getString("trainingList", null)
+            if (json != null) {
+                val gson = Gson()
+                val listType = object : TypeToken<MutableList<TrainingObject>>() {}.type
+                val pastTraining = gson.fromJson<MutableList<TrainingObject>>(json, listType)
+
+                adapter = TrainingAdapter(pastTraining)
+            }
+            else{
+                adapter = TrainingAdapter(listOf())
+            }
+            rv_activities.layoutManager = layoutManager
+            rv_activities.adapter = adapter
+
             updateStatsUI(sharedPref.getInt("totalSteps", 0), sharedPref.getInt("totalDistance", 0), sharedPref.getFloat("totalCalories", 0f))
             updateTVColor(tv_steps_progress, ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.steps)))
             updateTVColor(tv_distance_progress, ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.distance)))

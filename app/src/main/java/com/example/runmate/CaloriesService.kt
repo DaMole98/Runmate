@@ -16,11 +16,17 @@ import android.os.Build
 import android.os.IBinder
 import android.os.SystemClock
 import androidx.core.app.NotificationCompat
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import java.time.Duration
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class CaloriesService : Service(), SensorEventListener {
     private var sensorManager: SensorManager? = null
@@ -47,6 +53,10 @@ class CaloriesService : Service(), SensorEventListener {
     private var totalDistance = 0
     private var totalCalories = 0f
 
+    private lateinit var startTime: LocalTime
+
+    private var trainingType = "Camminata"
+
     override fun onCreate() {
         super.onCreate()
 
@@ -58,6 +68,13 @@ class CaloriesService : Service(), SensorEventListener {
         totalSteps = 0
         totalDistance = 0
         totalCalories = 0f
+
+        // SISTEMARE VERSIONE SDK
+        startTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LocalTime.now()//.format(DateTimeFormatter.ofPattern("HH:mm"))
+        } else {
+            TODO("VERSION.SDK_INT < O")
+        }
 
         // step sensor registration
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
@@ -153,7 +170,7 @@ class CaloriesService : Service(), SensorEventListener {
 
     private fun startCoroutineCalories() {
         if (job == null || job?.isCancelled == true) {
-            job = CoroutineScope(Dispatchers.Default).launch() {
+            job = CoroutineScope(Dispatchers.Default).launch {
                 while (isActive) {
                     val currentTime = SystemClock.elapsedRealtime()
 
@@ -172,21 +189,23 @@ class CaloriesService : Service(), SensorEventListener {
     // Updates stats
     private fun computeStats(){
         val interval = end - start
-        val (distance, calories) = computeCalories(interval)
+        if (interval != 0L) {
+            val (distance, calories) = computeCalories(interval)
 
-        totalSteps += currentSteps
-        totalDistance += distance
-        totalCalories += calories
+            totalSteps += currentSteps
+            totalDistance += distance
+            totalCalories += calories
 
-        currentSteps = 0
+            currentSteps = 0
 
-        // send broadcast to the activity to update the UI
-        val intentUI = Intent("UPDATE_UI")
+            // send broadcast to the activity to update the UI
+            val intentUI = Intent("UPDATE_UI")
 
-        intentUI.putExtra("totalSteps", totalSteps)
-        intentUI.putExtra("totalDistance", totalDistance)
-        intentUI.putExtra("totalCalories", totalCalories)
-        sendBroadcast(intentUI)
+            intentUI.putExtra("totalSteps", totalSteps)
+            intentUI.putExtra("totalDistance", totalDistance)
+            intentUI.putExtra("totalCalories", totalCalories)
+            sendBroadcast(intentUI)
+        }
     }
 
     // Computes calories based on the time interval. Returns distance and calories.
@@ -205,6 +224,33 @@ class CaloriesService : Service(), SensorEventListener {
     private fun saveStats(){
         val sharedPref = getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
         sharedPref?.edit()?.apply {
+            // SISTEMARE VERSIONE SDK
+            val currentDate = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+            } else {
+                TODO("VERSION.SDK_INT < O")
+            }
+
+            val duration = Duration.between(startTime, LocalTime.now())
+            val trainingObj = TrainingObject(trainingType, currentDate, startTime.format(DateTimeFormatter.ofPattern("HH:mm")),
+                totalSteps, totalDistance, totalCalories, "${duration.toHours()} h ${duration.toMinutes() % 60} min")
+
+            // take older trainings (if any) and add last training
+            var json = sharedPref.getString("trainingList", null)
+            val gson = Gson()
+            if (json != null) {
+                val listType = object : TypeToken<MutableList<TrainingObject>>() {}.type
+                val pastTraining = gson.fromJson<MutableList<TrainingObject>>(json, listType)
+                pastTraining.add(trainingObj)
+                json = gson.toJson(pastTraining)
+                putString("trainingList", json)
+            }
+            else{ // last training is the first training
+                val trainingList = mutableListOf(trainingObj)
+                json = gson.toJson(trainingList)
+            }
+            putString("trainingList", json)
+            putString("currentDate", currentDate)
 
             // old values are added to new values
             putInt("totalSteps", totalSteps + sharedPref.getInt("totalSteps", 0))
