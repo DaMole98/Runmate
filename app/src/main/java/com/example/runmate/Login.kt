@@ -1,6 +1,6 @@
 package com.example.runmate
 
-
+import com.example.runmate.utils.*
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
@@ -8,12 +8,8 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ktx.database
-
 import com.google.firebase.ktx.Firebase
-//import com.google.firebase.perf.metrics.AddTrace
 
 class Login : AppCompatActivity() {
 
@@ -35,10 +31,18 @@ class Login : AppCompatActivity() {
         editPassword = findViewById<EditText>(R.id.password)
         loginBtn = findViewById(R.id.btn_login)
 
-        checkCurrentUser()
+        if(checkCurrentUser(mAuth)) {
+            Toast.makeText(baseContext, "Benvenuto", Toast.LENGTH_LONG).show()
+            loadMainActivity()
+        }
 
-        login()
+        else Loadlogin()
 
+    }
+
+
+
+    private fun Loadlogin(){
 
         registerBtn = findViewById(R.id.btn_register)
         registerBtn.setOnClickListener{ view ->
@@ -46,21 +50,6 @@ class Login : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
-
-    }
-
-    private fun checkCurrentUser() {
-        val currentUser = mAuth.currentUser
-        if (currentUser != null) {
-            //var username = getUsernameFromDatabase(currentUser)
-            currentUser.reload()
-            Toast.makeText(baseContext, "Benvenuto", Toast.LENGTH_LONG).show()
-            loadMainActivity()
-
-        }
-    }
-
-    private fun login(){
 
         loginBtn.setOnClickListener{
             val email = editEmail.text.toString()

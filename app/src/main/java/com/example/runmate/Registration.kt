@@ -14,6 +14,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+
 
 
 class Registration : AppCompatActivity() {
@@ -89,28 +91,26 @@ class Registration : AppCompatActivity() {
                 { task ->
                     if (task.isSuccessful) {
                         val user = mAuth.currentUser
-                        val database = Firebase.database("https://runmate-b7137-default-rtdb.europe-west1.firebasedatabase.app/").reference
                         val uid = user!!.uid
+                        saveUserData(uid, username, email)
 
-                        //save user data
-                        val sPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-                        val editor = sPref.edit()
-                        editor.putString("username", username)
-                        editor.putString("email", email)
-                        editor.putString("uid", uid)
-                        editor.apply()
+                        Toast.makeText(this, "Benvenuto in Runmate!", Toast.LENGTH_SHORT).show()
 
-                        //push user data into cloud database
-                        val userData: MutableMap<String, Any> = HashMap()
-                        userData["uid"] = uid
-                        userData["username"] = username
-                        userData["email"] = email
-                        val usersRef = database.child("users")
-                        val userRef = usersRef.child(uid)
+                        val alertDialog = MaterialAlertDialogBuilder(this)
+                            .setMessage("Prima di cominciare, ci serve qualche altra informazione...")
+                            .setPositiveButton("OK") { dialog, which ->
 
-                        userRef.setValue(userData)
+                                val intent = Intent(this, Login::class.java)
+                                startActivity(intent)
+                                finish()
+                            }
+                            .setCancelable(false)
+                            .create()
 
-                        Toast.makeText(this, "Benvenuto in Runmate!", Toast.LENGTH_LONG).show()
+                        alertDialog.show()
+
+
+                        //TODO: cambiare intent per lanciare l'activity di profiling invece del loign
                         intent = Intent(applicationContext, Login::class.java)
                         startActivity(intent)
                     } else Toast.makeText(
@@ -123,5 +123,29 @@ class Registration : AppCompatActivity() {
             }
 
         }
+    }
+
+    private fun saveUserData( uid: String, username : String, email : String){
+        //val database = Firebase.database("https://runmate-b7137-default-rtdb.europe-west1.firebasedatabase.app/").reference
+        val database = (application as Runmate).database //ottieni l'istanza (singleton) del database dalla classe applicaiton
+        val databaseRef = database.reference
+
+        val sPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val editor = sPref.edit()
+        editor.putString("username", username)
+        editor.putString("email", email)
+        editor.putString("uid", uid)
+        editor.apply()
+
+        //push user data into cloud database
+        val userData: MutableMap<String, Any> = HashMap()
+        userData["uid"] = uid
+        userData["username"] = username
+        userData["email"] = email
+        val usersRef = databaseRef.child("users")
+        val userRef = usersRef.child(uid)
+
+        userRef.setValue(userData)
+
     }
 }

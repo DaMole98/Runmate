@@ -6,22 +6,14 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.os.SystemClock
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Chronometer
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.Locale
+import com.google.firebase.analytics.FirebaseAnalytics
 
 class TrainingFragment:Fragment(R.layout.fragment_training) {
     private lateinit var tv_totalSteps: TextView
@@ -34,6 +26,10 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
     private var isServiceStarted = false
     var pauseOffset: Long = 0
 
+
+    private lateinit var firebaseAnalytics: FirebaseAnalytics
+
+
     companion object {
         var isTraining = false
     }
@@ -41,6 +37,7 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_training, container, false)
 
+        firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext())
         isStarted = false
         isPaused = false
         isServiceStarted = false
@@ -63,6 +60,12 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
         val btn_play_pause = view.findViewById<ImageButton>(R.id.btn_play_pause_train)
         btn_play_pause.setOnClickListener {
             if (!isServiceStarted){
+
+                //log di dati analitici
+                val par = Bundle()
+                par.putString("play_btn", "start")
+                firebaseAnalytics.logEvent("Button_start_pressed", par)
+
                 isServiceStarted = true
 
                 // start the service
@@ -71,6 +74,12 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
             }
 
             if (!isStarted) {
+
+                //log di dati analitici
+                val par = Bundle()
+                par.putString("play_btn", "paused")
+                firebaseAnalytics.logEvent("Button_paused_pressed", par)
+
                 btn_play_pause.setImageResource(R.drawable.pause_circle)
 
                 if(!isPaused)
