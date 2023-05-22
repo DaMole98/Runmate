@@ -4,18 +4,20 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Binder
 import android.os.Build
 import android.os.IBinder
 import android.os.SystemClock
+import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
@@ -29,18 +31,32 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 class CaloriesService : Service(), SensorEventListener {
+
+    // Binder given to clients.
+    private val binder = LocalBinder()
+
+    inner class LocalBinder : Binder() {
+
+        // Return this instance of LocalService so clients can call public methods.
+        fun getService(): CaloriesService = this@CaloriesService
+    }
+
     private var sensorManager: SensorManager? = null
 
     private var isFirstStep = true
-    private var isTrainingPaused = false
+    var isTrainingPaused = false
+    private var isComputing = false
     private var job: Job? = null
 
     // timestamps to handle calories computation
+    private val computingTime = 3000
     private var start: Long = 0
     private var end: Long = 0
 
     // constants for calories computation
     // TODO(get these values from the database)
+    private var horizontalComponent = 0.1
+    private var verticalComponent = 1.8
     private val sex = "Male" // "Female"
     private val h = 180 // [cm]
     private val m = 80f // [kg]
@@ -55,37 +71,38 @@ class CaloriesService : Service(), SensorEventListener {
 
     private lateinit var startTime: LocalTime
 
-    private var trainingType = "Camminata"
+    lateinit var trainingType: String
 
     override fun onCreate() {
         super.onCreate()
+        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
+        //registerReceiver(shutdownReceiver, IntentFilter("STOP_SERVICE"))
+        //registerReceiver(shutdownReceiver, IntentFilter("TRAINING_PAUSED"))
+    }
 
+    private fun initialize(){
         isFirstStep = true
         isTrainingPaused = false
+        isComputing = false
         job = null
-
+        start = 0
+        end = 0
         currentSteps = 0
         totalSteps = 0
         totalDistance = 0
         totalCalories = 0f
+        startTime = LocalTime.now()
 
-        // SISTEMARE VERSIONE SDK
-        startTime = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            LocalTime.now()//.format(DateTimeFormatter.ofPattern("HH:mm"))
-        } else {
-            TODO("VERSION.SDK_INT < O")
+        if (trainingType == "Corsa"){
+            horizontalComponent = 0.2
+            verticalComponent = 0.9
         }
 
         // step sensor registration
-        sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
-
         val stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
         if (stepSensor != null) {
             sensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
         }
-
-        registerReceiver(shutdownReceiver, IntentFilter("STOP_SERVICE"))
-        registerReceiver(shutdownReceiver, IntentFilter("TRAINING_PAUSED"))
     }
 
     // TEST
@@ -106,12 +123,13 @@ class CaloriesService : Service(), SensorEventListener {
         super.onDestroy()
 
         sensorManager?.unregisterListener(this)
-        unregisterReceiver(shutdownReceiver)
         job?.cancel()
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        //detach()
     }
 
     override fun onBind(intent: Intent): IBinder? {
-        return null
+        return binder
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -119,6 +137,7 @@ class CaloriesService : Service(), SensorEventListener {
 
         // show a notification on the screen and allow the service to work in the background
         startForeground(1, createNotification())
+        initialize()
 
         // TEST
         /*for (i in 1..10) {
@@ -133,15 +152,13 @@ class CaloriesService : Service(), SensorEventListener {
         val channelId = "RunmateCaloriesService"
         val channelName = "Runmate Activity Tracker"
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel = NotificationChannel(
-                channelId,
-                channelName,
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
-            val notificationManager = getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(channel)
-        }
+        val channel = NotificationChannel(
+            channelId,
+            channelName,
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        val notificationManager = getSystemService(NotificationManager::class.java)
+        notificationManager.createNotificationChannel(channel)
 
         return NotificationCompat.Builder(this, channelId)
             .setContentTitle("Runmate sta registrando la tua attività")
@@ -152,9 +169,9 @@ class CaloriesService : Service(), SensorEventListener {
 
     // Detects user steps
     override fun onSensorChanged(event: SensorEvent?) {
-        currentSteps++
-
         if (!isTrainingPaused) {
+            currentSteps++
+
             if (isFirstStep) {
                 start = SystemClock.elapsedRealtime()
                 isFirstStep = false
@@ -174,9 +191,11 @@ class CaloriesService : Service(), SensorEventListener {
                 while (isActive) {
                     val currentTime = SystemClock.elapsedRealtime()
 
-                    // if no steps are taken for 5 seconds
-                    if (currentTime - end >= 5000) {
+                    // if no steps are taken for computingTime milliseconds
+                    if (currentTime - end >= computingTime && !isComputing) {
+                        isComputing = true
                         computeStats()
+                        isComputing = false
 
                         job?.cancel()
                         isFirstStep = true
@@ -205,6 +224,8 @@ class CaloriesService : Service(), SensorEventListener {
             intentUI.putExtra("totalDistance", totalDistance)
             intentUI.putExtra("totalCalories", totalCalories)
             sendBroadcast(intentUI)
+
+            //TrainingFragment().updateUI(totalSteps, totalDistance, totalCalories)
         }
     }
 
@@ -213,7 +234,7 @@ class CaloriesService : Service(), SensorEventListener {
         val interval_in_seconds = interval_in_milliseconds / 1000f // [s]
         val d = currentSteps * stepSize // [m]
         val S = (d / interval_in_seconds) * 60 // [m / min]
-        val VO2 = 3.5 + (0.1 * S) + (1.8 * S * G) // [mL / (kg * min)]
+        val VO2 = 3.5 + (horizontalComponent * S) + (verticalComponent * S * G) // [mL / (kg * min)]
         var calories = ((VO2 * m) / 1000) * 5 // [kcal / min]
         calories = calories * interval_in_seconds / 60 // [kcal]
 
@@ -224,16 +245,12 @@ class CaloriesService : Service(), SensorEventListener {
     private fun saveStats(){
         val sharedPref = getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
         sharedPref?.edit()?.apply {
-            // SISTEMARE VERSIONE SDK
-            val currentDate = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-            } else {
-                TODO("VERSION.SDK_INT < O")
-            }
+            val currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 
-            val duration = Duration.between(startTime, LocalTime.now())
+            //val duration = Duration.between(startTime, LocalTime.now())
             val trainingObj = TrainingObject(trainingType, currentDate, startTime.format(DateTimeFormatter.ofPattern("HH:mm")),
-                totalSteps, totalDistance, totalCalories, "${duration.toHours()} h ${duration.toMinutes() % 60} min")
+                totalSteps, totalDistance, totalCalories, TrainingFragment.elapsedFormatted)
+            //totalSteps, totalDistance, totalCalories, "${duration.toHours()} h ${duration.toMinutes() % 60} min")
 
             // take older trainings (if any) and add last training
             var json = sharedPref.getString("trainingList", null)
@@ -260,7 +277,7 @@ class CaloriesService : Service(), SensorEventListener {
         }
     }
 
-    private val shutdownReceiver = object : BroadcastReceiver() {
+    /*private val shutdownReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
 
             // stop the service
@@ -276,5 +293,39 @@ class CaloriesService : Service(), SensorEventListener {
             else if (intent?.action == "TRAINING_PAUSED")
                 isTrainingPaused = !isTrainingPaused
         }
+    }*/
+
+    // Stops the service
+    fun registerTraining() {
+        if (currentSteps != 0 && currentSteps != 1){
+            if (!isComputing) {
+                isComputing = true
+                computeStats()
+                isComputing = false
+            }
+        }
+        if(totalSteps != 0) {
+            saveStats()
+            Toast.makeText(baseContext, "Attività registrata!", Toast.LENGTH_SHORT).show()
+        }
+
+        sensorManager?.unregisterListener(this)
+        job?.cancel()
+        //detach()
+        /*if (currentSteps != 0 && currentSteps != 1 && totalSteps != currentSteps)
+            computeStats()
+        if (totalSteps != 0) {
+            saveStats()
+            totalSteps = 0
+        }*/
+
     }
+
+    /*private fun detach(){
+        sensorManager?.unregisterListener(this)
+        job?.cancel()
+
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
+    }*/
 }
