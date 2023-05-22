@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <androidx.constraintlayout.widget.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -14,26 +14,35 @@
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.9" />
 
-
+    <View
+        android:id="@+id/userTopView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="30dp"
+        android:background="@drawable/layout_bg"
+        app:layout_constraintBottom_toTopOf="@id/userBottomview"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
     <TextView
         android:id="@+id/profileTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Profilo"
-        android:background="@drawable/layout_bg"
         android:textColor="#33B5B5"
-        android:fontFamily="@font/righteous"
+        android:fontFamily="@font/rubik"
         android:padding="10sp"
         android:textSize="30sp"
         android:layout_marginHorizontal="30sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@id/userTopView"
         app:layout_constraintBottom_toTopOf="@id/user_view"
-
         />
+
     <View
-        android:id="@+id/view"
+        android:id="@+id/userBottomview"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_margin="30dp"
@@ -44,75 +53,70 @@
         app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <TextView
-        android:id="@+id/settings"
+    <Button
+        android:id="@+id/btn_logout"
+        android:layout_marginHorizontal="1dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/rubik"
+        android:background="@color/white"
+        android:paddingStart="20dp"
+        android:text="Logout"
+        android:textAlignment="textStart"
+        android:textColor="#D01414"
+        app:layout_constraintEnd_toEndOf="@id/userBottomview"
+        app:layout_constraintStart_toStartOf="@id/userBottomview"
+        app:layout_constraintTop_toBottomOf="@id/btn_username"/>
+
+    <Button
+        android:id="@+id/btn_target"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="1dp"
         android:layout_marginTop="1dp"
         android:background="@drawable/round_top_border_layout"
         android:text="Impostazioni"
-        android:fontFamily="@font/righteous"
+        android:fontFamily="@font/rubik"
+        android:textAlignment="textStart"
+        android:textColor="@color/black"
+        android:paddingStart="20dp"
+        app:layout_constraintEnd_toEndOf="@id/userBottomview"
+        app:layout_constraintStart_toStartOf="@id/userBottomview"
+        app:layout_constraintTop_toTopOf="@id/userBottomview"
+        />
+
+    <Button
+        android:id="@+id/btn_username"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="1dp"
+        android:layout_marginTop="1dp"
+        android:background="@drawable/round_top_border_layout"
+        android:text="modifica username"
+        android:fontFamily="@font/rubik"
         android:textAlignment="textStart"
         android:textColor="@color/black"
         android:paddingStart="20dp"
         app:layout_constraintBottom_toTopOf="@id/btn_logout"
-        app:layout_constraintEnd_toEndOf="@id/view"
-        app:layout_constraintStart_toStartOf="@id/view"
-        app:layout_constraintTop_toTopOf="@id/view"
+        app:layout_constraintEnd_toEndOf="@id/userBottomview"
+        app:layout_constraintStart_toStartOf="@id/userBottomview"
+        app:layout_constraintTop_toBottomOf="@id/btn_target"
         />
-
-
-    <Button
-        android:id="@+id/username_btn"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="1dp"
-        android:background="@color/white"
-        android:fontFamily="@font/righteous"
-        android:paddingStart="20dp"
-        android:text="Nome utente"
-        android:textAlignment="textStart"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="@id/view"
-        app:layout_constraintHorizontal_bias="0.277"
-        app:layout_constraintStart_toStartOf="@id/settings"
-        app:layout_constraintTop_toBottomOf="@id/btn_logout" />
-
-
-    <Button
-        android:id="@+id/btn_logout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="1dp"
-        android:layout_marginTop="12dp"
-        android:background="@color/white"
-        android:fontFamily="@font/righteous"
-        android:paddingStart="20dp"
-        android:text="Logout"
-        android:textAlignment="textStart"
-        android:textColor="#D01414"
-        app:layout_constraintEnd_toEndOf="@id/view"
-        app:layout_constraintStart_toStartOf="@id/view"
-        app:layout_constraintTop_toBottomOf="@id/settings" />
 
     <TextView
         android:id="@+id/user_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/layout_bg"
         android:text="Benvenuto user"
         android:textColor="@color/black"
         android:textSize="20sp"
         android:padding="10sp"
         android:layout_marginHorizontal="30sp"
-        android:fontFamily="@font/righteous"
-        app:layout_constraintBottom_toTopOf="@+id/settings"
+        android:fontFamily="@font/rubik_light"
+        app:layout_constraintBottom_toTopOf="@+id/profileTextView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/profileTextView"
         />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

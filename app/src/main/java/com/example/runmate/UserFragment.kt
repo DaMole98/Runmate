@@ -34,7 +34,7 @@ class UserFragment: Fragment(R.layout.fragment_user), ChangeUNDialogFragment.OnU
         val view = inflater.inflate(R.layout.fragment_user, container, false)
         val user_view = view.findViewById<TextView>(R.id.user_view)
         logoutBtn = view.findViewById<Button>(R.id.btn_logout)
-        usernameBtn = view.findViewById<Button>(R.id.username_btn)
+        usernameBtn = view.findViewById<Button>(R.id.btn_username)
 
 
         val username = arguments?.getString("USERNAME", "")
@@ -50,7 +50,6 @@ class UserFragment: Fragment(R.layout.fragment_user), ChangeUNDialogFragment.OnU
 
 
         logoutBtn.setOnClickListener {
-
             Firebase.auth.signOut()
             val intent = Intent(activity, Login::class.java)
             startActivity(intent)
