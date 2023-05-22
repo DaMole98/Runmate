@@ -24,6 +24,7 @@ class UserFragment: Fragment(R.layout.fragment_user), ChangeUNDialogFragment.OnU
 
     private lateinit var logoutBtn: Button
     private lateinit var usernameBtn: Button
+    private lateinit var targetBtn: Button
     //private lateinit var dialogView : View
 
     override fun onCreateView(
@@ -35,12 +36,16 @@ class UserFragment: Fragment(R.layout.fragment_user), ChangeUNDialogFragment.OnU
         val user_view = view.findViewById<TextView>(R.id.user_view)
         logoutBtn = view.findViewById<Button>(R.id.btn_logout)
         usernameBtn = view.findViewById<Button>(R.id.btn_username)
-
+        targetBtn = view.findViewById<Button>(R.id.btn_target)
 
         val username = arguments?.getString("USERNAME", "")
         user_view.text = "Ciao $username"
 
-
+        targetBtn.setOnClickListener {
+            val intent = Intent(activity,TargetActivity::class.java)
+            startActivity(intent)
+            activity?.finish()
+        }
 
         usernameBtn.setOnClickListener{
             val dialog = ChangeUNDialogFragment()
