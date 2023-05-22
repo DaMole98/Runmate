@@ -1,29 +1,31 @@
 package com.example.runmate
 
+import android.app.Service
 import android.content.BroadcastReceiver
+import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.ServiceConnection
 import android.os.Bundle
+import android.os.IBinder
 import android.os.SystemClock
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Chronometer
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.util.Locale
+import java.time.LocalTime
+import kotlin.math.roundToInt
 
 class TrainingFragment:Fragment(R.layout.fragment_training) {
+    private lateinit var mService: CaloriesService
+    private lateinit var intentService: Intent
+    private var mBound: Boolean = false
+
     private lateinit var tv_totalSteps: TextView
     private lateinit var tv_totalDistance: TextView
     private lateinit var tv_totalCalories: TextView
@@ -32,10 +34,34 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
     private var isStarted = false
     private var isPaused = false
     private var isServiceStarted = false
-    var pauseOffset: Long = 0
+    private var pauseOffset: Long = 0
+
+    private lateinit var trainingType: String
 
     companion object {
         var isTraining = false
+        lateinit var elapsedFormatted: String
+    }
+
+    private val connection = object : ServiceConnection {
+        override fun onServiceConnected(className: ComponentName, service: IBinder) {
+            // We've bound to CaloriesService, cast the IBinder and get CaloriesService instance.
+            val binder = service as CaloriesService.LocalBinder
+            mService = binder.getService()
+            mService.trainingType = trainingType
+            mBound = true
+        }
+
+        override fun onServiceDisconnected(arg0: ComponentName) {
+            mBound = false
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        arguments?.let {
+            trainingType = it.getString("trainingType").toString()
+        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -45,6 +71,8 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
         isPaused = false
         isServiceStarted = false
 
+        val tv_training_type = view.findViewById<TextView>(R.id.tv_training_type)
+        tv_training_type.text = trainingType
         tv_totalSteps = view.findViewById(R.id.tv_steps_train)
         tv_totalDistance = view.findViewById(R.id.tv_distance_train)
         tv_totalCalories = view.findViewById(R.id.tv_calories_train)
@@ -56,9 +84,13 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
             val h = elapsedSeconds / 3600
             val m = (elapsedSeconds % 3600) / 60
             val s = elapsedSeconds % 60
-            val elapsedFormatted = String.format("%01d:%02d:%02d", h, m, s)
-            chronometer.text = elapsedFormatted
+            elapsedFormatted = "$h h $m min"
+            chronometer.text = String.format("%01d:%02d:%02d", h, m, s)
         }
+
+        // bind to CaloriesService
+        intentService = Intent(context, CaloriesService::class.java)
+        context?.bindService(intentService, connection, Context.BIND_AUTO_CREATE)
 
         val btn_play_pause = view.findViewById<ImageButton>(R.id.btn_play_pause_train)
         btn_play_pause.setOnClickListener {
@@ -66,8 +98,14 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
                 isServiceStarted = true
 
                 // start the service
-                val serviceIntent = Intent(context, CaloriesService::class.java)
-                context?.startService(serviceIntent)
+                //val serviceIntent = Intent(context, CaloriesService::class.java)
+                //context?.startService(serviceIntent)
+
+                updateUI(0, 0, 0f)
+
+                // start CaloriesService
+                //context?.startService(intentService)
+                mService.startService(intentService)
             }
 
             if (!isStarted) {
@@ -77,14 +115,16 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
                     chronometer.base = SystemClock.elapsedRealtime()
                 else{
                     isPaused = false
-                    requireActivity().sendBroadcast(Intent("TRAINING_PAUSED"))
+                    //requireActivity().sendBroadcast(Intent("TRAINING_PAUSED"))
+                    mService.isTrainingPaused = !mService.isTrainingPaused
                     chronometer.base = SystemClock.elapsedRealtime() + pauseOffset
                 }
                 chronometer.start()
             }
             else {
                 btn_play_pause.setImageResource(R.drawable.play_circle)
-                requireActivity().sendBroadcast(Intent("TRAINING_PAUSED"))
+                //requireActivity().sendBroadcast(Intent("TRAINING_PAUSED"))
+                mService.isTrainingPaused = !mService.isTrainingPaused
                 isPaused = true
                 chronometer.stop()
                 pauseOffset = chronometer.base - SystemClock.elapsedRealtime()
@@ -98,7 +138,10 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
         btn_stop.setOnClickListener {
             if (isServiceStarted){
                 isServiceStarted = false
-                requireActivity().sendBroadcast(Intent("STOP_SERVICE"))
+                //requireActivity().sendBroadcast(Intent("STOP_SERVICE"))
+                mService.registerTraining()
+                mService.stopForeground(Service.STOP_FOREGROUND_REMOVE)
+                mService.stopService(intentService)
             }
 
             if (isStarted || isPaused) {
@@ -117,20 +160,43 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
         return view
     }
 
-    override fun onDestroyView() {
-        requireActivity().sendBroadcast(Intent("STOP_SERVICE"))
-        requireActivity().unregisterReceiver(updateUIReceiver)
+    /*fun updateUI(totalSteps: Int, totalDistance: Int, totalCalories: Float){
+        tv_totalSteps.text = "ciao"//totalSteps.toString()
+        tv_totalDistance.text = totalDistance.toString()
 
+        // TODO(tv_totalCalories.text = "${intent?.getFloatExtra("totalCalories", 0f)?.roundToInt()}")
+        tv_totalCalories.text = String.format("%.${3}f", totalCalories)
+    }*/
+
+    override fun onDestroyView() {
+        //requireActivity().sendBroadcast(Intent("STOP_SERVICE"))
+        //requireActivity().unregisterReceiver(updateUIReceiver)
         super.onDestroyView()
+
+        /*if (isServiceStarted) {
+            mService.registerTraining()
+        }*/
+        mService.stopService(intentService)
+        context?.unbindService(connection)
+        mBound = false
+    }
+
+    fun updateUI(totalSteps: Int, totalDistance: Int, totalCalories: Float){
+        tv_totalSteps.text = totalSteps.toString()
+        tv_totalDistance.text = totalDistance.toString()
+        tv_totalCalories.text = totalCalories.roundToInt().toString()
+        //tv_totalCalories.text = String.format("%.${3}f", totalCalories)
     }
 
     private val updateUIReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            tv_totalSteps.text = intent?.getIntExtra("totalSteps", 0).toString()
-            tv_totalDistance.text = "${intent?.getIntExtra("totalDistance", 0)}"
+        override fun onReceive(context: Context?, intent: Intent) {
+            val totalSteps = intent.getIntExtra("totalSteps", 0)
+            val totalDistance = intent.getIntExtra("totalDistance", 0)
 
             // TODO(tv_totalCalories.text = "${intent?.getFloatExtra("totalCalories", 0f)?.roundToInt()}")
-            tv_totalCalories.text = String.format("%.${3}f", intent?.getFloatExtra("totalCalories", 0f))
+            val totalCalories = intent.getFloatExtra("totalCalories", 0f)
+
+            updateUI(totalSteps, totalDistance, totalCalories)
         }
     }
 }

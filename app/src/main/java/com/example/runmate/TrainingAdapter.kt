@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import kotlin.math.roundToInt
 
 class TrainingAdapter(private val dataList: List<TrainingObject>) : RecyclerView.Adapter<TrainingAdapter.TrainingItemHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrainingItemHolder {
@@ -34,7 +35,8 @@ class TrainingAdapter(private val dataList: List<TrainingObject>) : RecyclerView
 
         fun bind(itemData: TrainingObject) {
             tv_act_sum_1.text = "${itemData.name} | ${itemData.date} | ${itemData.startTime}"
-            tv_act_sum_2.text = "${itemData.steps} passi | ${itemData.distance} m |" + String.format(" %.${3}f kcal", itemData.calories) + " | ${itemData.duration}"
+            //tv_act_sum_2.text = "${itemData.steps} passi | ${itemData.distance} m |" + String.format(" %.${3}f kcal", itemData.calories) + " | ${itemData.duration}"
+            tv_act_sum_2.text = "${itemData.steps} passi | ${itemData.distance} m | ${itemData.calories.roundToInt()} kcal" + " | ${itemData.duration}"
 
             if (itemData.name == "Corsa") imgv_activity.setImageResource(R.drawable.run)
         }

@@ -8,10 +8,12 @@ import android.os.Build
 import android.os.Bundle
 import android.text.style.ForegroundColorSpan
 import android.util.Log
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.gson.Gson
@@ -24,17 +26,15 @@ class MainActivity : AppCompatActivity() {
     //private lateinit var username: String?
     private val bundle = Bundle()
 
+    private var selectedItemId = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bottom_nav)
 
         val sharedPref = getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
         if (sharedPref != null) {
-            val currentDate = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-            } else {
-                TODO("VERSION.SDK_INT < O")
-            }
+            val currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
             if (sharedPref.getString("currentDate", "") != currentDate){ // the stats are reset each day (apart from training list)
                 val editor = sharedPref.edit()
                 editor.remove("totalSteps")
@@ -56,6 +56,7 @@ class MainActivity : AppCompatActivity() {
         val sPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
 
         val statsFragment = StatsFragment()
+        val trainingChoiceFragment = TrainingChoiceFragment()
         val trainingFragment = TrainingFragment()
         val userFragment = UserFragment()
 
@@ -66,25 +67,28 @@ class MainActivity : AppCompatActivity() {
         setCurrentFragment(statsFragment)
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        //bottomNavigationView.setOnNavigationItemSelectedListener {
         bottomNavigationView.setOnItemSelectedListener { item ->
+            selectedItemId = item.itemId
             when (item.itemId) {
                 R.id.stats -> {
                     if (TrainingFragment.isTraining) {
                         bottomNavigationView.post {
                             bottomNavigationView.selectedItemId = R.id.training
                         }
-                        showTrainingAlert()
                     }
                     else setCurrentFragment(statsFragment)
                 }
-                R.id.training -> setCurrentFragment(trainingFragment)
+                R.id.training -> {
+                    if (TrainingFragment.isTraining) {
+                        showTrainingAlert()
+                    }
+                    else setCurrentFragment(trainingChoiceFragment)
+                }
                 R.id.user -> {
-                    if (TrainingFragment.isTraining){
+                    if (TrainingFragment.isTraining) {
                         bottomNavigationView.post {
                             bottomNavigationView.selectedItemId = R.id.training
                         }
-                        showTrainingAlert()
                     }
                     else setCurrentFragment(userFragment)
                     // if (::username.isInitialized) {
@@ -101,7 +105,22 @@ class MainActivity : AppCompatActivity() {
             true
         }
 
-        //registerReceiver(trainingReceiver, IntentFilter("IS_TRAINING"))
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (supportFragmentManager.findFragmentById(R.id.flFragment) is TrainingFragment) {
+                    if (TrainingFragment.isTraining)
+                        showTrainingAlert()
+                    else {
+                        val fragment = TrainingChoiceFragment()
+                        val transaction = supportFragmentManager.beginTransaction()
+                        transaction.replace(R.id.flFragment, fragment)
+                        transaction.commit()
+                    }
+                }
+                else finish()
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     private fun setCurrentFragment(fragment: Fragment) =
@@ -123,12 +142,6 @@ class MainActivity : AppCompatActivity() {
         val alertDialog = alertDialogBuilder.create()
         alertDialog.show()
     }
-
-    /*private val trainingReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            isTraining = true
-        }
-    }*/
 
 //    @AddTrace(name = "loadUsername", enabled = true)
 //    //il parametro è una funzione di callback
