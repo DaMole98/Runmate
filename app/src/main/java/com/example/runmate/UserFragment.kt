@@ -98,8 +98,12 @@ class ChangeUNDialogFragment : DialogFragment() {
             editor.apply()
 
             val uid = Firebase.auth.currentUser?.uid
-            val database = Firebase.database("https://runmate-b7137-default-rtdb.europe-west1.firebasedatabase.app/").reference
-            val usernameRef = database.child("users/$uid/username")
+
+            val database = (requireActivity().application as Runmate).database //ottieni l'istanza del database dalla classe application
+                                            //requireActivity() perché application è un campo di mainActivity, non di fragment
+            val databaseRef = database.reference
+
+            val usernameRef = databaseRef.child("users/$uid/username")
             usernameRef.setValue(newUsername)
 
 

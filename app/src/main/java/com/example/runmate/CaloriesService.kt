@@ -12,12 +12,17 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Binder
 import android.os.Build
+import android.os.Debug
 import android.os.IBinder
 import android.os.SystemClock
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+
+import com.google.firebase.perf.FirebasePerformance
+import com.google.firebase.perf.metrics.Trace
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
@@ -73,12 +78,20 @@ class CaloriesService : Service(), SensorEventListener {
 
     lateinit var trainingType: String
 
+
+
+    //traccia del servizio (misura il tempo di attività del servizio)
+    private lateinit var serviceTrace : Trace
+
     override fun onCreate() {
         super.onCreate()
+
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         //registerReceiver(shutdownReceiver, IntentFilter("STOP_SERVICE"))
         //registerReceiver(shutdownReceiver, IntentFilter("TRAINING_PAUSED"))
     }
+        serviceTrace = FirebasePerformance.getInstance().newTrace("CaloriesServiceTrace")
+
 
     private fun initialize(){
         isFirstStep = true
@@ -126,6 +139,9 @@ class CaloriesService : Service(), SensorEventListener {
         job?.cancel()
         stopForeground(STOP_FOREGROUND_REMOVE)
         //detach()
+
+        serviceTrace.stop()
+
     }
 
     override fun onBind(intent: Intent): IBinder? {
@@ -134,6 +150,25 @@ class CaloriesService : Service(), SensorEventListener {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
+
+        serviceTrace.start()
+
+        // Misura il tempo di CPU utilizzato dal servizio
+        val cpuTime = Debug.threadCpuTimeNanos()
+
+        // Ottieni le informazioni sulla memoria del servizio
+        val memoryInfo = Debug.MemoryInfo()
+        Debug.getMemoryInfo(memoryInfo)
+
+        // Calcola il consumo di RAM totale del servizio
+        val totalPss = memoryInfo.totalPss
+
+
+        // Registra le metriche di consumo di CPU e RAM nel trace del servizio
+        serviceTrace?.putMetric("cpu_time", cpuTime)
+        serviceTrace?.putMetric("total_pss", totalPss.toLong())
+
+
 
         // show a notification on the screen and allow the service to work in the background
         startForeground(1, createNotification())
