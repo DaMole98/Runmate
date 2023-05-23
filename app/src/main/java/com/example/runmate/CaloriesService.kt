@@ -11,15 +11,12 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Binder
-import android.os.Build
+
 import android.os.Debug
 import android.os.IBinder
 import android.os.SystemClock
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
-
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 
 import com.google.firebase.perf.FirebasePerformance
 import com.google.firebase.perf.metrics.Trace
@@ -30,7 +27,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import java.time.Duration
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
@@ -62,7 +58,7 @@ class CaloriesService : Service(), SensorEventListener {
     // TODO(get these values from the database)
     private var horizontalComponent = 0.1
     private var verticalComponent = 1.8
-    private val sex = "Male" // "Female"
+    //private val sex = "Male" // "Female"
     private val h = 180 // [cm]
     private val m = 80f // [kg]
     private val G = 0.01f
@@ -89,9 +85,9 @@ class CaloriesService : Service(), SensorEventListener {
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
         //registerReceiver(shutdownReceiver, IntentFilter("STOP_SERVICE"))
         //registerReceiver(shutdownReceiver, IntentFilter("TRAINING_PAUSED"))
-    }
-        serviceTrace = FirebasePerformance.getInstance().newTrace("CaloriesServiceTrace")
 
+        serviceTrace = FirebasePerformance.getInstance().newTrace("CaloriesServiceTrace")
+    }
 
     private fun initialize(){
         isFirstStep = true
