@@ -17,6 +17,7 @@ import android.os.IBinder
 import android.os.SystemClock
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import com.google.firebase.auth.FirebaseAuth
 
 import com.google.firebase.perf.FirebasePerformance
 import com.google.firebase.perf.metrics.Trace
@@ -305,6 +306,21 @@ class CaloriesService : Service(), SensorEventListener {
             putInt("totalDistance", totalDistance + sharedPref.getInt("totalDistance", 0))
             putFloat("totalCalories", totalCalories + sharedPref.getFloat("totalCalories", 0f))
             apply()
+
+            val cloudData = HashMap<String, Any>()
+            cloudData["trainingList"] = json
+            cloudData["totalSteps"] = totalSteps + sharedPref.getInt("totalSteps", 0)
+            cloudData["totalDistance"] = totalDistance + sharedPref.getInt("totalDistance", 0)
+            cloudData["totalCalories"] = totalCalories + sharedPref.getFloat("totalCalories", 0f)
+            cloudData["currentDate"] = currentDate
+
+            val uid = FirebaseAuth.getInstance().currentUser.toString()
+            val database = (application as Runmate).database //ottieni l'istanza (singleton) del database dalla classe applicaiton
+            val databaseRef = database.reference
+            val usersRef = databaseRef.child("users").child(uid)
+
+
+
         }
     }
 

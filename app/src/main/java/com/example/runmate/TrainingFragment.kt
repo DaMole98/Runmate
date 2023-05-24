@@ -16,10 +16,7 @@ import android.view.ViewGroup
 import android.widget.Chronometer
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
-
-import java.time.LocalTime
 import kotlin.math.roundToInt
 
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -111,32 +108,23 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
                 firebaseAnalytics.logEvent("Button_start_pressed", par)
 
                 isServiceStarted = true
-
-                // start the service
-                //val serviceIntent = Intent(context, CaloriesService::class.java)
-                //context?.startService(serviceIntent)
-
                 updateUI(0, 0, 0f)
-
-                // start CaloriesService
-                //context?.startService(intentService)
                 mService.startService(intentService)
             }
 
             if (!isStarted) {
 
+                btn_play_pause.setImageResource(R.drawable.pause_circle)
+
                 //log di dati analitici
                 val par = Bundle()
-                par.putString("play_btn", "paused")
-                firebaseAnalytics.logEvent("Button_paused_pressed", par)
-
-                btn_play_pause.setImageResource(R.drawable.pause_circle)
+                par.putString("play_btn", "training_resumed")
+                firebaseAnalytics.logEvent("Button_resume_pressed", par)
 
                 if(!isPaused)
                     chronometer.base = SystemClock.elapsedRealtime()
                 else{
                     isPaused = false
-                    //requireActivity().sendBroadcast(Intent("TRAINING_PAUSED"))
                     mService.isTrainingPaused = !mService.isTrainingPaused
                     chronometer.base = SystemClock.elapsedRealtime() + pauseOffset
                 }
@@ -144,16 +132,21 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
             }
             else {
                 btn_play_pause.setImageResource(R.drawable.play_circle)
-                //requireActivity().sendBroadcast(Intent("TRAINING_PAUSED"))
+
+                //log di dati analitici
+                val par = Bundle()
+                par.putString("play_btn", "training_paused")
+                firebaseAnalytics.logEvent("Button_pause_pressed", par)
+
                 mService.isTrainingPaused = !mService.isTrainingPaused
                 isPaused = true
                 chronometer.stop()
                 pauseOffset = chronometer.base - SystemClock.elapsedRealtime()
             }
-            //requireActivity().sendBroadcast(Intent("IS_TRAINING"))
             isTraining = true
             isStarted = !isStarted
         }
+
 
         val btn_stop = view.findViewById<ImageButton>(R.id.btn_stop_train)
         btn_stop.setOnClickListener {
@@ -166,6 +159,12 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
             }
 
             if (isStarted || isPaused) {
+
+                //log di dati analitici
+                val par = Bundle()
+                par.putString("stop_btn", "training_stopped")
+                firebaseAnalytics.logEvent("Button_stop_pressed", par)
+
                 isStarted = false
                 isPaused = false
                 pauseOffset = 0
@@ -181,43 +180,32 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
         return view
     }
 
-    /*fun updateUI(totalSteps: Int, totalDistance: Int, totalCalories: Float){
-        tv_totalSteps.text = "ciao"//totalSteps.toString()
-        tv_totalDistance.text = totalDistance.toString()
-
-        // TODO(tv_totalCalories.text = "${intent?.getFloatExtra("totalCalories", 0f)?.roundToInt()}")
-        tv_totalCalories.text = String.format("%.${3}f", totalCalories)
-    }*/
-
     override fun onDestroyView() {
-        //requireActivity().sendBroadcast(Intent("STOP_SERVICE"))
-        //requireActivity().unregisterReceiver(updateUIReceiver)
         super.onDestroyView()
-
-        /*if (isServiceStarted) {
-            mService.registerTraining()
-        }*/
         mService.stopService(intentService)
         context?.unbindService(connection)
         mBound = false
     }
 
+
+
     fun updateUI(totalSteps: Int, totalDistance: Int, totalCalories: Float){
         tv_totalSteps.text = totalSteps.toString()
         tv_totalDistance.text = totalDistance.toString()
         tv_totalCalories.text = totalCalories.roundToInt().toString()
-        //tv_totalCalories.text = String.format("%.${3}f", totalCalories)
     }
+
+
+
 
     private val updateUIReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent) {
             val totalSteps = intent.getIntExtra("totalSteps", 0)
             val totalDistance = intent.getIntExtra("totalDistance", 0)
-
             // TODO(tv_totalCalories.text = "${intent?.getFloatExtra("totalCalories", 0f)?.roundToInt()}")
             val totalCalories = intent.getFloatExtra("totalCalories", 0f)
-
             updateUI(totalSteps, totalDistance, totalCalories)
         }
     }
+
 }
