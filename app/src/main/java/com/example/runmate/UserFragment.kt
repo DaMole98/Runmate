@@ -2,6 +2,7 @@ package com.example.runmate
 
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -14,18 +15,21 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.FirebaseDatabase
 
-
-class UserFragment: Fragment(R.layout.fragment_user), ChangeUNDialogFragment.OnUsernameChangedListener {
-
+class UserFragment : Fragment(R.layout.fragment_user), ChangeUNDialogFragment.OnUsernameChangedListener {
 
     private lateinit var logoutBtn: Button
     private lateinit var usernameBtn: Button
     private lateinit var targetBtn: Button
-    //private lateinit var dialogView : View
+    private lateinit var deleteAccountBtn: Button
+    private var currentUser: FirebaseUser? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,21 +42,28 @@ class UserFragment: Fragment(R.layout.fragment_user), ChangeUNDialogFragment.OnU
         usernameBtn = view.findViewById<Button>(R.id.btn_username)
         targetBtn = view.findViewById<Button>(R.id.btn_target)
 
-        val username = arguments?.getString("USERNAME", "")
+        currentUser = Firebase.auth.currentUser
+
+        val sPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val username = sPref.getString("username", "")
         user_view.text = "Ciao $username"
 
+        deleteAccountBtn = view.findViewById<Button>(R.id.btn_delete_account)
+        deleteAccountBtn.setOnClickListener {
+            showDeleteConfirmationDialog()
+        }
+
         targetBtn.setOnClickListener {
-            val intent = Intent(activity,TargetActivity::class.java)
+            val intent = Intent(activity, TargetActivity::class.java)
             startActivity(intent)
             activity?.finish()
         }
 
-        usernameBtn.setOnClickListener{
+        usernameBtn.setOnClickListener {
             val dialog = ChangeUNDialogFragment()
             dialog.setOnUsernameChangedListener(this) //il listener diventa questo fragment
-            dialog.show(requireFragmentManager(),"change username dialog")
+            dialog.show(requireFragmentManager(), "change username dialog")
         }
-
 
         logoutBtn.setOnClickListener {
             Firebase.auth.signOut()
@@ -61,17 +72,84 @@ class UserFragment: Fragment(R.layout.fragment_user), ChangeUNDialogFragment.OnU
             activity?.finish()
         }
 
-
         return view
     }
 
-    //funzione listener che aggiorna lo username. l'interfaccia viene dalla classe ChangeUNDialogFragment
     override fun onUsernameChanged(newUsername: String) {
         val userView = view?.findViewById<TextView>(R.id.user_view)
         userView?.text = "Ciao $newUsername"
     }
 
+    private fun showDeleteConfirmationDialog() {
+        val dialogBuilder = AlertDialog.Builder(requireContext())
+        dialogBuilder.setTitle("Conferma cancellazione account")
+        dialogBuilder.setMessage("Sei sicuro di voler cancellare il tuo account?")
+        dialogBuilder.setPositiveButton("Conferma") { dialog, which ->
+            reauthenticateUser()
+        }
+        dialogBuilder.setNegativeButton("Annulla", null)
+        dialogBuilder.show()
+    }
+
+    private fun reauthenticateUser() {
+
+        val dialogBuilder = AlertDialog.Builder(requireContext())
+        dialogBuilder.setTitle("Reinserisci le credenziali")
+        dialogBuilder.setMessage("Per cancellare l'account, reinserisci la tua password.")
+
+        val rootView = requireActivity().layoutInflater.inflate(R.layout.delete_dialog, null)
+        val passwordEditText = rootView.findViewById<EditText>(R.id.passwordEditText)
+        dialogBuilder.setView(rootView)
+
+        dialogBuilder.setPositiveButton("Conferma") { dialog, which ->
+            val password = passwordEditText.text.toString()
+            val credentials = EmailAuthProvider.getCredential(currentUser?.email!!, password)
+
+
+            currentUser?.reauthenticate(credentials)
+                ?.addOnSuccessListener {
+                    deleteAccount()
+                }
+                ?.addOnFailureListener { exception ->
+                    Log.e(TAG, "Errore durante la riautenticazione dell'utente", exception)
+                }
+        }
+
+        dialogBuilder.setNegativeButton("Annulla", null)
+        dialogBuilder.show()
+    }
+
+    private fun deleteAccount() {
+        currentUser?.delete()
+            ?.addOnSuccessListener {
+                deleteUserDataFromDatabase(currentUser?.uid)
+                navigateToLogin()
+            }
+            ?.addOnFailureListener { exception ->
+                Log.e(TAG, "Errore durante la cancellazione dell'account", exception)
+            }
+    }
+
+    private fun deleteUserDataFromDatabase(userId: String?) {
+        val database = (requireActivity().application as Runmate).database
+        val userRef = database.getReference("users").child(userId ?: "")
+
+        userRef.removeValue()
+            .addOnSuccessListener {
+                Log.d(TAG, "Dati utente eliminati dal database")
+            }
+            .addOnFailureListener { exception ->
+                Log.e(TAG, "Errore durante l'eliminazione dei dati utente dal database", exception)
+            }
+    }
+
+    private fun navigateToLogin() {
+        val intent = Intent(activity, Login::class.java)
+        startActivity(intent)
+        activity?.finish()
+    }
 }
+
 
 
 class ChangeUNDialogFragment : DialogFragment() {

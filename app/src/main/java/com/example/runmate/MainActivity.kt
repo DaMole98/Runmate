@@ -53,16 +53,16 @@ class MainActivity : AppCompatActivity() {
             apply()
         }*/
 
-        val sPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
 
         val statsFragment = StatsFragment()
         val trainingChoiceFragment = TrainingChoiceFragment()
         val trainingFragment = TrainingFragment()
         val userFragment = UserFragment()
 
-        val username = sPref.getString("username", "")
-        bundle.putString("USERNAME", username)
-        userFragment.arguments = bundle
+       // val sPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+       // val username = sPref.getString("username", "")
+       // bundle.putString("username", username)
+       // userFragment.arguments = bundle
 
         setCurrentFragment(statsFragment)
 

@@ -116,9 +116,12 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
 
                 btn_play_pause.setImageResource(R.drawable.pause_circle)
 
+                val tPref = requireContext().getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE)
+                val weight = tPref.getString("Weight", "")
                 //log di dati analitici
                 val par = Bundle()
                 par.putString("play_btn", "training_resumed")
+                par.putString("weight", weight)
                 firebaseAnalytics.logEvent("Button_resume_pressed", par)
 
                 if(!isPaused)

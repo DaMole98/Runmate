@@ -96,22 +96,22 @@ class Registration : AppCompatActivity() {
 
                         Toast.makeText(this, "Benvenuto in Runmate!", Toast.LENGTH_SHORT).show()
 
-                        val alertDialog = MaterialAlertDialogBuilder(this)
-                            .setMessage("Prima di cominciare, ci serve qualche altra informazione...")
-                            .setPositiveButton("OK") { dialog, which ->
-
-                                val intent = Intent(this, Login::class.java)
-                                startActivity(intent)
-                                finish()
-                            }
-                            .setCancelable(false)
-                            .create()
-
-                        alertDialog.show()
+                     //   val alertDialog = MaterialAlertDialogBuilder(this)
+                     //       .setMessage("Prima di cominciare, ci serve qualche altra informazione...")
+                     //       .setPositiveButton("OK") { dialog, which ->
+//
+                     //           val intent = Intent(this, TargetActivity::class.java)
+                     //           startActivity(intent)
+                     //           finish()
+                     //       }
+                     //       .setCancelable(false)
+                     //       .create()
+//
+                     //   alertDialog.show()
 
 
                         //TODO: cambiare intent per lanciare l'activity di profiling invece del loign
-                        intent = Intent(applicationContext, Login::class.java)
+                        intent = Intent(applicationContext, TargetActivity::class.java)
                         startActivity(intent)
                     } else Toast.makeText(
                         baseContext,

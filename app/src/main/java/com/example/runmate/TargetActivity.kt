@@ -11,6 +11,7 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.analytics.FirebaseAnalytics
 
 
 class TargetActivity: AppCompatActivity() {
@@ -26,6 +27,8 @@ class TargetActivity: AppCompatActivity() {
         val kcal_edit = findViewById<EditText>(R.id.editTargetKcal)
         val meters_edit = findViewById<EditText>(R.id.editTargetMeter)
         val gender = findViewById<RadioGroup>(R.id.editGender)
+
+       // val firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
 
         reset_btn.setOnClickListener {
@@ -46,6 +49,9 @@ class TargetActivity: AppCompatActivity() {
             editor.putInt("Calories", Integer.parseInt(kcal_edit.text.toString()))
             editor.putInt("Meters", Integer.parseInt(meters_edit.text.toString()))
             editor.apply()
+
+            //firebaseAnalytics.setUserProperty("weight", weight_edit.text.toString())
+
             Toast.makeText(this, "Campi modificati correttamente", Toast.LENGTH_SHORT).show()
             val intent = Intent(this,MainActivity::class.java)
             startActivity(intent)
