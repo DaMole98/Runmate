@@ -10,6 +10,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.runmate.utils.CloudDBSingleton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
@@ -28,6 +29,8 @@ class Registration : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var back_btn : Button
     private lateinit var textView: TextView
+    private var DB = CloudDBSingleton.getInstance()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -127,7 +130,9 @@ class Registration : AppCompatActivity() {
 
     private fun saveUserData( uid: String, username : String, email : String){
         //val database = Firebase.database("https://runmate-b7137-default-rtdb.europe-west1.firebasedatabase.app/").reference
-        val database = (application as Runmate).database //ottieni l'istanza (singleton) del database dalla classe applicaiton
+        //val database = (application as Runmate).database //ottieni l'istanza (singleton) del database dalla classe applicaiton
+        val database = DB.getDBref()
+
         val databaseRef = database.reference
 
         val sPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)

@@ -17,6 +17,7 @@ import android.os.IBinder
 import android.os.SystemClock
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
+import com.example.runmate.utils.CloudDBSingleton
 import com.google.firebase.auth.FirebaseAuth
 
 import com.google.firebase.perf.FirebasePerformance
@@ -36,6 +37,9 @@ class CaloriesService : Service(), SensorEventListener {
 
     // Binder given to clients.
     private val binder = LocalBinder()
+
+    private var DB = CloudDBSingleton.getInstance()
+
 
     inner class LocalBinder : Binder() {
 
@@ -314,10 +318,13 @@ class CaloriesService : Service(), SensorEventListener {
             cloudData["totalCalories"] = totalCalories + sharedPref.getFloat("totalCalories", 0f)
             cloudData["currentDate"] = currentDate
 
-            val uid = FirebaseAuth.getInstance().currentUser.toString()
-            val database = (application as Runmate).database //ottieni l'istanza (singleton) del database dalla classe applicaiton
-            val databaseRef = database.reference
-            val usersRef = databaseRef.child("users").child(uid)
+            val userId = FirebaseAuth.getInstance().currentUser.toString()
+
+            val userRef = DB.getDBref().getReference("users").child(userId ?: "")
+
+            //val database = (application as Runmate).database //ottieni l'istanza (singleton) del database dalla classe applicaiton
+            //val databaseRef = database.reference
+           // val usersRef = databaseRef.child("users").child(uid)
 
 
 

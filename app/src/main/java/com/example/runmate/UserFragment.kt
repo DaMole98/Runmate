@@ -15,6 +15,7 @@ import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
+import com.example.runmate.utils.CloudDBSingleton
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
@@ -30,6 +31,7 @@ class UserFragment : Fragment(R.layout.fragment_user), ChangeUNDialogFragment.On
     private lateinit var targetBtn: Button
     private lateinit var deleteAccountBtn: Button
     private var currentUser: FirebaseUser? = null
+    private var DB = CloudDBSingleton.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -131,8 +133,8 @@ class UserFragment : Fragment(R.layout.fragment_user), ChangeUNDialogFragment.On
     }
 
     private fun deleteUserDataFromDatabase(userId: String?) {
-        val database = (requireActivity().application as Runmate).database
-        val userRef = database.getReference("users").child(userId ?: "")
+        //val database = (requireActivity().application as Runmate).database
+        val userRef = DB.getDBref().getReference("users").child(userId ?: "")
 
         userRef.removeValue()
             .addOnSuccessListener {
@@ -159,6 +161,8 @@ class ChangeUNDialogFragment : DialogFragment() {
     }
 
     private var usernameChangedListener: OnUsernameChangedListener? = null
+    private var DB = CloudDBSingleton.getInstance()
+
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext())
@@ -175,14 +179,16 @@ class ChangeUNDialogFragment : DialogFragment() {
             editor.putString("username", newUsername)
             editor.apply()
 
-            val uid = Firebase.auth.currentUser?.uid
+            val userId = Firebase.auth.currentUser?.uid
 
-            val database = (requireActivity().application as Runmate).database //ottieni l'istanza del database dalla classe application
+            val userRef = DB.getDBref().getReference("users").child(userId ?: "")
+
+           // val database = (requireActivity().application as Runmate).database //ottieni l'istanza del database dalla classe application
                                             //requireActivity() perché application è un campo di mainActivity, non di fragment
-            val databaseRef = database.reference
+           // val databaseRef = database.reference
 
-            val usernameRef = databaseRef.child("users/$uid/username")
-            usernameRef.setValue(newUsername)
+           // val usernameRef = databaseRef.child("users/$uid/username")
+            userRef.child("username").setValue(newUsername)
 
 
             usernameChangedListener?.onUsernameChanged(newUsername)
