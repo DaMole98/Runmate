@@ -20,15 +20,37 @@ class TargetActivity: AppCompatActivity() {
 
         val confirm_btn = findViewById<Button>(R.id.confirm_target_button)
         val reset_btn = findViewById<Button>(R.id.reset_target_button)
-        val height_edit = findViewById<EditText>(R.id.editTargetAge)
+        val height_edit = findViewById<EditText>(R.id.editTargetHeight)
         val weight_edit = findViewById<EditText>(R.id.editTargetWeight)
         val steps_edit = findViewById<EditText>(R.id.editTargetSteps)
         val kcal_edit = findViewById<EditText>(R.id.editTargetKcal)
         val meters_edit = findViewById<EditText>(R.id.editTargetMeter)
         val gender = findViewById<RadioGroup>(R.id.editGender)
+        var check = 0
 
        // val firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
+        // TODO: sistemare le sharedPreferences in modo da evitare che vengano prese quelle di account precendenti
+        
+        val sharedPreferences = getSharedPreferences("PREFERENCE",Context.MODE_PRIVATE)
+        val allEntries: Map<String,*> = sharedPreferences.all
+
+        //Nel caso in cui esistano dei valori salvati allora vengono mostrati al posto dei valori di default
+
+        if(allEntries.isNotEmpty())
+        {
+            height_edit.setText(sharedPreferences.getInt("Height",0).toString())
+            weight_edit.setText(sharedPreferences.getInt("Weight",0).toString())
+            steps_edit.setText(sharedPreferences.getInt("Steps",0).toString())
+            kcal_edit.setText(sharedPreferences.getInt("Calories",0).toString())
+            meters_edit.setText(sharedPreferences.getInt("Meters",0).toString())
+            if(sharedPreferences.getString("Gender", "").equals("Male"))
+                gender.check(R.id.male)
+            else
+                gender.check(R.id.female)
+        }
+
+        //Premere reset porta tutti i valori numerici a 0 e annulla la selezione del gender
 
         reset_btn.setOnClickListener {
             height_edit.setText("0")
@@ -39,25 +61,75 @@ class TargetActivity: AppCompatActivity() {
             gender.clearCheck()
         }
 
+        //Premere il tasto conferma salva tutti i valori nelle sharedPreferences e riporta alla schermata principale
+
         confirm_btn.setOnClickListener {
-            val sharedPreferences = getSharedPreferences("PREFERENCE",Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-            editor.putInt("Height", Integer.parseInt(height_edit.text.toString()))
-            editor.putInt("Weight", Integer.parseInt(weight_edit.text.toString()))
-            editor.putInt("Steps", Integer.parseInt(steps_edit.text.toString()))
-            editor.putInt("Calories", Integer.parseInt(kcal_edit.text.toString()))
-            editor.putInt("Meters", Integer.parseInt(meters_edit.text.toString()))
-            editor.apply()
+            //Controllo sui campi vuoti
+            if(height_edit.text.isEmpty() || weight_edit.text.isEmpty() || steps_edit.text.isEmpty() || kcal_edit.text.isEmpty() || meters_edit.text.isEmpty()) {
+                Toast.makeText(this, "Inserisci tutti i campi", Toast.LENGTH_SHORT).show()
+                check++
+            }
+            if(gender.checkedRadioButtonId != R.id.male && gender.checkedRadioButtonId != R.id.female) {
+                Toast.makeText(this, "Seleziona una scelta tra 'Uomo' o 'Donna'", Toast.LENGTH_SHORT).show()
+                check++
+            }
+
+            //Controllo sulla validità dei dati
+
+            if(Integer.parseInt(height_edit.text.toString()) <= 0 || Integer.parseInt(height_edit.text.toString()) >= 350)
+            {
+                Toast.makeText(this, "Altezza non valida, inserisci un valore tra 1 e 350", Toast.LENGTH_SHORT).show()
+                check++
+            }
+
+            if(Integer.parseInt(weight_edit.text.toString()) <= 0 || Integer.parseInt(weight_edit.text.toString()) >= 350)
+            {
+                Toast.makeText(this, "Peso non valido, inserisci un valore tra 1 e 350", Toast.LENGTH_SHORT).show()
+                check++
+            }
+
+            if(Integer.parseInt(steps_edit.text.toString()) <= 0 || Integer.parseInt(steps_edit.text.toString()) >= 50000)
+            {
+                Toast.makeText(this, "Numero di passi non valido, inserisci un valore tra 1 e 49999", Toast.LENGTH_SHORT).show()
+                check++
+            }
+
+            if(Integer.parseInt(kcal_edit.text.toString()) <= 0 || Integer.parseInt(kcal_edit.text.toString()) >= 500)
+            {
+                Toast.makeText(this, "Numero di calorie non valido, inserisci un valore tra 1 e 500", Toast.LENGTH_SHORT).show()
+                check++
+            }
+
+            if(Integer.parseInt(meters_edit.text.toString()) <= 0 || Integer.parseInt(meters_edit.text.toString()) >= 50000)
+            {
+                Toast.makeText(this, "Oh vacci piano Forrest Gump, inserisci un valore tra 1 e 49999", Toast.LENGTH_SHORT).show()
+                check++
+            }
+
+            if(check==0) {
+                val editor = sharedPreferences.edit()
+                editor.putInt("Height", Integer.parseInt(height_edit.text.toString()))
+                editor.putInt("Weight", Integer.parseInt(weight_edit.text.toString()))
+                editor.putInt("Steps", Integer.parseInt(steps_edit.text.toString()))
+                editor.putInt("Calories", Integer.parseInt(kcal_edit.text.toString()))
+                editor.putInt("Meters", Integer.parseInt(meters_edit.text.toString()))
+                when (gender.checkedRadioButtonId) {
+                    R.id.male -> editor.putString("Gender", "Male")
+                    R.id.female -> editor.putString("Gender", "Female")
+                }
+                editor.apply()
+                Toast.makeText(this, "Campi modificati correttamente", Toast.LENGTH_SHORT).show()
+                val intent = Intent(this, MainActivity::class.java)
+                startActivity(intent)
+            }
+            else
+                check=0
 
             //firebaseAnalytics.setUserProperty("weight", weight_edit.text.toString())
-
-            Toast.makeText(this, "Campi modificati correttamente", Toast.LENGTH_SHORT).show()
-            val intent = Intent(this,MainActivity::class.java)
-            startActivity(intent)
         }
     }
 
-    fun onRadioButtonClicked(view: View) {
+    /*fun onRadioButtonClicked(view: View) {
         if (view is RadioButton) {
             // Is the button now checked?
             val checked = view.isChecked
@@ -66,17 +138,17 @@ class TargetActivity: AppCompatActivity() {
 
             // Check which radio button was clicked
             when (view.getId()) {
-                R.id.man ->
+                R.id.male ->
                     if (checked) {
                         editor.putString("Gender", "Male")
                         editor.apply()
                     }
-                R.id.woman ->
+                R.id.female ->
                     if (checked) {
                         editor.putString("Gender", "Female")
                         editor.apply()
                     }
             }
         }
-    }
+    }*/
 }

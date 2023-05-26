@@ -75,7 +75,7 @@
         android:layout_marginHorizontal="1dp"
         android:layout_marginTop="1dp"
         android:background="@drawable/round_top_border_layout"
-        android:text="Impostazioni"
+        android:text="Modifica Account"
         android:fontFamily="@font/rubik"
         android:textAlignment="textStart"
         android:textColor="@color/black"
