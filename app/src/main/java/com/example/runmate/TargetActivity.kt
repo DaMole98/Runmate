@@ -2,7 +2,6 @@ package com.example.runmate
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -69,12 +68,12 @@ class TargetActivity: AppCompatActivity() {
             when (view.getId()) {
                 R.id.man ->
                     if (checked) {
-                        editor.putString("Gender", "Man")
+                        editor.putString("Gender", "Male")
                         editor.apply()
                     }
                 R.id.woman ->
                     if (checked) {
-                        editor.putString("Gender", "Woman")
+                        editor.putString("Gender", "Female")
                         editor.apply()
                     }
             }

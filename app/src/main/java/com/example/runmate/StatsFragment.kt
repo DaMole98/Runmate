@@ -26,7 +26,6 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
     private lateinit var tv_calories_progress: TextView
     private lateinit var rv_activities: RecyclerView
 
-    // TODO(get these values from the database or from something else)
     private var stepsGoal = 10000
     private var distanceGoal = 8000
     private var caloriesGoal = 1000
@@ -41,6 +40,11 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
         tv_distance_progress = view.findViewById(R.id.tv_distance_stats)
         tv_calories_progress = view.findViewById(R.id.tv_calories_stats)
         rv_activities = view.findViewById(R.id.rv_activities)
+
+        val sharedPref = requireActivity().getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE)
+        stepsGoal = sharedPref.getInt("Steps", 10000)
+        distanceGoal = sharedPref.getInt("Meters", 8000)
+        caloriesGoal = sharedPref.getInt("Calories", 1000)
 
         /*val layoutManager = LinearLayoutManager(requireContext())
         val dataList: List<String> = listOf("0 passi | 0 m | 0 kcal | 0:00\nWalk | gg/mm/aaaa | 00:00", "Banana", "Orange")
