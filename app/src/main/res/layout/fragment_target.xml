@@ -65,7 +65,7 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:layout_marginTop="5dp"
-        android:padding="5dp"
+        android:paddingTop="10dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/guidelineTop"
         app:layout_constraintStart_toEndOf="@id/textTargetGender"
@@ -74,17 +74,19 @@
         <RadioButton android:id="@+id/male"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Male"
-            android:textSize="20sp"
+            android:text="Maschio"
+            android:textSize="14sp"
             android:fontFamily="@font/rubik"
-            android:padding="5dp" />
+            android:paddingHorizontal="5dp"
+             />
         <RadioButton android:id="@+id/female"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Female"
-            android:textSize="20sp"
+            android:text="Femmina"
+            android:textSize="14sp"
             android:fontFamily="@font/rubik"
-            android:padding="5dp" />
+            android:paddingHorizontal="5dp"
+             />
     </RadioGroup>
 
     <EditText
@@ -153,7 +155,7 @@
         android:fontFamily="@font/rubik"
         android:text="Kcal giornaliere"
         android:paddingVertical="15dp"
-        android:paddingStart="10dp"
+        android:paddingStart="15dp"
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"
         app:layout_constraintEnd_toStartOf="@id/editTargetKcal"
@@ -167,7 +169,7 @@
         android:fontFamily="@font/rubik"
         android:text="Metri al giorno"
         android:paddingVertical="15dp"
-        android:paddingStart="10dp"
+        android:paddingStart="15dp"
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"
         app:layout_constraintEnd_toStartOf="@id/editTargetMeter"
