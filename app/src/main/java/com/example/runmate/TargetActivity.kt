@@ -31,7 +31,7 @@ class TargetActivity: AppCompatActivity() {
        // val firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
         // TODO: sistemare le sharedPreferences in modo da evitare che vengano prese quelle di account precendenti
-        
+
         val sharedPreferences = getSharedPreferences("PREFERENCE",Context.MODE_PRIVATE)
         val allEntries: Map<String,*> = sharedPreferences.all
 
@@ -64,91 +64,54 @@ class TargetActivity: AppCompatActivity() {
         //Premere il tasto conferma salva tutti i valori nelle sharedPreferences e riporta alla schermata principale
 
         confirm_btn.setOnClickListener {
+
             //Controllo sui campi vuoti
-            if(height_edit.text.isEmpty() || weight_edit.text.isEmpty() || steps_edit.text.isEmpty() || kcal_edit.text.isEmpty() || meters_edit.text.isEmpty()) {
-                Toast.makeText(this, "Inserisci tutti i campi", Toast.LENGTH_SHORT).show()
+
+            if(height_edit.text.isEmpty() || weight_edit.text.isEmpty() || steps_edit.text.isEmpty() || kcal_edit.text.isEmpty() || meters_edit.text.isEmpty() || (gender.checkedRadioButtonId != R.id.male && gender.checkedRadioButtonId != R.id.female))
                 check++
-            }
-            if(gender.checkedRadioButtonId != R.id.male && gender.checkedRadioButtonId != R.id.female) {
-                Toast.makeText(this, "Seleziona una scelta tra 'Uomo' o 'Donna'", Toast.LENGTH_SHORT).show()
-                check++
-            }
 
             //Controllo sulla validità dei dati
 
-            if(Integer.parseInt(height_edit.text.toString()) <= 0 || Integer.parseInt(height_edit.text.toString()) >= 350)
-            {
-                Toast.makeText(this, "Altezza non valida, inserisci un valore tra 1 e 350", Toast.LENGTH_SHORT).show()
-                check++
-            }
-
-            if(Integer.parseInt(weight_edit.text.toString()) <= 0 || Integer.parseInt(weight_edit.text.toString()) >= 350)
-            {
-                Toast.makeText(this, "Peso non valido, inserisci un valore tra 1 e 350", Toast.LENGTH_SHORT).show()
-                check++
-            }
-
-            if(Integer.parseInt(steps_edit.text.toString()) <= 0 || Integer.parseInt(steps_edit.text.toString()) >= 50000)
-            {
-                Toast.makeText(this, "Numero di passi non valido, inserisci un valore tra 1 e 49999", Toast.LENGTH_SHORT).show()
-                check++
-            }
-
-            if(Integer.parseInt(kcal_edit.text.toString()) <= 0 || Integer.parseInt(kcal_edit.text.toString()) >= 500)
-            {
-                Toast.makeText(this, "Numero di calorie non valido, inserisci un valore tra 1 e 500", Toast.LENGTH_SHORT).show()
-                check++
-            }
-
             if(Integer.parseInt(meters_edit.text.toString()) <= 0 || Integer.parseInt(meters_edit.text.toString()) >= 50000)
-            {
-                Toast.makeText(this, "Oh vacci piano Forrest Gump, inserisci un valore tra 1 e 49999", Toast.LENGTH_SHORT).show()
                 check++
-            }
+            if(Integer.parseInt(kcal_edit.text.toString()) <= 0 || Integer.parseInt(kcal_edit.text.toString()) >= 500)
+                check++
+            if(Integer.parseInt(steps_edit.text.toString()) <= 0 || Integer.parseInt(steps_edit.text.toString()) >= 50000)
+                check++
+            if(Integer.parseInt(weight_edit.text.toString()) <= 0 || Integer.parseInt(weight_edit.text.toString()) >= 350)
+                check++
+            if(Integer.parseInt(height_edit.text.toString()) <= 0 || Integer.parseInt(height_edit.text.toString()) >= 350)
+                check++
 
-            if(check==0) {
-                val editor = sharedPreferences.edit()
-                editor.putInt("Height", Integer.parseInt(height_edit.text.toString()))
-                editor.putInt("Weight", Integer.parseInt(weight_edit.text.toString()))
-                editor.putInt("Steps", Integer.parseInt(steps_edit.text.toString()))
-                editor.putInt("Calories", Integer.parseInt(kcal_edit.text.toString()))
-                editor.putInt("Meters", Integer.parseInt(meters_edit.text.toString()))
-                when (gender.checkedRadioButtonId) {
-                    R.id.male -> editor.putString("Gender", "Male")
-                    R.id.female -> editor.putString("Gender", "Female")
+            //Utilizzo il when per far apparire un allert alla volta
+
+            when(check){
+                0 -> {
+                    val editor = sharedPreferences.edit()
+                    editor.putInt("Height", Integer.parseInt(height_edit.text.toString()))
+                    editor.putInt("Weight", Integer.parseInt(weight_edit.text.toString()))
+                    editor.putInt("Steps", Integer.parseInt(steps_edit.text.toString()))
+                    editor.putInt("Calories", Integer.parseInt(kcal_edit.text.toString()))
+                    editor.putInt("Meters", Integer.parseInt(meters_edit.text.toString()))
+                    when (gender.checkedRadioButtonId) {
+                        R.id.male -> editor.putString("Gender", "Male")
+                        R.id.female -> editor.putString("Gender", "Female")
+                    }
+                    editor.apply()
+                    Toast.makeText(this, "Campi modificati correttamente", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
                 }
-                editor.apply()
-                Toast.makeText(this, "Campi modificati correttamente", Toast.LENGTH_SHORT).show()
-                val intent = Intent(this, MainActivity::class.java)
-                startActivity(intent)
+                1 -> Toast.makeText(this, "Inserisci tutti i campi", Toast.LENGTH_SHORT).show()
+                2 -> Toast.makeText(this, "Numero di metri non valido, inserisci un valore tra 1 e 49999", Toast.LENGTH_SHORT).show()
+                3 -> Toast.makeText(this, "Numero di calorie non valido, inserisci un valore tra 1 e 500", Toast.LENGTH_SHORT).show()
+                4 -> Toast.makeText(this, "Numero di passi non valido, inserisci un valore tra 1 e 49999", Toast.LENGTH_SHORT).show()
+                5 -> Toast.makeText(this, "Peso non valido, inserisci un valore tra 1 e 350", Toast.LENGTH_SHORT).show()
+                6 -> Toast.makeText(this, "Altezza non valida, inserisci un valore tra 1 e 350", Toast.LENGTH_SHORT).show()
             }
-            else
-                check=0
 
+            check = 0
             //firebaseAnalytics.setUserProperty("weight", weight_edit.text.toString())
         }
     }
-
-    /*fun onRadioButtonClicked(view: View) {
-        if (view is RadioButton) {
-            // Is the button now checked?
-            val checked = view.isChecked
-            val sharedPreferences = getSharedPreferences("PREFERENCE",Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-
-            // Check which radio button was clicked
-            when (view.getId()) {
-                R.id.male ->
-                    if (checked) {
-                        editor.putString("Gender", "Male")
-                        editor.apply()
-                    }
-                R.id.female ->
-                    if (checked) {
-                        editor.putString("Gender", "Female")
-                        editor.apply()
-                    }
-            }
-        }
-    }*/
 }

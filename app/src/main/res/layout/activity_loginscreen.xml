@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.25" />
+        app:layout_constraintGuide_percent="0.2" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineEnd"
@@ -44,7 +44,7 @@
         app:layout_constraintBottom_toBottomOf="@id/guidelineBottom"
         app:layout_constraintEnd_toStartOf="@id/btn_register"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"
-        app:layout_constraintTop_toBottomOf="@id/password" />
+        />
 
     <Button
         android:id="@+id/btn_register"
@@ -55,8 +55,7 @@
         android:text="Registrati"
         app:layout_constraintBottom_toBottomOf="@id/guidelineBottom"
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
-        app:layout_constraintStart_toEndOf="@+id/btn_login"
-        app:layout_constraintTop_toBottomOf="@id/password" />
+        app:layout_constraintStart_toEndOf="@+id/btn_login" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -70,8 +69,7 @@
     <EditText
         android:id="@+id/email"
         android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_margin="10dp"
+        android:layout_height="60dp"
         android:ems="10"
         android:hint="E-mail"
         android:inputType="textEmailAddress"
@@ -83,8 +81,7 @@
     <EditText
         android:id="@+id/password"
         android:layout_width="200dp"
-        android:layout_height="50dp"
-        android:layout_margin="10dp"
+        android:layout_height="60dp"
         android:ems="10"
         android:hint="password"
         android:inputType="textPassword"
