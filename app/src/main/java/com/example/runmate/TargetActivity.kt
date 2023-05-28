@@ -10,10 +10,14 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.runmate.utils.CloudDBSingleton
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.auth.FirebaseAuth
 
 
 class TargetActivity: AppCompatActivity() {
+    private var DB = CloudDBSingleton.getInstance()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.fragment_target)
@@ -28,7 +32,9 @@ class TargetActivity: AppCompatActivity() {
         val gender = findViewById<RadioGroup>(R.id.editGender)
         var check = 0
 
-       // val firebaseAnalytics = FirebaseAnalytics.getInstance(this)
+
+
+        // val firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
         // TODO: sistemare le sharedPreferences in modo da evitare che vengano prese quelle di account precendenti
 
@@ -87,12 +93,29 @@ class TargetActivity: AppCompatActivity() {
 
             when(check){
                 0 -> {
+
+                    val height = Integer.parseInt(height_edit.text.toString())
+                    val weight = Integer.parseInt(weight_edit.text.toString())
+                    val steps = Integer.parseInt(steps_edit.text.toString())
+                    val calories = Integer.parseInt(kcal_edit.text.toString())
+                    val meters = Integer.parseInt(meters_edit.text.toString())
+
                     val editor = sharedPreferences.edit()
-                    editor.putInt("Height", Integer.parseInt(height_edit.text.toString()))
-                    editor.putInt("Weight", Integer.parseInt(weight_edit.text.toString()))
-                    editor.putInt("Steps", Integer.parseInt(steps_edit.text.toString()))
-                    editor.putInt("Calories", Integer.parseInt(kcal_edit.text.toString()))
-                    editor.putInt("Meters", Integer.parseInt(meters_edit.text.toString()))
+                    editor.putInt("Height", height)
+                    editor.putInt("Weight", weight)
+                    editor.putInt("Steps", steps)
+                    editor.putInt("Calories", calories)
+                    editor.putInt("Meters", meters)
+
+                    val profile = HashMap<String, Any>()
+                    profile["height"] = height
+                    profile["weight"] = weight
+                    profile["steps"] = steps
+                    profile["calories"] = calories
+                    profile["meters"] = meters
+
+                    updateDatabase(profile)
+
                     when (gender.checkedRadioButtonId) {
                         R.id.male -> editor.putString("Gender", "Male")
                         R.id.female -> editor.putString("Gender", "Female")
@@ -113,5 +136,12 @@ class TargetActivity: AppCompatActivity() {
             check = 0
             //firebaseAnalytics.setUserProperty("weight", weight_edit.text.toString())
         }
+    }
+
+    private fun updateDatabase(profile : HashMap<String, Any>){
+
+        val userId = FirebaseAuth.getInstance().currentUser.toString()
+        val userRef = DB.getDBref().getReference("users").child(userId ?: "").child("profile")
+        userRef.updateChildren(profile)
     }
 }

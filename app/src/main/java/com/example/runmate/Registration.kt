@@ -151,6 +151,8 @@ class Registration : AppCompatActivity() {
         val userRef = usersRef.child(uid)
 
         userRef.setValue(userData)
+        userRef.child("trainingList").setValue(null)
+        userRef.child("profile").setValue(null)
 
     }
 }

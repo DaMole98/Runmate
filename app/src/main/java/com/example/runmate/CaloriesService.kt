@@ -27,9 +27,11 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
+import java.util.Date
 import java.util.concurrent.locks.ReentrantLock
 
 
@@ -276,20 +278,24 @@ class CaloriesService : Service(), SensorEventListener {
             putString("trainingList", json)
             putString("currentDate", currentDate)
 
+            val ts = totalSteps + sharedPref.getInt("totalSteps", 0)
+            val td = totalDistance + sharedPref.getInt("totalDistance", 0)
+            val tc = totalCalories + sharedPref.getFloat("totalCalories", 0f)
             // old values are added to new values
-            putInt("totalSteps", totalSteps + sharedPref.getInt("totalSteps", 0))
-            putInt("totalDistance", totalDistance + sharedPref.getInt("totalDistance", 0))
-            putFloat("totalCalories", totalCalories + sharedPref.getFloat("totalCalories", 0f))
+            putInt("totalSteps", ts)
+            putInt("totalDistance", td)
+            putFloat("totalCalories", tc)
             apply()
 
-            val cloudData = HashMap<String, Any>()
-            cloudData["trainingList"] = json
-            cloudData["totalSteps"] = totalSteps + sharedPref.getInt("totalSteps", 0)
-            cloudData["totalDistance"] = totalDistance + sharedPref.getInt("totalDistance", 0)
-            cloudData["totalCalories"] = totalCalories + sharedPref.getFloat("totalCalories", 0f)
-            cloudData["currentDate"] = currentDate
-
-            val userId = FirebaseAuth.getInstance().currentUser.toString()
+            updateDatabase(trainingObj, ts, td, tc)
+            //val cloudData = HashMap<String, Any>()
+            //cloudData["trainingList"] = json
+            //cloudData["totalSteps"] = totalSteps + sharedPref.getInt("totalSteps", 0)
+            //cloudData["totalDistance"] = totalDistance + sharedPref.getInt("totalDistance", 0)
+            //cloudData["totalCalories"] = totalCalories + sharedPref.getFloat("totalCalories", 0f)
+            //cloudData["currentDate"] = SimpleDateFormat("yyy-MM-dd HH:mm:ss").format(Date())
+//
+            //val userId = FirebaseAuth.getInstance().currentUser.toString()
 
             //val userRef = DB.getDBref().getReference("users").child(userId ?: "")
 
@@ -297,6 +303,15 @@ class CaloriesService : Service(), SensorEventListener {
             //val databaseRef = database.reference
             // val usersRef = databaseRef.child("users").child(uid)
         }
+    }
+
+    private fun updateDatabase(trainingObj : TrainingObject, totSteps : Int, totDist: Int, totCal : Float){
+
+        val userId = FirebaseAuth.getInstance().currentUser.toString()
+        val userRef = DB.getDBref().getReference("users").child(userId ?: "")
+        val newTraining = userRef.child("traininglist").push()
+        newTraining.setValue(trainingObj)
+
     }
 
     // Stops the service
