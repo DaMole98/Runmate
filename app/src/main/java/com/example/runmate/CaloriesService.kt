@@ -11,6 +11,7 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Binder
+import android.os.Build
 import android.os.Debug
 import android.os.IBinder
 import android.widget.Toast
@@ -127,7 +128,9 @@ class CaloriesService : Service(), SensorEventListener {
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
         // step sensor registration
-        val stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
+        var stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
+            stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
         if (stepSensor != null) {
             sensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
         }
@@ -182,7 +185,7 @@ class CaloriesService : Service(), SensorEventListener {
 
         return NotificationCompat.Builder(this, channelId)
             .setContentTitle("Runmate sta registrando la tua attività")
-            .setSmallIcon(R.drawable.runmate_running_man)
+            .setSmallIcon(R.drawable.runmate_notification_icon)
             .build()
     }
 

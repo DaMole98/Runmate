@@ -33,13 +33,14 @@ class MainActivity : AppCompatActivity() {
 
     private var selectedItemId = 0
 
-    @RequiresApi(Build.VERSION_CODES.Q)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bottom_nav)
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED){
-            requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
+            }
         }
 
         val sharedPref = getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)

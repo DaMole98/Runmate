@@ -86,7 +86,7 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
             val h = elapsedSeconds / 3600
             val m = (elapsedSeconds % 3600) / 60
             val s = elapsedSeconds % 60
-            elapsedFormatted = "$h h $m m"
+            elapsedFormatted = "$h h $m min"
             chronometer.text = String.format("%02d:%02d:%02d", h, m, s)
         }
 
@@ -158,6 +158,10 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
         btn_stop.setOnClickListener {
             if (isServiceStarted){  // stop the service if it is running
                 isServiceStarted = false
+
+                // reset UI
+                updateUI(0, 0, 0f)
+                chronometer.text = "00:00:00"
 
                 // register the current training
                 cService.registerTraining()
