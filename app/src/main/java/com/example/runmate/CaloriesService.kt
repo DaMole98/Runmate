@@ -310,7 +310,7 @@ class CaloriesService : Service(), SensorEventListener {
 
     private fun updateDatabase(trainingObj : TrainingObject, totSteps : Int, totDist: Int, totCal : Float){
 
-        val userId = FirebaseAuth.getInstance().currentUser.toString()
+        val userId = FirebaseAuth.getInstance().currentUser!!.uid.toString()
         val userRef = DB.getDBref().getReference("users").child(userId ?: "")
         val newTraining = userRef.child("traininglist").push()
         newTraining.setValue(trainingObj)

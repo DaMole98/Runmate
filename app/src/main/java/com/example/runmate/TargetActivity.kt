@@ -140,7 +140,7 @@ class TargetActivity: AppCompatActivity() {
 
     private fun updateDatabase(profile : HashMap<String, Any>){
 
-        val userId = FirebaseAuth.getInstance().currentUser.toString()
+        val userId = FirebaseAuth.getInstance().currentUser!!.uid.toString()
         val userRef = DB.getDBref().getReference("users").child(userId ?: "").child("profile")
         userRef.updateChildren(profile)
     }

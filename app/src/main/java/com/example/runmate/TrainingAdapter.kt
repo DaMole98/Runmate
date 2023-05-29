@@ -34,11 +34,11 @@ class TrainingAdapter(private val dataList: List<TrainingObject>) : RecyclerView
         private val imgv_activity: ImageView = itemView.findViewById(R.id.imgv_activity_icon)
 
         fun bind(itemData: TrainingObject) {
-            tv_act_sum_1.text = "${itemData.name} | ${itemData.date} | ${itemData.startTime}"
+            tv_act_sum_1.text = "${itemData.type} | ${itemData.date} | ${itemData.startTime}"
             //tv_act_sum_2.text = "${itemData.steps} passi | ${itemData.distance} m |" + String.format(" %.${3}f kcal", itemData.calories) + " | ${itemData.duration}"
             tv_act_sum_2.text = "${itemData.steps} passi | ${itemData.distance} m | ${itemData.calories.roundToInt()} kcal" + " | ${itemData.duration}"
 
-            if (itemData.name == "Camminata") imgv_activity.setImageResource(R.drawable.walk)
+            if (itemData.type == "Camminata") imgv_activity.setImageResource(R.drawable.walk)
             else imgv_activity.setImageResource(R.drawable.run)
         }
 
