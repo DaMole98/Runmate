@@ -135,7 +135,7 @@ class Registration : AppCompatActivity() {
 
         val databaseRef = database.reference
 
-        val sPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val sPref = getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
         val editor = sPref.edit()
         editor.putString("username", username)
         editor.putString("email", email)

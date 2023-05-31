@@ -17,6 +17,7 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.firebase.analytics.FirebaseAnalytics
+import com.google.firebase.auth.FirebaseAuth
 import kotlin.math.roundToInt
 
 class TrainingFragment:Fragment(R.layout.fragment_training) {
@@ -107,7 +108,9 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
                 isServiceStarted = true
 
                 // TODO: spostare in CaloriesService (?), in onCreate() ad esempio.
-                val tPref = requireContext().getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE)
+                val uid = FirebaseAuth.getInstance().currentUser!!.uid
+                val tPref = requireContext().getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
+                //val tPref = requireContext().getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE)
 
                 //log di dati analitici
                 val par = Bundle()

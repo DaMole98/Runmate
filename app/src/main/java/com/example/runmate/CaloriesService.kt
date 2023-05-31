@@ -242,7 +242,9 @@ class CaloriesService : Service(), SensorEventListener {
 
     // Locally saves stats
     private fun saveStats(){
-        val sharedPref = getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val sharedPref = getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
+        //val sharedPref = getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
         sharedPref?.edit()?.apply {
             val currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 

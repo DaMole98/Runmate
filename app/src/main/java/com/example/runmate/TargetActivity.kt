@@ -38,7 +38,9 @@ class TargetActivity: AppCompatActivity() {
 
         // TODO: sistemare le sharedPreferences in modo da evitare che vengano prese quelle di account precendenti
 
-        val sharedPreferences = getSharedPreferences("PREFERENCE",Context.MODE_PRIVATE)
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val sharedPreferences = getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
+        //val sharedPreferences = getSharedPreferences("PREFERENCE",Context.MODE_PRIVATE)
         val allEntries: Map<String,*> = sharedPreferences.all
 
         //Nel caso in cui esistano dei valori salvati allora vengono mostrati al posto dei valori di default

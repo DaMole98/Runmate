@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlin.math.roundToInt
@@ -42,7 +43,9 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
         tv_calories_progress = view.findViewById(R.id.tv_calories_stats)
         rv_activities = view.findViewById(R.id.rv_activities)
 
-        val sharedPref = requireActivity().getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE)
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val sharedPref = requireContext().getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
+        //val sharedPref = requireContext().getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE)
         stepsGoal = sharedPref.getInt("Steps", 10000)
         distanceGoal = sharedPref.getInt("Meters", 8000)
         caloriesGoal = sharedPref.getInt("Calories", 1000)
@@ -60,7 +63,9 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
         super.onResume()
 
         // take stats values from local save and update stats UI
-        val sharedPref = context?.getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val sharedPref = requireContext().getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
+        //val sharedPref = context?.getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
         if (sharedPref != null) {
             val layoutManager = LinearLayoutManager(requireContext())
             val adapter: TrainingAdapter

@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.time.LocalDate
@@ -41,7 +42,9 @@ class MainActivity : AppCompatActivity() {
             requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
         }
 
-        val sharedPref = getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val sharedPref = getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
+        //val sharedPref = getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
         if (sharedPref != null) {
             val currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
             if (sharedPref.getString("currentDate", "") != currentDate){ // the stats are reset each day (apart from training list)
@@ -62,13 +65,14 @@ class MainActivity : AppCompatActivity() {
             apply()
         }*/
 
-        val sPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+
+        //val sPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
 
         val statsFragment = StatsFragment()
         val trainingChoiceFragment = TrainingChoiceFragment()
         val userFragment = UserFragment()
 
-        val username = sPref.getString("username", "")
+        val username = sharedPref.getString("username", "")
         bundle.putString("USERNAME", username)
         userFragment.arguments = bundle
 
