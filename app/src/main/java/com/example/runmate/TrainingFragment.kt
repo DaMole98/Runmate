@@ -40,10 +40,12 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
 
     private lateinit var trainingType: String
 
+    private var isTraining = false
+
     private lateinit var firebaseAnalytics: FirebaseAnalytics
 
     companion object {
-        var isTraining = false
+        //var isTraining = false
         lateinit var elapsedFormatted: String
     }
 
@@ -59,6 +61,10 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
         override fun onServiceDisconnected(arg0: ComponentName) {
             isServiceBounded = false
         }
+    }
+
+    fun getIsTraining(): Boolean{
+        return isTraining
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

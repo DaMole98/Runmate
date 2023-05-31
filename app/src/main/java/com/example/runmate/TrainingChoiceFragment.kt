@@ -33,7 +33,7 @@ class TrainingChoiceFragment : Fragment() {
         fragment.arguments = bundle
 
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.flFragment, fragment)
+        transaction.replace(R.id.flFragment, fragment, "TrainingFragment")
         //transaction.addToBackStack(null) // add the transaction to the back stack to enable back navigation
         transaction.commit()
     }

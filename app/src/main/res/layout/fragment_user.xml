@@ -48,25 +48,25 @@
         android:layout_margin="30dp"
         android:background="@drawable/layout_bg"
         app:layout_constraintBottom_toTopOf="@id/guideline2"
-        app:layout_constraintTop_toBottomOf="@id/user_view"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/user_view" />
 
     <Button
         android:id="@+id/btn_logout"
-        android:layout_marginHorizontal="1dp"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/rubik"
+        android:layout_marginHorizontal="1dp"
         android:background="@color/white"
+        android:fontFamily="@font/rubik"
         android:paddingStart="20dp"
         android:text="Logout"
         android:textAlignment="textStart"
         android:textColor="#D01414"
+        android:verticalScrollbarPosition="defaultPosition"
         app:layout_constraintEnd_toEndOf="@id/userBottomview"
         app:layout_constraintStart_toStartOf="@id/userBottomview"
-        app:layout_constraintTop_toBottomOf="@id/btn_username"/>
+        app:layout_constraintTop_toBottomOf="@id/btn_username" />
 
     <Button
         android:id="@+id/btn_target"
@@ -90,18 +90,17 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="1dp"
-        android:layout_marginTop="1dp"
-        android:background="@drawable/round_top_border_layout"
-        android:text="modifica username"
+        android:background="@color/white"
         android:fontFamily="@font/rubik"
+        android:paddingStart="20dp"
+        android:text="modifica username"
         android:textAlignment="textStart"
         android:textColor="@color/black"
-        android:paddingStart="20dp"
+
         app:layout_constraintBottom_toTopOf="@id/btn_logout"
         app:layout_constraintEnd_toEndOf="@id/userBottomview"
         app:layout_constraintStart_toStartOf="@id/userBottomview"
-        app:layout_constraintTop_toBottomOf="@id/btn_target"
-        />
+        app:layout_constraintTop_toBottomOf="@id/btn_target" />
 
     <TextView
         android:id="@+id/user_view"
@@ -124,18 +123,16 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="1dp"
-        android:layout_marginTop="1dp"
-        android:background="@drawable/round_top_border_layout"
-        android:text="Cancella account"
+        android:background="@color/white"
         android:fontFamily="@font/rubik"
+        android:paddingStart="20dp"
+        android:text="Cancella account"
         android:textAlignment="textStart"
         android:textColor="@color/black"
-        android:paddingStart="20dp"
         app:layout_constraintBottom_toTopOf="@id/btn_username"
         app:layout_constraintEnd_toEndOf="@id/userBottomview"
         app:layout_constraintStart_toStartOf="@id/userBottomview"
-        app:layout_constraintTop_toBottomOf="@id/btn_target"
-        />
+        app:layout_constraintTop_toBottomOf="@id/btn_target" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

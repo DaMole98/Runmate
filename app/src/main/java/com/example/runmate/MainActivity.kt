@@ -38,9 +38,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_bottom_nav)
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
-            }
+            requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
         }
 
         val sharedPref = getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
@@ -79,9 +77,10 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.setOnItemSelectedListener { item ->
             selectedItemId = item.itemId
+            val tfInstance = supportFragmentManager.findFragmentByTag("TrainingFragment") as? TrainingFragment
             when (item.itemId) {
                 R.id.stats -> {
-                    if (TrainingFragment.isTraining) {
+                    if (tfInstance?.getIsTraining() == true) {
                         bottomNavigationView.post {
                             bottomNavigationView.selectedItemId = R.id.training
                         }
@@ -89,13 +88,13 @@ class MainActivity : AppCompatActivity() {
                     else setCurrentFragment(statsFragment)
                 }
                 R.id.training -> {
-                    if (TrainingFragment.isTraining) {
+                    if (tfInstance?.getIsTraining() == true) {
                         showTrainingAlert("Stai registrando un'attività:\npremi il pulsante di stop per fermarla e permetterne il salvataggio.")
                     }
                     else setCurrentFragment(trainingChoiceFragment)
                 }
                 R.id.user -> {
-                    if (TrainingFragment.isTraining) {
+                    if (tfInstance?.getIsTraining() == true) {
                         bottomNavigationView.post {
                             bottomNavigationView.selectedItemId = R.id.training
                         }
@@ -118,7 +117,8 @@ class MainActivity : AppCompatActivity() {
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (supportFragmentManager.findFragmentById(R.id.flFragment) is TrainingFragment) {
-                    if (TrainingFragment.isTraining)
+                    val tfInstance = supportFragmentManager.findFragmentByTag("TrainingFragment") as TrainingFragment
+                    if (tfInstance.getIsTraining())
                         showTrainingAlert("Stai registrando un'attività:\npremi il pulsante di stop per fermarla e permetterne il salvataggio.")
                     else {
                         val fragment = TrainingChoiceFragment()

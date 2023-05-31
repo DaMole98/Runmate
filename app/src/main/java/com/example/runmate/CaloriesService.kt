@@ -73,10 +73,6 @@ class CaloriesService : Service(), SensorEventListener {
     //traccia del servizio (misura il tempo di attività del servizio)
     private lateinit var serviceTrace : Trace
 
-    fun setIsTrainingPaused(paused: Boolean){
-        isTrainingPaused = paused
-    }
-
     // Binder given to clients
     private val binder = LocalBinder()
 
@@ -84,6 +80,10 @@ class CaloriesService : Service(), SensorEventListener {
 
         // Returns this instance of CaloriesService so clients can call public methods
         fun getService(): CaloriesService = this@CaloriesService
+    }
+
+    fun setIsTrainingPaused(paused: Boolean){
+        isTrainingPaused = paused
     }
 
     override fun onCreate() {
@@ -128,9 +128,7 @@ class CaloriesService : Service(), SensorEventListener {
         sensorManager = getSystemService(Context.SENSOR_SERVICE) as SensorManager
 
         // step sensor registration
-        var stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
-            stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_COUNTER)
+        val stepSensor = sensorManager?.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR)
         if (stepSensor != null) {
             sensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
         }
@@ -146,20 +144,6 @@ class CaloriesService : Service(), SensorEventListener {
 
         startTime = LocalTime.now()
     }
-
-    // TEST
-    /*private fun detectVirtualSteps(){
-        currentSteps++
-
-        if (isFirstStep) {
-            start = SystemClock.elapsedRealtime()
-            isFirstStep = false
-        }
-        else{
-            end = SystemClock.elapsedRealtime()
-            startCoroutineCalories()
-        }
-    }*/
 
     override fun onDestroy() {
         super.onDestroy()

@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlin.math.roundToInt
 
 class StatsFragment:Fragment(R.layout.fragment_stats) {
     private lateinit var pb_steps: ProgressBar
@@ -91,7 +92,7 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
         pb_calories.progress = (calories / caloriesGoal.toFloat() * 100).toInt()
         tv_steps_progress.text = "$steps / $stepsGoal passi"
         tv_distance_progress.text = "$distance / $distanceGoal m"
-        tv_calories_progress.text = "${calories.toInt()} / $caloriesGoal kcal"
+        tv_calories_progress.text = "${calories.roundToInt()} / $caloriesGoal kcal"
     }
 
     // Changes the color of part of the statistics texts
