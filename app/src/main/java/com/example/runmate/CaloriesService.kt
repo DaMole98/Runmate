@@ -55,7 +55,7 @@ class CaloriesService : Service(), SensorEventListener {
     private var h = 180 // [cm]
     private var m = 80 // [kg]
     private val G = 0.01f
-    private var k = 0.415 // men = 0.415, women = 0.413
+    private var k = 0.42 // walk = 0.42, run = 0.6    //0.415 // men = 0.415, women = 0.413
     private var stepSize = (k * h / 100).toFloat() // [m]
 
     // variables to save steps, distance and calories
@@ -118,9 +118,11 @@ class CaloriesService : Service(), SensorEventListener {
     override fun onBind(intent: Intent): IBinder {
         trainingType = intent.getStringExtra("trainingType").toString()
         if (trainingType == "Corsa"){
+            k = 0.6
             horizontalComponent = 0.2
             verticalComponent = 0.9
         }
+        stepSize = (k * h / 100).toFloat()
         return binder
     }
 
@@ -139,8 +141,8 @@ class CaloriesService : Service(), SensorEventListener {
         h = sharedPref.getInt("Height", 180)
         m = sharedPref.getInt("Weight", 80)
 
-        if (gender == "Female") k = 0.413
-        stepSize = (k * h / 100).toFloat()
+        //if (gender == "Female") k = 0.413
+        //stepSize = (k * h / 100).toFloat()
 
         startTime = LocalTime.now()
     }
