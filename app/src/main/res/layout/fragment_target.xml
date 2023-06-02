@@ -60,7 +60,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <RadioGroup
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/editGender"
         android:layout_width="0dp"
         android:layout_height="50dp"
@@ -91,10 +90,7 @@
 
     <EditText
         android:id="@+id/editTargetHeight"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:ems="10"
-        android:inputType="number"
+        style="@style/TargetEditText"
         android:text="180"
         app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
         app:layout_constraintStart_toEndOf="@+id/textTargetHeight"
@@ -103,10 +99,7 @@
 
     <EditText
         android:id="@+id/editTargetWeight"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:ems="10"
-        android:inputType="number"
+        style="@style/TargetEditText"
         android:text="80"
         app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
         app:layout_constraintStart_toEndOf="@+id/textTargetWeight"
@@ -115,10 +108,7 @@
 
     <EditText
         android:id="@+id/editTargetSteps"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:ems="10"
-        android:inputType="number"
+        style="@style/TargetEditText"
         android:text="10000"
         app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
         app:layout_constraintStart_toEndOf="@+id/textTargetSteps"
@@ -127,22 +117,16 @@
 
     <EditText
         android:id="@+id/editTargetKcal"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:ems="10"
+        style="@style/TargetEditText"
         android:text="200"
-        android:inputType="number"
         app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
         app:layout_constraintTop_toBottomOf="@+id/editTargetSteps"
         app:layout_constraintStart_toEndOf="@id/textTargetKcal"/>
 
     <EditText
         android:id="@+id/editTargetMeter"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:ems="10"
+        style="@style/TargetEditText"
         android:text="1000"
-        android:inputType="number"
         app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
         app:layout_constraintTop_toBottomOf="@+id/editTargetKcal"
         app:layout_constraintStart_toEndOf="@id/textTargetMeter"
@@ -150,13 +134,8 @@
 
     <TextView
         android:id="@+id/textTargetKcal"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:fontFamily="@font/rubik"
         android:text="Kcal giornaliere"
-        android:paddingVertical="15dp"
-        android:paddingStart="15dp"
-        android:textSize="15sp"
+        style="@style/TargetView"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"
         app:layout_constraintEnd_toStartOf="@id/editTargetKcal"
         app:layout_constraintTop_toBottomOf="@id/textTargetSteps"
@@ -164,13 +143,8 @@
 
     <TextView
         android:id="@+id/textTargetMeter"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:fontFamily="@font/rubik"
         android:text="Metri al giorno"
-        android:paddingVertical="15dp"
-        android:paddingStart="15dp"
-        android:textSize="15sp"
+        style="@style/TargetView"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"
         app:layout_constraintEnd_toStartOf="@id/editTargetMeter"
         app:layout_constraintTop_toBottomOf="@id/textTargetKcal"
@@ -178,14 +152,9 @@
 
     <TextView
         android:id="@+id/textTargetGender"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="5dp"
-        android:fontFamily="@font/rubik"
+        style="@style/TargetView"
         android:text="Sesso"
-        android:textSize="15sp"
-        android:paddingVertical="15dp"
-        android:paddingStart="15dp"
+        android:layout_marginTop="5dp"
         app:layout_constraintEnd_toStartOf="@id/editTargetSteps"
         app:layout_constraintStart_toStartOf="@+id/guidelineStart"
         app:layout_constraintTop_toTopOf="@+id/guidelineTop"
@@ -193,13 +162,8 @@
 
     <TextView
         android:id="@+id/textTargetHeight"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:fontFamily="@font/rubik"
-        android:paddingVertical="15dp"
-        android:paddingStart="15dp"
         android:text="Altezza (cm)"
-        android:textSize="15sp"
+        style="@style/TargetView"
         app:layout_constraintEnd_toStartOf="@id/editTargetSteps"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -207,26 +171,16 @@
 
     <TextView
         android:id="@+id/textTargetWeight"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:fontFamily="@font/rubik"
-        android:paddingVertical="15dp"
-        android:paddingStart="15dp"
         android:text="Peso (Kg)"
-        android:textSize="15sp"
+        style="@style/TargetView"
         app:layout_constraintEnd_toStartOf="@id/editTargetSteps"
         app:layout_constraintStart_toStartOf="@+id/guidelineStart"
         app:layout_constraintTop_toBottomOf="@+id/textTargetHeight" />
 
     <TextView
         android:id="@+id/textTargetSteps"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:fontFamily="@font/rubik"
         android:text="Passi giornalieri"
-        android:paddingVertical="15dp"
-        android:paddingStart="15dp"
-        android:textSize="15sp"
+        style="@style/TargetView"
         app:layout_constraintEnd_toStartOf="@id/editTargetSteps"
         app:layout_constraintStart_toStartOf="@+id/guidelineStart"
         app:layout_constraintTop_toBottomOf="@+id/textTargetWeight"
@@ -234,12 +188,12 @@
 
     <Button
         android:id="@+id/confirm_target_button"
+        android:text="Conferma"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="#33B5B5"
         android:fontFamily="@font/rubik"
-        android:text="Conferma"
-        android:textSize="15dp"
+        android:textSize="15sp"
         app:layout_constraintBottom_toTopOf="@+id/guidelineBottom"
         app:layout_constraintEnd_toStartOf="@+id/reset_target_button"
         app:layout_constraintStart_toStartOf="@+id/guidelineStart"
