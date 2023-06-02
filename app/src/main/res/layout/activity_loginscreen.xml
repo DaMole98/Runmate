@@ -83,7 +83,7 @@
         android:layout_width="200dp"
         android:layout_height="60dp"
         android:ems="10"
-        android:hint="password"
+        android:hint="Password"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"

@@ -7,50 +7,34 @@
     tools:context=".MainActivity">
 
 
-    <ImageButton
+    <Button
         android:id="@+id/btn_walk"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
-        android:background="@android:color/transparent"
-        android:src="@drawable/activity_choice_circle"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:text="Camminata"
+        android:textColor="@color/runmate_green"
+        android:padding="10dp"
+        android:textSize="30sp"
+        android:fontFamily="@font/rubik"
+        android:background="@drawable/activity_choice_circle"
         app:layout_constraintBottom_toTopOf="@+id/btn_run"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageButton
+    <Button
         android:id="@+id/btn_run"
-        android:layout_width="180dp"
-        android:layout_height="180dp"
-        android:src="@drawable/activity_choice_circle"
-        android:background="@android:color/transparent"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:text="Corsa"
+        android:textColor="@color/runmate_green"
+        android:textSize="30sp"
+        android:fontFamily="@font/rubik"
+        android:background="@drawable/activity_choice_circle"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_walk"
         app:layout_constraintVertical_bias="0.3" />
 
-    <TextView
-        android:id="@+id/tv_walk"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Camminata"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_walk"
-        app:layout_constraintEnd_toEndOf="@+id/btn_walk"
-        app:layout_constraintStart_toStartOf="@+id/btn_walk"
-        app:layout_constraintTop_toTopOf="@+id/btn_walk" />
-
-    <TextView
-        android:id="@+id/tv_run"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Corsa"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/btn_run"
-        app:layout_constraintEnd_toEndOf="@+id/btn_run"
-        app:layout_constraintStart_toStartOf="@+id/btn_run"
-        app:layout_constraintTop_toTopOf="@+id/btn_run" />
 </androidx.constraintlayout.widget.ConstraintLayout>
