@@ -73,29 +73,27 @@ class TargetActivity: AppCompatActivity() {
 
         confirm_btn.setOnClickListener {
 
-            //Controllo sulla validità dei dati
-
-            if(Integer.parseInt(meters_edit.text.toString()) <= 0 || Integer.parseInt(meters_edit.text.toString()) >= 50000)
-                check=1
-            if(Integer.parseInt(kcal_edit.text.toString()) <= 0 || Integer.parseInt(kcal_edit.text.toString()) >= 1000)
-                check=2
-            if(Integer.parseInt(steps_edit.text.toString()) <= 0 || Integer.parseInt(steps_edit.text.toString()) >= 50000)
-                check=3
-            if(Integer.parseInt(weight_edit.text.toString()) <= 0 || Integer.parseInt(weight_edit.text.toString()) >= 350)
-                check=4
-            if(Integer.parseInt(height_edit.text.toString()) <= 0 || Integer.parseInt(height_edit.text.toString()) >= 350)
-                check=5
-
             //Controllo sui campi vuoti
 
             if(height_edit.text.isEmpty() || weight_edit.text.isEmpty() || steps_edit.text.isEmpty() || kcal_edit.text.isEmpty() || meters_edit.text.isEmpty() || (gender.checkedRadioButtonId != R.id.male && gender.checkedRadioButtonId != R.id.female))
                 check=6
-
+            else{
+                //Controllo sulla validità dei dati
+                if(Integer.parseInt(meters_edit.text.toString()) <= 0 || Integer.parseInt(meters_edit.text.toString()) >= 50000)
+                    check=1
+                if(Integer.parseInt(kcal_edit.text.toString()) <= 0 || Integer.parseInt(kcal_edit.text.toString()) >= 1000)
+                    check=2
+                if(Integer.parseInt(steps_edit.text.toString()) <= 0 || Integer.parseInt(steps_edit.text.toString()) >= 50000)
+                    check=3
+                if(Integer.parseInt(weight_edit.text.toString()) <= 0 || Integer.parseInt(weight_edit.text.toString()) >= 350)
+                    check=4
+                if(Integer.parseInt(height_edit.text.toString()) <= 0 || Integer.parseInt(height_edit.text.toString()) >= 350)
+                    check=5
+            }
             //Utilizzo il when per far apparire un allert alla volta
 
             when(check){
                 0 -> {
-
                     val height = Integer.parseInt(height_edit.text.toString())
                     val weight = Integer.parseInt(weight_edit.text.toString())
                     val steps = Integer.parseInt(steps_edit.text.toString())
@@ -132,7 +130,7 @@ class TargetActivity: AppCompatActivity() {
                 3 -> Toast.makeText(this, "Numero di passi non valido, inserisci un valore tra 1 e 49999", Toast.LENGTH_SHORT).show()
                 4 -> Toast.makeText(this, "Peso non valido, inserisci un valore tra 1 e 350", Toast.LENGTH_SHORT).show()
                 5 -> Toast.makeText(this, "Altezza non valida, inserisci un valore tra 1 e 350", Toast.LENGTH_SHORT).show()
-                6-> Toast.makeText(this, "Inserisci tutti i campi", Toast.LENGTH_SHORT).show()
+                6 -> Toast.makeText(this, "Inserisci tutti i campi", Toast.LENGTH_SHORT).show()
             }
 
             check = 0
