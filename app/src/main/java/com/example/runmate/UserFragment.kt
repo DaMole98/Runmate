@@ -30,8 +30,10 @@ class UserFragment : Fragment(R.layout.fragment_user), ChangeUNDialogFragment.On
     private lateinit var usernameBtn: Button
     private lateinit var targetBtn: Button
     private lateinit var deleteAccountBtn: Button
-    private var currentUser: FirebaseUser? = null
+    //private var currentUser: FirebaseUser? = null
     private var DB = CloudDBSingleton.getInstance()
+    private val currentUser = Firebase.auth.currentUser
+    private val uid = currentUser!!.uid
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,9 +46,9 @@ class UserFragment : Fragment(R.layout.fragment_user), ChangeUNDialogFragment.On
         usernameBtn = view.findViewById<Button>(R.id.btn_username)
         targetBtn = view.findViewById<Button>(R.id.btn_target)
 
-        currentUser = Firebase.auth.currentUser
+        //currentUser = Firebase.auth.currentUser
 
-        val sPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        val sPref = requireContext().getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
         val username = sPref.getString("username", "")
         user_view.text = "Ciao $username"
 
@@ -173,13 +175,13 @@ class ChangeUNDialogFragment : DialogFragment() {
         builder.setView(rootView)
 
         builder.setPositiveButton("Conferma") { dialog, which ->
+            val userId = Firebase.auth.currentUser?.uid
             val newUsername = usernameEditText.text.toString()
-            val sPref = requireContext().getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+            val sPref = requireContext().getSharedPreferences("${userId}UserPrefs", Context.MODE_PRIVATE)
             val editor = sPref.edit()
             editor.putString("username", newUsername)
             editor.apply()
 
-            val userId = Firebase.auth.currentUser?.uid
 
             val userRef = DB.getDBref().getReference("users").child(userId ?: "")
 
