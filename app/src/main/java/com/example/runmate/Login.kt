@@ -1,5 +1,6 @@
 package com.example.runmate
 
+import android.content.Context
 import com.example.runmate.utils.*
 import android.content.Intent
 import android.os.Bundle
@@ -63,7 +64,11 @@ class Login : AppCompatActivity() {
                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         Toast.makeText(baseContext, "Benvenuto in Runmate!", Toast.LENGTH_SHORT).show()
-
+                        //if(isFirstLogin()){
+                        //    val uid = FirebaseAuth.getInstance().currentUser!!.uid
+                        //    val sPref = getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
+                        //    syncDB(sPref, uid)
+                        //}
                         loadMainActivity()
 
                     } else {

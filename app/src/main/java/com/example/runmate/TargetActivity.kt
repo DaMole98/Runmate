@@ -109,14 +109,14 @@ class TargetActivity: AppCompatActivity() {
                     editor.putInt("Calories", calories)
                     editor.putInt("Meters", meters)
 
-                    val profile = HashMap<String, Any>()
+                    /*val profile = HashMap<String, Any>()
                     profile["height"] = height
                     profile["weight"] = weight
                     profile["steps"] = steps
                     profile["calories"] = calories
                     profile["meters"] = meters
 
-                    updateDatabase(profile)
+                    updateDatabase(profile) */
 
                     when (gender.checkedRadioButtonId) {
                         R.id.male -> editor.putString("Gender", "Male")
@@ -140,10 +140,10 @@ class TargetActivity: AppCompatActivity() {
         }
     }
 
-    private fun updateDatabase(profile : HashMap<String, Any>){
+  /*  private fun updateDatabase(profile : HashMap<String, Any>){
 
         val userId = FirebaseAuth.getInstance().currentUser!!.uid.toString()
         val userRef = DB.getDBref().getReference("users").child(userId ?: "").child("profile")
         userRef.updateChildren(profile)
-    }
+    } */
 }
