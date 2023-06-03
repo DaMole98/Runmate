@@ -15,12 +15,12 @@ class TrainingChoiceFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
         val view = inflater.inflate(R.layout.fragment_training_choice, container, false)
 
-        val btn_walk = view.findViewById<Button>(R.id.btn_walk)
+        val btn_walk = view.findViewById<ImageButton>(R.id.btn_walk)
         btn_walk.setOnClickListener {
             startTrainingFragment("Camminata")
         }
 
-        val btn_run = view.findViewById<Button>(R.id.btn_run)
+        val btn_run = view.findViewById<ImageButton>(R.id.btn_run)
         btn_run.setOnClickListener {
             startTrainingFragment("Corsa")
         }

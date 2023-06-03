@@ -61,10 +61,12 @@
 
     <RadioGroup
         android:id="@+id/editGender"
-        android:layout_width="0dp"
+        android:layout_width="200dp"
         android:layout_height="50dp"
-        android:layout_marginTop="5dp"
-        android:paddingTop="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:paddingVertical="15dp"
+        android:paddingStart="10dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/guidelineTop"
         app:layout_constraintStart_toEndOf="@id/textTargetGender"
@@ -74,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Maschio"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:fontFamily="@font/rubik"
             android:paddingHorizontal="5dp"
              />
@@ -82,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Femmina"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:fontFamily="@font/rubik"
             android:paddingHorizontal="5dp"
              />
@@ -154,8 +156,8 @@
         android:id="@+id/textTargetGender"
         style="@style/TargetView"
         android:text="Sesso"
-        android:layout_marginTop="5dp"
-        app:layout_constraintEnd_toStartOf="@id/editTargetSteps"
+        android:paddingStart="34dp"
+        app:layout_constraintEnd_toStartOf="@id/editGender"
         app:layout_constraintStart_toStartOf="@+id/guidelineStart"
         app:layout_constraintTop_toTopOf="@+id/guidelineTop"
         />
@@ -164,8 +166,7 @@
         android:id="@+id/textTargetHeight"
         android:text="Altezza (cm)"
         style="@style/TargetView"
-        app:layout_constraintEnd_toStartOf="@id/editTargetSteps"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintEnd_toStartOf="@id/editTargetHeight"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"
         app:layout_constraintTop_toBottomOf="@+id/textTargetGender" />
 
@@ -173,7 +174,7 @@
         android:id="@+id/textTargetWeight"
         android:text="Peso (Kg)"
         style="@style/TargetView"
-        app:layout_constraintEnd_toStartOf="@id/editTargetSteps"
+        app:layout_constraintEnd_toStartOf="@id/editTargetWeight"
         app:layout_constraintStart_toStartOf="@+id/guidelineStart"
         app:layout_constraintTop_toBottomOf="@+id/textTargetHeight" />
 
@@ -189,7 +190,7 @@
     <Button
         android:id="@+id/confirm_target_button"
         android:text="Conferma"
-        android:layout_width="wrap_content"
+        android:layout_width="125dp"
         android:layout_height="wrap_content"
         android:backgroundTint="#33B5B5"
         android:fontFamily="@font/rubik"
@@ -201,12 +202,12 @@
 
     <Button
         android:id="@+id/reset_target_button"
-        android:layout_width="wrap_content"
+        android:layout_width="125dp"
         android:layout_height="wrap_content"
         android:backgroundTint="#D01414"
         android:fontFamily="@font/rubik"
         android:text="Reset"
-        android:textSize="15dp"
+        android:textSize="17sp"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/guidelineBottom"
         app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
