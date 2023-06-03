@@ -156,7 +156,6 @@
         android:id="@+id/textTargetGender"
         style="@style/TargetView"
         android:text="Sesso"
-        android:paddingStart="34dp"
         app:layout_constraintEnd_toStartOf="@id/editGender"
         app:layout_constraintStart_toStartOf="@+id/guidelineStart"
         app:layout_constraintTop_toTopOf="@+id/guidelineTop"
