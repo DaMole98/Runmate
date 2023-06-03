@@ -12,14 +12,14 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.8" />
+        app:layout_constraintGuide_percent="0.85" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineTop"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.2" />
+        app:layout_constraintGuide_percent="0.15" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineEnd"
@@ -61,12 +61,12 @@
 
     <RadioGroup
         android:id="@+id/editGender"
-        android:layout_width="200dp"
+        android:layout_width="150dp"
         android:layout_height="50dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:paddingVertical="15dp"
-        android:paddingStart="10dp"
+
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/guidelineTop"
         app:layout_constraintStart_toEndOf="@id/textTargetGender"
@@ -75,18 +75,18 @@
         <RadioButton android:id="@+id/male"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Maschio"
+            android:text="M"
             android:textSize="12sp"
             android:fontFamily="@font/rubik"
-            android:paddingHorizontal="5dp"
+            android:paddingEnd="20dp"
              />
         <RadioButton android:id="@+id/female"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Femmina"
+            android:text="F"
             android:textSize="12sp"
             android:fontFamily="@font/rubik"
-            android:paddingHorizontal="5dp"
+            android:paddingEnd="20dp"
              />
     </RadioGroup>
 
