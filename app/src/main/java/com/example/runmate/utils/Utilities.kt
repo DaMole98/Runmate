@@ -1,12 +1,16 @@
 package com.example.runmate.utils
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import com.google.firebase.auth.FirebaseUser
+import android.content.SharedPreferences
+import com.example.runmate.TrainingObject
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.values
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 
 class CloudDBSingleton private constructor() {
@@ -47,26 +51,87 @@ fun checkCurrentUser(mAuth: FirebaseAuth): Boolean {
 }
 
 
-//fun getUser() : FirebaseUser? {
-//
-//    val firebaseAuth = FirebaseAuth.getInstance()
-//    val currentUser = firebaseAuth.currentUser
-//
-//}
-//val firebaseAuth = FirebaseAuth.getInstance()
-//val currentUser = firebaseAuth.currentUser
-//
-//if (currentUser != null) {
-//    // Utente autenticato
-//    val isFirstLoginOnDevice = currentUser.metadata.creationTimestamp == currentUser.metadata.lastSignInTimestamp
-//
-//    if (isFirstLoginOnDevice) {
-//        // È il primo accesso dell'utente su questo dispositivo
-//        // Scarica i dati dal cloud per la sincronizzazione con il database
-//    } else {
-//        // Utente già ha effettuato l'accesso su questo dispositivo in precedenza
-//    }
-//} else {
-//    // Utente non autenticato
-//}
+/*fun isFirstLogin(): Boolean {
+    val firebaseAuth = FirebaseAuth.getInstance()
+    val currentUser = firebaseAuth.currentUser
+    val isfirst = (currentUser?.metadata?.creationTimestamp == currentUser?.metadata?.lastSignInTimestamp)
+    return isfirst
+} */
 
+
+/*fun syncDB(sPref : SharedPreferences, uid : String){
+    val DB = CloudDBSingleton.getInstance()
+
+    lateinit var email : String;
+    lateinit var username : String;
+
+    val userRef = DB.getDBref().getReference("users/${uid}")
+    userRef.child("email").get().addOnSuccessListener { dataSnapshot ->
+        email = dataSnapshot.getValue(String::class.java).toString()
+    }
+
+    userRef.child("username").get().addOnSuccessListener { dataSnapshot ->
+        username = dataSnapshot.getValue(String::class.java).toString()
+    }
+
+    userRef.child("profile/calories").get().addOnSuccessListener { dataSnapshot ->
+        email = dataSnapshot.getValue(String::class.java).toString()
+    }
+
+    userRef.child("profile/height").get().addOnSuccessListener { dataSnapshot ->
+        email = dataSnapshot.getValue(String::class.java).toString()
+    }
+
+    userRef.child("profile/calories").get().addOnSuccessListener { dataSnapshot ->
+        email = dataSnapshot.getValue(String::class.java).toString()
+    }
+
+    userRef.child("profile/meters").get().addOnSuccessListener { dataSnapshot ->
+        email = dataSnapshot.getValue(String::class.java).toString()
+    }
+
+    userRef.child("profile/steps").get().addOnSuccessListener { dataSnapshot ->
+        email = dataSnapshot.getValue(String::class.java).toString()
+    }
+
+    userRef.child("profile/weight").get().addOnSuccessListener { dataSnapshot ->
+        email = dataSnapshot.getValue(String::class.java).toString()
+    }
+
+    val trainingRef = userRef.child("traininglist")
+
+    val sevenDaysAgo = Calendar.getInstance()
+    sevenDaysAgo.add(Calendar.DAY_OF_YEAR, -7)
+    //val dateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
+    val date = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault()).format(sevenDaysAgo.time)
+
+    val query = trainingRef.orderByChild("data").startAt(date)
+
+    query.addListenerForSingleValueEvent(object : ValueEventListener {
+        override fun onDataChange(dataSnapshot: DataSnapshot) {
+            for (childSnapshot in dataSnapshot.children) {
+                val trainingData = childSnapshot.getValue(TrainingObject::class.java)
+
+            }
+
+            // Rimuovi il listener se necessario
+            query.removeEventListener(this)
+        }
+
+        override fun onCancelled(databaseError: DatabaseError) {
+            // Gestisci gli errori
+        }
+    })
+
+
+    val editor = sPref.edit()
+    editor.putString("username", username)
+    editor.putString("email", email)
+    editor.putString("uid", uid)
+    editor.apply()
+
+
+
+
+
+} */

@@ -278,7 +278,7 @@ class CaloriesService : Service(), SensorEventListener {
             putFloat("totalCalories", tc)
             apply()
 
-            updateDatabase(trainingObj, ts, td, tc)
+            //updateDatabase(trainingObj, ts, td, tc)
             //val cloudData = HashMap<String, Any>()
             //cloudData["trainingList"] = json
             //cloudData["totalSteps"] = totalSteps + sharedPref.getInt("totalSteps", 0)
@@ -296,14 +296,14 @@ class CaloriesService : Service(), SensorEventListener {
         }
     }
 
-    private fun updateDatabase(trainingObj : TrainingObject, totSteps : Int, totDist: Int, totCal : Float){
+   /* private fun updateDatabase(trainingObj : TrainingObject, totSteps : Int, totDist: Int, totCal : Float){
 
         val userId = FirebaseAuth.getInstance().currentUser!!.uid.toString()
         val userRef = DB.getDBref().getReference("users").child(userId ?: "")
         val newTraining = userRef.child("traininglist").push()
         newTraining.setValue(trainingObj)
 
-    }
+    } */
 
     // Stops the service
     fun registerTraining() {
