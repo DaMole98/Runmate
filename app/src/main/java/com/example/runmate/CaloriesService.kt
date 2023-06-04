@@ -16,7 +16,6 @@ import android.os.Debug
 import android.os.IBinder
 import android.widget.Toast
 import androidx.core.app.NotificationCompat
-import com.example.runmate.utils.CloudDBSingleton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.perf.FirebasePerformance
 import com.google.firebase.perf.metrics.Trace
@@ -68,7 +67,7 @@ class CaloriesService : Service(), SensorEventListener {
 
     lateinit var trainingType: String
 
-    private var DB = CloudDBSingleton.getInstance()
+    //private var DB = CloudDBSingleton.getInstance()
 
     //traccia del servizio (misura il tempo di attività del servizio)
     private lateinit var serviceTrace : Trace

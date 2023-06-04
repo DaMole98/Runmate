@@ -2,15 +2,6 @@ package com.example.runmate.utils
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
-import android.content.SharedPreferences
-import com.example.runmate.TrainingObject
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.ValueEventListener
-import com.google.firebase.database.ktx.values
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 
 
 class CloudDBSingleton private constructor() {
