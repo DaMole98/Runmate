@@ -45,18 +45,18 @@ class TargetActivity: AppCompatActivity() {
 
         //Nel caso in cui esistano dei valori salvati allora vengono mostrati al posto dei valori di default
 
-        if(allEntries.isNotEmpty())
-        {
+        //if(allEntries.isNotEmpty())
+        //{
             height_edit.setText(sharedPreferences.getInt("Height",0).toString())
             weight_edit.setText(sharedPreferences.getInt("Weight",0).toString())
             steps_edit.setText(sharedPreferences.getInt("Steps",0).toString())
             kcal_edit.setText(sharedPreferences.getInt("Calories",0).toString())
             meters_edit.setText(sharedPreferences.getInt("Meters",0).toString())
-            if(sharedPreferences.getString("Gender", "").equals("Male"))
-                gender.check(R.id.male)
-            else
-                gender.check(R.id.female)
-        }
+            gender.check(R.id.male)
+            val g = sharedPreferences.getString("Gender", "")
+            if(g == "" || g == "Male") gender.check(R.id.male)
+            else gender.check(R.id.female)
+        //}
 
         //Premere reset porta tutti i valori numerici a 0 e annulla la selezione del gender
 
@@ -79,15 +79,15 @@ class TargetActivity: AppCompatActivity() {
                 check=6
             else{
                 //Controllo sulla validità dei dati
-                if(Integer.parseInt(meters_edit.text.toString()) <= 0 || Integer.parseInt(meters_edit.text.toString()) >= 50000)
+                if(Integer.parseInt(meters_edit.text.toString()) <= 0 || Integer.parseInt(meters_edit.text.toString()) > 50000)
                     check=1
-                if(Integer.parseInt(kcal_edit.text.toString()) <= 0 || Integer.parseInt(kcal_edit.text.toString()) >= 1000)
+                if(Integer.parseInt(kcal_edit.text.toString()) <= 0 || Integer.parseInt(kcal_edit.text.toString()) > 5000)
                     check=2
-                if(Integer.parseInt(steps_edit.text.toString()) <= 0 || Integer.parseInt(steps_edit.text.toString()) >= 50000)
+                if(Integer.parseInt(steps_edit.text.toString()) <= 0 || Integer.parseInt(steps_edit.text.toString()) > 50000)
                     check=3
-                if(Integer.parseInt(weight_edit.text.toString()) <= 0 || Integer.parseInt(weight_edit.text.toString()) >= 350)
+                if(Integer.parseInt(weight_edit.text.toString()) <= 0 || Integer.parseInt(weight_edit.text.toString()) > 350)
                     check=4
-                if(Integer.parseInt(height_edit.text.toString()) <= 0 || Integer.parseInt(height_edit.text.toString()) >= 350)
+                if(Integer.parseInt(height_edit.text.toString()) <= 0 || Integer.parseInt(height_edit.text.toString()) > 350)
                     check=5
             }
             //Utilizzo il when per far apparire un allert alla volta
@@ -125,9 +125,9 @@ class TargetActivity: AppCompatActivity() {
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 }
-                1 -> Toast.makeText(this, "Numero di metri non valido, inserisci un valore tra 1 e 49999", Toast.LENGTH_SHORT).show()
-                2 -> Toast.makeText(this, "Numero di calorie non valido, inserisci un valore tra 1 e 500", Toast.LENGTH_SHORT).show()
-                3 -> Toast.makeText(this, "Numero di passi non valido, inserisci un valore tra 1 e 49999", Toast.LENGTH_SHORT).show()
+                1 -> Toast.makeText(this, "Numero di metri non valido, inserisci un valore tra 1 e 50000", Toast.LENGTH_SHORT).show()
+                2 -> Toast.makeText(this, "Numero di calorie non valido, inserisci un valore tra 1 e 5000", Toast.LENGTH_SHORT).show()
+                3 -> Toast.makeText(this, "Numero di passi non valido, inserisci un valore tra 1 e 50000", Toast.LENGTH_SHORT).show()
                 4 -> Toast.makeText(this, "Peso non valido, inserisci un valore tra 1 e 350", Toast.LENGTH_SHORT).show()
                 5 -> Toast.makeText(this, "Altezza non valida, inserisci un valore tra 1 e 350", Toast.LENGTH_SHORT).show()
                 6 -> Toast.makeText(this, "Inserisci tutti i campi", Toast.LENGTH_SHORT).show()

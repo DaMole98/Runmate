@@ -11,7 +11,6 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Binder
-import android.os.Build
 import android.os.Debug
 import android.os.IBinder
 import android.widget.Toast
@@ -27,11 +26,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.util.Date
 import java.util.concurrent.locks.ReentrantLock
 
 
@@ -67,6 +64,8 @@ class CaloriesService : Service(), SensorEventListener {
 
     lateinit var trainingType: String
 
+    private lateinit var tfCallback: TrainingFragmentCallback
+
     //private var DB = CloudDBSingleton.getInstance()
 
     //traccia del servizio (misura il tempo di attività del servizio)
@@ -79,6 +78,10 @@ class CaloriesService : Service(), SensorEventListener {
 
         // Returns this instance of CaloriesService so clients can call public methods
         fun getService(): CaloriesService = this@CaloriesService
+    }
+
+    fun setTrainingFragmentCallback(callback: TrainingFragmentCallback) {
+        tfCallback = callback
     }
 
     fun setIsTrainingPaused(paused: Boolean){
@@ -135,7 +138,9 @@ class CaloriesService : Service(), SensorEventListener {
         }
 
         // get user data
-        val sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE)
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val sharedPref = getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
+        //val sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE)
         gender = sharedPref.getString("Gender", "Male").toString()
         h = sharedPref.getInt("Height", 180)
         m = sharedPref.getInt("Weight", 80)
@@ -220,13 +225,8 @@ class CaloriesService : Service(), SensorEventListener {
 
         currentSteps = 0
 
-        // send broadcast to the activity to update the UI
-        val intentUI = Intent("UPDATE_UI")
-
-        intentUI.putExtra("totalSteps", totalSteps)
-        intentUI.putExtra("totalDistance", totalDistance)
-        intentUI.putExtra("totalCalories", totalCalories)
-        sendBroadcast(intentUI)
+        // update the UI
+        tfCallback.updateUI(totalSteps, totalDistance, totalCalories)
     }
 
     // Computes calories based on the time interval. Returns distance and calories.
@@ -250,7 +250,7 @@ class CaloriesService : Service(), SensorEventListener {
             val currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 
             val trainingObj = TrainingObject(trainingType, currentDate, startTime.format(DateTimeFormatter.ofPattern("HH:mm")),
-                totalSteps, totalDistance, totalCalories, TrainingFragment.elapsedFormatted)
+                totalSteps, totalDistance, totalCalories, tfCallback.getTrainingTime())
 
             // take older trainings (if any) and add last training
             var json = sharedPref.getString("trainingList", null)
@@ -258,7 +258,7 @@ class CaloriesService : Service(), SensorEventListener {
             if (json != null) {
                 val listType = object : TypeToken<MutableList<TrainingObject>>() {}.type
                 val pastTraining = gson.fromJson<MutableList<TrainingObject>>(json, listType)
-                pastTraining.add(trainingObj)
+                pastTraining.add(0, trainingObj)
                 json = gson.toJson(pastTraining)
             }
             else{ // last training is the first training

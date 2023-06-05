@@ -20,7 +20,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import kotlin.math.roundToInt
 
-class TrainingFragment:Fragment(R.layout.fragment_training) {
+class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCallback {
     private lateinit var cService: CaloriesService
     private lateinit var intentService: Intent
     private var isServiceBounded: Boolean = false
@@ -35,20 +35,13 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
     private var isServiceStarted = false
     private var pauseOffset: Long = 0
 
-    private var steps = 0
-    private var distance = 0
-    private var calories = 0f
+    private lateinit var trainingTime: String
 
     private lateinit var trainingType: String
 
     private var isTraining = false
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics
-
-    companion object {
-        //var isTraining = false
-        lateinit var elapsedFormatted: String
-    }
 
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
@@ -57,6 +50,8 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
             val binder = service as CaloriesService.LocalBinder
             cService = binder.getService()
             isServiceBounded = true
+
+            cService.setTrainingFragmentCallback(this@TrainingFragment)
         }
 
         override fun onServiceDisconnected(arg0: ComponentName) {
@@ -88,19 +83,16 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
         chronometer = view.findViewById(R.id.chronometer_train)
 
         chronometer.setOnChronometerTickListener {
-            val elapsedMillis = SystemClock.elapsedRealtime() - chronometer.base
-            val elapsedSeconds = elapsedMillis / 1000
-            val h = elapsedSeconds / 3600
-            val m = (elapsedSeconds % 3600) / 60
-            val s = elapsedSeconds % 60
-            elapsedFormatted = "$h h $m min"
+            val elapsedTimeMillis = SystemClock.elapsedRealtime() - chronometer.base
+            val elapsedTimeSeconds = elapsedTimeMillis / 1000
+            val h = elapsedTimeSeconds / 3600
+            val m = (elapsedTimeSeconds % 3600) / 60
+            val s = elapsedTimeSeconds % 60
+            trainingTime = "$h h $m min"
             chronometer.text = String.format("%02d:%02d:%02d", h, m, s)
         }
 
         intentService = Intent(context, CaloriesService::class.java)
-
-        // register broadcast
-        requireActivity().registerReceiver(updateUIReceiver, IntentFilter("UPDATE_UI"))
 
         val btn_play_pause = view.findViewById<ImageButton>(R.id.btn_play_pause_train)
         btn_play_pause.setOnClickListener {
@@ -214,7 +206,7 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
     override fun onResume() {
         super.onResume()
 
-        updateUI(steps, distance, calories)
+        //updateUI(steps, distance, calories)
     }
 
     override fun onDestroyView() {
@@ -223,21 +215,16 @@ class TrainingFragment:Fragment(R.layout.fragment_training) {
         unbindCS()
     }
 
-    private val updateUIReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent) {
-            steps = intent.getIntExtra("totalSteps", 0)
-            distance = intent.getIntExtra("totalDistance", 0)
-            calories = intent.getFloatExtra("totalCalories", 0f)
-
-            updateUI(steps, distance, calories)
+    override fun updateUI(steps: Int, distance: Int, calories: Float) {
+        activity?.runOnUiThread {
+            tv_totalSteps.text = steps.toString()
+            tv_totalDistance.text = distance.toString()
+            tv_totalCalories.text = calories.roundToInt().toString()
         }
     }
 
-    private fun updateUI(totalSteps: Int, totalDistance: Int, totalCalories: Float){
-        tv_totalSteps.text = totalSteps.toString()
-        tv_totalDistance.text = totalDistance.toString()
-        tv_totalCalories.text = totalCalories.roundToInt().toString()
-        //tv_totalCalories.text = String.format("%.${3}f", totalCalories)
+    override fun getTrainingTime(): String{
+        return trainingTime
     }
 
     // Unbind this CaloriesService if not bounded

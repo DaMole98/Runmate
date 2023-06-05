@@ -145,6 +145,13 @@ class UserFragment : Fragment(R.layout.fragment_user), ChangeUNDialogFragment.On
             .addOnFailureListener { exception ->
                 Log.e(TAG, "Errore durante l'eliminazione dei dati utente dal database", exception)
             }
+
+        // delete local data
+        val sPref = requireContext().getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
+        sPref.edit().apply(){
+            clear()
+            apply()
+        }
     }
 
     private fun navigateToLogin() {
