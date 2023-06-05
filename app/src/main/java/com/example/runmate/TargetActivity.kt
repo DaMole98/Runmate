@@ -3,6 +3,8 @@ package com.example.runmate
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -31,8 +33,6 @@ class TargetActivity: AppCompatActivity() {
         val meters_edit = findViewById<EditText>(R.id.editTargetMeter)
         val gender = findViewById<RadioGroup>(R.id.editGender)
         var check = 0
-
-
 
         // val firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
@@ -68,6 +68,117 @@ class TargetActivity: AppCompatActivity() {
             meters_edit.setText("0")
             gender.clearCheck()
         }
+
+        //Controllo sul valore "Altezza"
+
+        height_edit.addTextChangedListener(object : TextWatcher
+        {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                //TODO("Not yet implemented")
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                //TODO("Not yet implemented")
+            }
+            override fun afterTextChanged(s: Editable?)
+            {
+                val value = s.toString().toIntOrNull()
+                if(value !=null && s != null && value > 349)
+                {
+                    Toast.makeText(applicationContext, "Altezza non valida, inserisci un valore tra 1 e 350", Toast.LENGTH_SHORT).show()
+                    height_edit.text =(s.subSequence(0,s.length-1) as Editable)
+                    height_edit.setSelection(s.length-1)
+                }
+            }
+        })
+
+        //Controllo sul valore "Peso"
+
+        weight_edit.addTextChangedListener(object : TextWatcher
+        {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                //TODO("Not yet implemented")
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                //TODO("Not yet implemented")
+            }
+            override fun afterTextChanged(s: Editable?)
+            {
+                val value = s.toString().toIntOrNull()
+                if(value !=null && s != null && value > 349)
+                {
+                    Toast.makeText(applicationContext, "Peso non valido, inserisci un valore tra 1 e 350", Toast.LENGTH_SHORT).show()
+                    weight_edit.text =(s.subSequence(0,s.length-1) as Editable)
+                    weight_edit.setSelection(s.length-1)
+                }
+            }
+        })
+
+        //Controllo sul valore "Metri giornalieri"
+
+        steps_edit.addTextChangedListener(object : TextWatcher
+        {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                //TODO("Not yet implemented")
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                //TODO("Not yet implemented")
+            }
+            override fun afterTextChanged(s: Editable?)
+            {
+                val value = s.toString().toIntOrNull()
+                if(value !=null && s != null && value > 49999)
+                {
+                    Toast.makeText(applicationContext, "Numero di passi non valido, inserisci un valore tra 1 e 50000", Toast.LENGTH_SHORT).show()
+                    steps_edit.text =(s.subSequence(0,s.length-1) as Editable)
+                    steps_edit.setSelection(s.length-1)
+                }
+            }
+        })
+
+        //Controllo sul valore "Calorie giornaliere"
+
+        kcal_edit.addTextChangedListener(object : TextWatcher
+        {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                //TODO("Not yet implemented")
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                //TODO("Not yet implemented")
+            }
+            override fun afterTextChanged(s: Editable?)
+            {
+                val value = s.toString().toIntOrNull()
+                if(value !=null && s != null && value > 4999)
+                {
+                    Toast.makeText(applicationContext, "Numero di calorie non valido, inserisci un valore tra 1 e 5000", Toast.LENGTH_SHORT).show()
+                    kcal_edit.text =(s.subSequence(0,s.length-1) as Editable)
+                    kcal_edit.setSelection(s.length-1)
+                }
+            }
+        })
+
+        //Controllo sul valore "Metri giornalieri"
+
+        meters_edit.addTextChangedListener(object : TextWatcher
+        {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                //TODO("Not yet implemented")
+            }
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                //TODO("Not yet implemented")
+            }
+            override fun afterTextChanged(s: Editable?)
+            {
+                val value = s.toString().toIntOrNull()
+                if(value !=null && s != null && value > 29999)
+                {
+                    Toast.makeText(applicationContext, "Numero di metri non valido, inserisci un valore tra 1 e 30000", Toast.LENGTH_SHORT).show()
+                    meters_edit.text =(s.subSequence(0,s.length-1) as Editable)
+                    meters_edit.setSelection(s.length-1)
+                }
+            }
+        })
+
 
         //Premere il tasto conferma salva tutti i valori nelle sharedPreferences e riporta alla schermata principale
 
