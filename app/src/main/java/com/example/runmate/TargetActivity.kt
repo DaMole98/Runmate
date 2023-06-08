@@ -13,6 +13,7 @@ import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.runmate.utils.CloudDBSingleton
+import com.example.runmate.utils.setUserProperties
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 
@@ -233,6 +234,8 @@ class TargetActivity: AppCompatActivity() {
                     }
                     editor.apply()
                     Toast.makeText(this, "Campi modificati correttamente", Toast.LENGTH_SHORT).show()
+                    val analytics = FirebaseAnalytics.getInstance(applicationContext)
+                    setUserProperties(applicationContext, analytics)
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 }

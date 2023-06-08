@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
+import com.google.firebase.analytics.FirebaseAnalytics
 
 class TrainingChoiceFragment : Fragment() {
 
@@ -18,11 +19,13 @@ class TrainingChoiceFragment : Fragment() {
         val btn_walk = view.findViewById<ImageButton>(R.id.btn_walk)
         btn_walk.setOnClickListener {
             startTrainingFragment("Camminata")
+            logTrainingEvent("camminata")
         }
 
         val btn_run = view.findViewById<ImageButton>(R.id.btn_run)
         btn_run.setOnClickListener {
             startTrainingFragment("Corsa")
+            logTrainingEvent("Corsa")
         }
 
         return view
@@ -38,4 +41,12 @@ class TrainingChoiceFragment : Fragment() {
         //transaction.addToBackStack(null) // add the transaction to the back stack to enable back navigation
         transaction.commit()
     }
+
+    private fun logTrainingEvent(trainingType: String) {
+        val analytics = FirebaseAnalytics.getInstance(requireContext())
+        val params = Bundle()
+        params.putString("trainingType", trainingType)
+        analytics.logEvent("training_selected", params)
+    }
+
 }

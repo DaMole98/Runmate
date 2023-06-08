@@ -1,5 +1,8 @@
 package com.example.runmate.utils
 
+import android.content.Context
+import androidx.core.content.ContentProviderCompat.requireContext
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 
@@ -41,6 +44,21 @@ fun checkCurrentUser(mAuth: FirebaseAuth): Boolean {
     else false
 }
 
+fun setUserProperties(context: Context, analytics: FirebaseAnalytics){
+
+    val uid = FirebaseAuth.getInstance().currentUser!!.uid
+    val tPref = context.getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
+    val weight = tPref.getInt("Weight", 0)
+    val height = tPref.getInt("Height", 0)
+    val gender = tPref.getString("Gender", "Male")
+
+
+    analytics.setUserProperty("Weight", weight.toString())
+    analytics.setUserProperty("Height", height.toString())
+    analytics.setUserProperty("Gender", gender.toString())
+
+
+}
 
 /*fun isFirstLogin(): Boolean {
     val firebaseAuth = FirebaseAuth.getInstance()

@@ -8,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -34,6 +35,8 @@ class Login : AppCompatActivity() {
 
         if(checkCurrentUser(mAuth)) {
             Toast.makeText(baseContext, "Benvenuto", Toast.LENGTH_LONG).show()
+            val analytics = FirebaseAnalytics.getInstance(applicationContext)
+            setUserProperties(applicationContext, analytics)
             loadMainActivity()
         }
 
@@ -69,6 +72,8 @@ class Login : AppCompatActivity() {
                         //    val sPref = getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
                         //    syncDB(sPref, uid)
                         //}
+                        val analytics = FirebaseAnalytics.getInstance(applicationContext)
+                        setUserProperties(applicationContext, analytics)
                         loadMainActivity()
 
                     } else {

@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.example.runmate.utils.CloudDBSingleton
@@ -116,6 +117,7 @@ class UserFragment : Fragment(R.layout.fragment_user), ChangeUNDialogFragment.On
                 }
                 ?.addOnFailureListener { exception ->
                     Log.e(TAG, "Errore durante la riautenticazione dell'utente", exception)
+                    Toast.makeText(requireContext(), "Password errata", Toast.LENGTH_LONG).show()
                 }
         }
 

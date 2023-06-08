@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.ServiceConnection
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.IBinder
 import android.os.SystemClock
@@ -42,6 +43,7 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
     private var isTraining = false
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics
+    private lateinit var tPref: SharedPreferences
 
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
@@ -73,7 +75,9 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_training, container, false)
 
+
         firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext())
+
 
         val tv_training_type = view.findViewById<TextView>(R.id.tv_training_type)
         tv_training_type.text = trainingType
@@ -100,16 +104,15 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
                 isServiceStarted = true
 
                 // TODO: spostare in CaloriesService (?), in onCreate() ad esempio.
-                val uid = FirebaseAuth.getInstance().currentUser!!.uid
-                val tPref = requireContext().getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
                 //val tPref = requireContext().getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE)
 
+                logTrainingStartStopEvent(firebaseAnalytics, "training_started")
                 //log di dati analitici
-                val par = Bundle()
-                val weight = tPref.getInt("Weight", 0)
-                par.putString("play_btn", "start")
-                par.putInt("weight", weight)
-                firebaseAnalytics.logEvent("Button_start_pressed", par)
+                //val par = Bundle()
+                //val weight = tPref.getInt("Weight", 0)
+                //par.putString("play_btn", "start")
+                //par.putInt("weight", weight)
+                //firebaseAnalytics.logEvent("Button_start_pressed", par)
 
                 // bind to CaloriesService
                 intentService.putExtra("trainingType", trainingType)
@@ -122,12 +125,13 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
             if (!isPlayed) { // the play button is pressed
                 btn_play_pause.setImageResource(R.drawable.pause_circle)
 
+                logTrainingFlowEvent(firebaseAnalytics, "play_button_pressed")
                 // TODO: qui scrivi "training_resumed", dipende perché potrebbe essere la prima volta che preme su play.
                 //log di dati analitici
-                val par = Bundle()
-                par.putString("play_btn", "training_resumed")
+               //val par = Bundle()
+               //par.putString("play_btn", "training_resumed")
 
-                firebaseAnalytics.logEvent("Button_resume_pressed", par)
+               //firebaseAnalytics.logEvent("Button_resume_pressed", par)
 
                 if(!isPaused) // the pause button was not previously pressed
                     pauseOffset = 0
@@ -141,11 +145,13 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
             else { // the pause button is pressed
                 btn_play_pause.setImageResource(R.drawable.play_circle)
 
-                //log di dati analitici
-                val par = Bundle()
-                par.putString("play_btn", "training_paused")
-                firebaseAnalytics.logEvent("Button_pause_pressed", par)
+                logTrainingFlowEvent(firebaseAnalytics, "pause_button_pressed")
 
+                ////log di dati analitici
+                //val par = Bundle()
+                //par.putString("play_btn", "training_paused")
+                //firebaseAnalytics.logEvent("Button_pause_pressed", par)
+//
                 cService.setIsTrainingPaused(true)
                 isPaused = true
                 chronometer.stop()
@@ -169,11 +175,13 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
 
                 unbindCS()
 
+
+                logTrainingStartStopEvent(firebaseAnalytics, "training_stopped")
                 // TODO: spostare in CaloriesService (?), in registerTraining() ad esempio
                 //log di dati analitici
-                val par = Bundle()
-                par.putString("stop_btn", "training_stopped")
-                firebaseAnalytics.logEvent("Button_stop_pressed", par)
+                //val par = Bundle()
+                //par.putString("stop_btn", "training_stopped")
+                //firebaseAnalytics.logEvent("Button_stop_pressed", par)
 
                 isPlayed = false
                 isPaused = false
@@ -233,5 +241,16 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
             context?.unbindService(connection)
             isServiceBounded = false
         }
+    }
+
+    private fun logTrainingFlowEvent(firebaseAnalytics: FirebaseAnalytics, playPause: String) {
+        val params = Bundle()
+        params.putString("ButtonPlayPause", playPause)
+        firebaseAnalytics.logEvent("ButtonPlayPause", params)
+    }
+    private fun logTrainingStartStopEvent(firebaseAnalytics: FirebaseAnalytics, startStop: String) {
+        val params = Bundle()
+        params.putString("ButtonStartStop", startStop)
+        firebaseAnalytics.logEvent("ButtonStartStop", params)
     }
 }
