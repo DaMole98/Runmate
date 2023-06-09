@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import com.google.firebase.analytics.FirebaseAnalytics
 
@@ -38,7 +37,6 @@ class TrainingChoiceFragment : Fragment() {
 
         val transaction = requireActivity().supportFragmentManager.beginTransaction()
         transaction.replace(R.id.flFragment, fragment, "TrainingFragment")
-        //transaction.addToBackStack(null) // add the transaction to the back stack to enable back navigation
         transaction.commit()
     }
 

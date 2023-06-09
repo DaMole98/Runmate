@@ -5,21 +5,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
-import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.example.runmate.utils.CloudDBSingleton
 import com.example.runmate.utils.setUserProperties
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 
 
 class TargetActivity: AppCompatActivity() {
-    private var DB = CloudDBSingleton.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +31,6 @@ class TargetActivity: AppCompatActivity() {
         val gender = findViewById<RadioGroup>(R.id.editGender)
         var check = 0
 
-        // val firebaseAnalytics = FirebaseAnalytics.getInstance(this)
 
         // TODO: sistemare le sharedPreferences in modo da evitare che vengano prese quelle di account precendenti
 
@@ -46,8 +41,7 @@ class TargetActivity: AppCompatActivity() {
 
         //Nel caso in cui esistano dei valori salvati allora vengono mostrati al posto dei valori di default
 
-        //if(allEntries.isNotEmpty())
-        //{
+
             height_edit.setText(sharedPreferences.getInt("Height",0).toString())
             weight_edit.setText(sharedPreferences.getInt("Weight",0).toString())
             steps_edit.setText(sharedPreferences.getInt("Steps",0).toString())
@@ -219,14 +213,6 @@ class TargetActivity: AppCompatActivity() {
                     editor.putInt("Calories", calories)
                     editor.putInt("Meters", meters)
 
-                    /*val profile = HashMap<String, Any>()
-                    profile["height"] = height
-                    profile["weight"] = weight
-                    profile["steps"] = steps
-                    profile["calories"] = calories
-                    profile["meters"] = meters
-
-                    updateDatabase(profile) */
 
                     when (gender.checkedRadioButtonId) {
                         R.id.male -> editor.putString("Gender", "Male")
@@ -248,14 +234,7 @@ class TargetActivity: AppCompatActivity() {
             }
 
             check = 0
-            //firebaseAnalytics.setUserProperty("weight", weight_edit.text.toString())
         }
     }
 
-  /*  private fun updateDatabase(profile : HashMap<String, Any>){
-
-        val userId = FirebaseAuth.getInstance().currentUser!!.uid.toString()
-        val userRef = DB.getDBref().getReference("users").child(userId ?: "").child("profile")
-        userRef.updateChildren(profile)
-    } */
 }

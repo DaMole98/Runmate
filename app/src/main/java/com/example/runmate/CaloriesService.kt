@@ -66,7 +66,6 @@ class CaloriesService : Service(), SensorEventListener {
 
     private lateinit var tfCallback: TrainingFragmentCallback
 
-    //private var DB = CloudDBSingleton.getInstance()
 
     //traccia del servizio (misura il tempo di attività del servizio)
     private lateinit var serviceTrace : Trace
@@ -140,13 +139,9 @@ class CaloriesService : Service(), SensorEventListener {
         // get user data
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         val sharedPref = getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
-        //val sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE)
         gender = sharedPref.getString("Gender", "Male").toString()
         h = sharedPref.getInt("Height", 180)
         m = sharedPref.getInt("Weight", 80)
-
-        //if (gender == "Female") k = 0.413
-        //stepSize = (k * h / 100).toFloat()
 
         startTime = LocalTime.now()
     }
@@ -245,7 +240,6 @@ class CaloriesService : Service(), SensorEventListener {
     private fun saveStats(){
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         val sharedPref = getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
-        //val sharedPref = getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
         sharedPref?.edit()?.apply {
             val currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 
@@ -277,32 +271,10 @@ class CaloriesService : Service(), SensorEventListener {
             putFloat("totalCalories", tc)
             apply()
 
-            //updateDatabase(trainingObj, ts, td, tc)
-            //val cloudData = HashMap<String, Any>()
-            //cloudData["trainingList"] = json
-            //cloudData["totalSteps"] = totalSteps + sharedPref.getInt("totalSteps", 0)
-            //cloudData["totalDistance"] = totalDistance + sharedPref.getInt("totalDistance", 0)
-            //cloudData["totalCalories"] = totalCalories + sharedPref.getFloat("totalCalories", 0f)
-            //cloudData["currentDate"] = SimpleDateFormat("yyy-MM-dd HH:mm:ss").format(Date())
-//
-            //val userId = FirebaseAuth.getInstance().currentUser.toString()
-
-            //val userRef = DB.getDBref().getReference("users").child(userId ?: "")
-
-            //val database = (application as Runmate).database //ottieni l'istanza (singleton) del database dalla classe applicaiton
-            //val databaseRef = database.reference
-            // val usersRef = databaseRef.child("users").child(uid)
         }
     }
 
-   /* private fun updateDatabase(trainingObj : TrainingObject, totSteps : Int, totDist: Int, totCal : Float){
 
-        val userId = FirebaseAuth.getInstance().currentUser!!.uid.toString()
-        val userRef = DB.getDBref().getReference("users").child(userId ?: "")
-        val newTraining = userRef.child("traininglist").push()
-        newTraining.setValue(trainingObj)
-
-    } */
 
     // Stops the service
     fun registerTraining() {

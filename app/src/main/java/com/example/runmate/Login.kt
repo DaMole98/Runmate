@@ -12,6 +12,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.perf.metrics.AddTrace
 
 class Login : AppCompatActivity() {
 
@@ -22,13 +23,11 @@ class Login : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
 
 
-    //@AddTrace(name = "OnCreateLoginTrace, enabled = true")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loginscreen)
 
         mAuth = Firebase.auth
-        //textView = findViewById(R.id.login_prompt)
         editEmail = findViewById<EditText>(R.id.email)
         editPassword = findViewById<EditText>(R.id.password)
         loginBtn = findViewById(R.id.btn_login)
@@ -67,11 +66,7 @@ class Login : AppCompatActivity() {
                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         Toast.makeText(baseContext, "Benvenuto in Runmate!", Toast.LENGTH_SHORT).show()
-                        //if(isFirstLogin()){
-                        //    val uid = FirebaseAuth.getInstance().currentUser!!.uid
-                        //    val sPref = getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
-                        //    syncDB(sPref, uid)
-                        //}
+
                         val analytics = FirebaseAnalytics.getInstance(applicationContext)
                         setUserProperties(applicationContext, analytics)
                         loadMainActivity()
@@ -85,7 +80,7 @@ class Login : AppCompatActivity() {
 
         }
     }
-
+    @AddTrace(name = "loadMainFromLoginTrace, enabled = true")
     private fun loadMainActivity(){
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)

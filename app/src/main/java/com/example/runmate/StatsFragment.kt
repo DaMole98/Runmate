@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -27,6 +28,7 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
     private lateinit var tv_distance_progress: TextView
     private lateinit var tv_calories_progress: TextView
     private lateinit var rv_activities: RecyclerView
+    private lateinit var analytics: FirebaseAnalytics
 
     private var stepsGoal = 10000
     private var distanceGoal = 8000
@@ -34,6 +36,10 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_stats, container, false)
+
+        analytics = FirebaseAnalytics.getInstance(requireContext())
+
+        trackFragment(analytics, "Statistics Fragment")
 
         pb_steps = view.findViewById(R.id.pb_steps_foreground)
         pb_distance = view.findViewById(R.id.pb_distance_foreground)
@@ -45,16 +51,9 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
 
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         val sharedPref = requireContext().getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
-        //val sharedPref = requireContext().getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE)
         stepsGoal = sharedPref.getInt("Steps", 10000)
         distanceGoal = sharedPref.getInt("Meters", 8000)
         caloriesGoal = sharedPref.getInt("Calories", 1000)
-
-        /*val layoutManager = LinearLayoutManager(requireContext())
-        val dataList: List<String> = listOf("0 passi | 0 m | 0 kcal | 0:00\nWalk | gg/mm/aaaa | 00:00", "Banana", "Orange")
-        val adapter = ActivitiesAdapter(dataList)
-        rv_activities.layoutManager = layoutManager
-        rv_activities.adapter = adapter*/
 
         return view
     }
@@ -65,7 +64,6 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
         // take stats values from local save and update stats UI
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         val sharedPref = requireContext().getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
-        //val sharedPref = context?.getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
         if (sharedPref != null) {
             val layoutManager = LinearLayoutManager(requireContext())
             val adapter: TrainingAdapter
@@ -106,5 +104,13 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
         val spannableString = SpannableString(txt)
         spannableString.setSpan(color, 0, txt.indexOf("/"), Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
         tv.text = spannableString
+    }
+
+
+    private fun trackFragment(analytics : FirebaseAnalytics, fragName: String) {
+        val bundle = Bundle()
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, fragName)
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "StatsFragment")
+        analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
     }
 }

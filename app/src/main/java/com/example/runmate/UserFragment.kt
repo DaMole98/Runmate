@@ -16,14 +16,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
-import com.example.runmate.utils.CloudDBSingleton
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.database.FirebaseDatabase
+
 
 class UserFragment : Fragment(R.layout.fragment_user), ChangeUNDialogFragment.OnUsernameChangedListener {
 
@@ -31,8 +27,6 @@ class UserFragment : Fragment(R.layout.fragment_user), ChangeUNDialogFragment.On
     private lateinit var usernameBtn: Button
     private lateinit var targetBtn: Button
     private lateinit var deleteAccountBtn: Button
-    //private var currentUser: FirebaseUser? = null
-    private var DB = CloudDBSingleton.getInstance()
     private val currentUser = Firebase.auth.currentUser
     private val uid = currentUser!!.uid
 
@@ -47,7 +41,6 @@ class UserFragment : Fragment(R.layout.fragment_user), ChangeUNDialogFragment.On
         usernameBtn = view.findViewById<Button>(R.id.btn_username)
         targetBtn = view.findViewById<Button>(R.id.btn_target)
 
-        //currentUser = Firebase.auth.currentUser
 
         val sPref = requireContext().getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
         val username = sPref.getString("username", "")
@@ -127,6 +120,7 @@ class UserFragment : Fragment(R.layout.fragment_user), ChangeUNDialogFragment.On
 
     private fun deleteAccount() {
         currentUser?.delete()
+        currentUser?.delete()
             ?.addOnSuccessListener {
                 deleteUserDataFromDatabase(currentUser?.uid)
                 navigateToLogin()
@@ -137,17 +131,7 @@ class UserFragment : Fragment(R.layout.fragment_user), ChangeUNDialogFragment.On
     }
 
     private fun deleteUserDataFromDatabase(userId: String?) {
-        //val database = (requireActivity().application as Runmate).database
-        val userRef = DB.getDBref().getReference("users").child(userId ?: "")
-
-        userRef.removeValue()
-            .addOnSuccessListener {
-                Log.d(TAG, "Dati utente eliminati dal database")
-            }
-            .addOnFailureListener { exception ->
-                Log.e(TAG, "Errore durante l'eliminazione dei dati utente dal database", exception)
-            }
-
+//
         // delete local data
         val sPref = requireContext().getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
         sPref.edit().apply(){
@@ -172,7 +156,6 @@ class ChangeUNDialogFragment : DialogFragment() {
     }
 
     private var usernameChangedListener: OnUsernameChangedListener? = null
-    private var DB = CloudDBSingleton.getInstance()
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -190,17 +173,6 @@ class ChangeUNDialogFragment : DialogFragment() {
             val editor = sPref.edit()
             editor.putString("username", newUsername)
             editor.apply()
-
-
-            val userRef = DB.getDBref().getReference("users").child(userId ?: "")
-
-           // val database = (requireActivity().application as Runmate).database //ottieni l'istanza del database dalla classe application
-                                            //requireActivity() perché application è un campo di mainActivity, non di fragment
-           // val databaseRef = database.reference
-
-           // val usernameRef = databaseRef.child("users/$uid/username")
-            userRef.child("username").setValue(newUsername)
-
 
             usernameChangedListener?.onUsernameChanged(newUsername)
 

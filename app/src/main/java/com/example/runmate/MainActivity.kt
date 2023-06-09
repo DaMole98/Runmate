@@ -29,7 +29,6 @@ import java.time.format.DateTimeFormatter
 
 class MainActivity : AppCompatActivity() {
 
-    //private lateinit var username: String?
     private val bundle = Bundle()
 
     private var selectedItemId = 0
@@ -44,7 +43,6 @@ class MainActivity : AppCompatActivity() {
 
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         val sharedPref = getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
-        //val sharedPref = getSharedPreferences("TRAINING_DATA", Context.MODE_PRIVATE)
         if (sharedPref != null) {
             val currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
             if (sharedPref.getString("currentDate", "") != currentDate){ // the stats are reset each day (apart from training list)
@@ -55,18 +53,6 @@ class MainActivity : AppCompatActivity() {
                 editor.apply()
             }
         }
-
-        // REMOVE THIS, IT'S JUST FOR DEBUG
-        /*sharedPref?.edit()?.apply {
-            remove("trainingList")
-            remove("totalSteps")
-            remove("totalDistance")
-            remove("totalCalories")
-            apply()
-        }*/
-
-
-        //val sPref = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
 
         val statsFragment = StatsFragment()
         val trainingChoiceFragment = TrainingChoiceFragment()
@@ -104,15 +90,7 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     else setCurrentFragment(userFragment)
-                    // if (::username.isInitialized) {
-                    //     userFragment.arguments = bundle
-                    //     setCurrentFragment(userFragment)
-                    // } else {
-                    //     val loadingDialog = ProgressDialog.show(this, "", "Un attimo...", true)
-                    //     loadUsername({loadingDialog.dismiss()
-                    //                     userFragment.arguments = bundle
-                    //                     setCurrentFragment(userFragment)})
-                    // }
+
                 }
             }
             true
@@ -161,20 +139,4 @@ class MainActivity : AppCompatActivity() {
         if (!isGranted) // permission is not granted
             showTrainingAlert("Hai rifiutato l'accesso al sensore contapassi: non potrai registrare i tuoi allenamenti.")
     }
-
-//    @AddTrace(name = "loadUsername", enabled = true)
-//    //il parametro è una funzione di callback
-//    private fun loadUsername(onLoaded : () -> Unit) {
-//        val uid = FirebaseAuth.getInstance().currentUser?.uid
-//        val userRef =
-//            Firebase.database("https://runmate-b7137-default-rtdb.europe-west1.firebasedatabase.app/")
-//                .getReference("users/$uid")
-//
-//        userRef.child("username").get().addOnSuccessListener { dataSnapshot ->
-//            username = dataSnapshot.getValue(String::class.java).toString()
-//            bundle.putString("USERNAME", username)
-//            onLoaded() // apri lo userFragment una volta terminata la chiamata asincrona al DB
-//
-//        }
-//    }
 }

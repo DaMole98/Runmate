@@ -1,10 +1,8 @@
 package com.example.runmate
 
-import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.ServiceConnection
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -18,7 +16,6 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.firebase.analytics.FirebaseAnalytics
-import com.google.firebase.auth.FirebaseAuth
 import kotlin.math.roundToInt
 
 class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCallback {
@@ -104,15 +101,8 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
                 isServiceStarted = true
 
                 // TODO: spostare in CaloriesService (?), in onCreate() ad esempio.
-                //val tPref = requireContext().getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE)
 
                 logTrainingStartStopEvent(firebaseAnalytics, "training_started")
-                //log di dati analitici
-                //val par = Bundle()
-                //val weight = tPref.getInt("Weight", 0)
-                //par.putString("play_btn", "start")
-                //par.putInt("weight", weight)
-                //firebaseAnalytics.logEvent("Button_start_pressed", par)
 
                 // bind to CaloriesService
                 intentService.putExtra("trainingType", trainingType)
@@ -126,12 +116,6 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
                 btn_play_pause.setImageResource(R.drawable.pause_circle)
 
                 logTrainingFlowEvent(firebaseAnalytics, "play_button_pressed")
-                // TODO: qui scrivi "training_resumed", dipende perché potrebbe essere la prima volta che preme su play.
-                //log di dati analitici
-               //val par = Bundle()
-               //par.putString("play_btn", "training_resumed")
-
-               //firebaseAnalytics.logEvent("Button_resume_pressed", par)
 
                 if(!isPaused) // the pause button was not previously pressed
                     pauseOffset = 0
@@ -147,11 +131,6 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
 
                 logTrainingFlowEvent(firebaseAnalytics, "pause_button_pressed")
 
-                ////log di dati analitici
-                //val par = Bundle()
-                //par.putString("play_btn", "training_paused")
-                //firebaseAnalytics.logEvent("Button_pause_pressed", par)
-//
                 cService.setIsTrainingPaused(true)
                 isPaused = true
                 chronometer.stop()
@@ -178,33 +157,14 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
 
                 logTrainingStartStopEvent(firebaseAnalytics, "training_stopped")
                 // TODO: spostare in CaloriesService (?), in registerTraining() ad esempio
-                //log di dati analitici
-                //val par = Bundle()
-                //par.putString("stop_btn", "training_stopped")
-                //firebaseAnalytics.logEvent("Button_stop_pressed", par)
 
                 isPlayed = false
                 isPaused = false
                 pauseOffset = 0
                 btn_play_pause.setImageResource(R.drawable.play_circle)
-                //chronometer.base = SystemClock.elapsedRealtime()
                 chronometer.stop()
             }
 
-            /*if (isPlayed || isPaused) { // perform reset
-
-                //log di dati analitici
-                val par = Bundle()
-                par.putString("stop_btn", "training_stopped")
-                firebaseAnalytics.logEvent("Button_stop_pressed", par)
-
-                isPlayed = false
-                isPaused = false
-                pauseOffset = 0
-                btn_play_pause.setImageResource(R.drawable.play_circle)
-                //chronometer.base = SystemClock.elapsedRealtime()
-                chronometer.stop()
-            }*/
             isTraining = false
         }
 
