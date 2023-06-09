@@ -20,7 +20,7 @@ import kotlin.math.roundToInt
 
 class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCallback {
     private lateinit var cService: CaloriesService
-    private lateinit var intentService: Intent
+    //private lateinit var intentService: Intent
     private var isServiceBounded: Boolean = false
 
     private lateinit var tv_totalSteps: TextView
@@ -28,19 +28,16 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
     private lateinit var tv_totalCalories: TextView
     private lateinit var chronometer: Chronometer
 
+    // variables to handle the training stages
     private var isPlayed = false
     private var isPaused = false
     private var isServiceStarted = false
     private var pauseOffset: Long = 0
-
     private lateinit var trainingTime: String
-
     private lateinit var trainingType: String
-
     private var isTraining = false
 
     private lateinit var firebaseAnalytics: FirebaseAnalytics
-    private lateinit var tPref: SharedPreferences
 
     private val connection = object : ServiceConnection {
         override fun onServiceConnected(className: ComponentName, service: IBinder) {
@@ -72,17 +69,17 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_training, container, false)
 
-
         firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext())
 
-
-        val tv_training_type = view.findViewById<TextView>(R.id.tv_training_type)
-        tv_training_type.text = trainingType
+        //val tv_training_type = view.findViewById<TextView>(R.id.tv_training_type)
+        //tv_training_type.text = trainingType
+        view.findViewById<TextView>(R.id.tv_training_type).text = trainingType
         tv_totalSteps = view.findViewById(R.id.tv_steps_train)
         tv_totalDistance = view.findViewById(R.id.tv_distance_train)
         tv_totalCalories = view.findViewById(R.id.tv_calories_train)
         chronometer = view.findViewById(R.id.chronometer_train)
 
+        // the training chronometer shows time formatted to hours, minutes, seconds
         chronometer.setOnChronometerTickListener {
             val elapsedTimeMillis = SystemClock.elapsedRealtime() - chronometer.base
             val elapsedTimeSeconds = elapsedTimeMillis / 1000
@@ -93,14 +90,13 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
             chronometer.text = String.format("%02d:%02d:%02d", h, m, s)
         }
 
-        intentService = Intent(context, CaloriesService::class.java)
+        val intentService = Intent(context, CaloriesService::class.java)
 
+        // code to handle training buttons click events
         val btn_play_pause = view.findViewById<ImageButton>(R.id.btn_play_pause_train)
         btn_play_pause.setOnClickListener {
             if (!isServiceStarted){ // the service is not started yet, so start it
                 isServiceStarted = true
-
-                // TODO: spostare in CaloriesService (?), in onCreate() ad esempio.
 
                 logTrainingStartStopEvent(firebaseAnalytics, "training_started")
 
@@ -109,7 +105,7 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
                 context?.bindService(intentService, connection, Context.BIND_AUTO_CREATE)
 
                 // reset UI
-                updateUI(0, 0, 0f)
+                updateUI(0, 0f, 0f)
             }
 
             if (!isPlayed) { // the play button is pressed
@@ -146,7 +142,7 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
                 isServiceStarted = false
 
                 // reset UI
-                updateUI(0, 0, 0f)
+                updateUI(0, 0f, 0f)
                 chronometer.text = "00:00:00"
 
                 // register the current training
@@ -154,9 +150,7 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
 
                 unbindCS()
 
-
                 logTrainingStartStopEvent(firebaseAnalytics, "training_stopped")
-                // TODO: spostare in CaloriesService (?), in registerTraining() ad esempio
 
                 isPlayed = false
                 isPaused = false
@@ -164,17 +158,10 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
                 btn_play_pause.setImageResource(R.drawable.play_circle)
                 chronometer.stop()
             }
-
             isTraining = false
         }
 
         return view
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        //updateUI(steps, distance, calories)
     }
 
     override fun onDestroyView() {
@@ -183,10 +170,11 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
         unbindCS()
     }
 
-    override fun updateUI(steps: Int, distance: Int, calories: Float) {
+    // Updates the training UI with the training stats
+    override fun updateUI(steps: Int, distance: Float, calories: Float) {
         activity?.runOnUiThread {
             tv_totalSteps.text = steps.toString()
-            tv_totalDistance.text = distance.toString()
+            tv_totalDistance.text = distance.roundToInt().toString()
             tv_totalCalories.text = calories.roundToInt().toString()
         }
     }
@@ -195,7 +183,7 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
         return trainingTime
     }
 
-    // Unbind this CaloriesService if not bounded
+    // Unbinds this CaloriesService if not bounded
     private fun unbindCS(){
         if (isServiceBounded) {
             context?.unbindService(connection)
@@ -208,6 +196,7 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
         params.putString("ButtonPlayPause", playPause)
         firebaseAnalytics.logEvent("ButtonPlayPause", params)
     }
+
     private fun logTrainingStartStopEvent(firebaseAnalytics: FirebaseAnalytics, startStop: String) {
         val params = Bundle()
         params.putString("ButtonStartStop", startStop)

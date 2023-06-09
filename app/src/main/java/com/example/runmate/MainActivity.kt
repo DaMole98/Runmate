@@ -37,10 +37,12 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_bottom_nav)
 
+        // check permissions to use the step sensor
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACTIVITY_RECOGNITION) != PackageManager.PERMISSION_GRANTED){
             requestPermissionLauncher.launch(Manifest.permission.ACTIVITY_RECOGNITION)
         }
 
+        // get current user id and remove daily stats if this is a new day
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         val sharedPref = getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
         if (sharedPref != null) {
@@ -67,10 +69,12 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.setOnItemSelectedListener { item ->
             selectedItemId = item.itemId
+
+            // get instance of TrainingFragment (if any) and handle user navigation between fragments
             val tfInstance = supportFragmentManager.findFragmentByTag("TrainingFragment") as? TrainingFragment
             when (item.itemId) {
                 R.id.stats -> {
-                    if (tfInstance?.getIsTraining() == true) {
+                    if (tfInstance?.getIsTraining() == true) { // the user is training => don't change current fragment
                         bottomNavigationView.post {
                             bottomNavigationView.selectedItemId = R.id.training
                         }
@@ -78,19 +82,18 @@ class MainActivity : AppCompatActivity() {
                     else setCurrentFragment(statsFragment)
                 }
                 R.id.training -> {
-                    if (tfInstance?.getIsTraining() == true) {
+                    if (tfInstance?.getIsTraining() == true) { // the user is training => don't change current fragment
                         showTrainingAlert("Stai registrando un'attività:\npremi il pulsante di stop per fermarla e permetterne il salvataggio.")
                     }
                     else setCurrentFragment(trainingChoiceFragment)
                 }
                 R.id.user -> {
-                    if (tfInstance?.getIsTraining() == true) {
+                    if (tfInstance?.getIsTraining() == true) { // the user is training => don't change current fragment
                         bottomNavigationView.post {
                             bottomNavigationView.selectedItemId = R.id.training
                         }
                     }
                     else setCurrentFragment(userFragment)
-
                 }
             }
             true
@@ -98,16 +101,17 @@ class MainActivity : AppCompatActivity() {
 
         val onBackPressedCallback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-                if (supportFragmentManager.findFragmentById(R.id.flFragment) is TrainingFragment) {
+                if (supportFragmentManager.findFragmentById(R.id.flFragment) is TrainingFragment) { // the user is training => don't change current fragment
                     val tfInstance = supportFragmentManager.findFragmentByTag("TrainingFragment") as TrainingFragment
                     if (tfInstance.getIsTraining())
                         showTrainingAlert("Stai registrando un'attività:\npremi il pulsante di stop per fermarla e permetterne il salvataggio.")
-                    else {
+                    else setCurrentFragment(trainingChoiceFragment)
+                    /*else {
                         val fragment = TrainingChoiceFragment()
                         val transaction = supportFragmentManager.beginTransaction()
                         transaction.replace(R.id.flFragment, fragment)
                         transaction.commit()
-                    }
+                    }*/
                 }
                 else finish()
             }

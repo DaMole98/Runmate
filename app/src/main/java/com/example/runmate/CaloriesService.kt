@@ -31,11 +31,13 @@ import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.concurrent.locks.ReentrantLock
 
-
+// Service class to manage the step counter and the stats calculation
 class CaloriesService : Service(), SensorEventListener {
     private var isFirstStep = true
     private var isTrainingPaused = false
-    private var isComputing = false
+    fun setIsTrainingPaused(paused: Boolean){
+        isTrainingPaused = paused
+    }
 
     private var sensorManager: SensorManager? = null
     private val statsLock = ReentrantLock()
@@ -44,54 +46,53 @@ class CaloriesService : Service(), SensorEventListener {
     // timestamps to handle calories computation
     private val computingTime = 10000L
 
-    // constants for calories computation
+    // variables for calories computation
     private var horizontalComponent = 0.1
     private var verticalComponent = 1.8
     private var gender = "Male" // "Female"
     private var h = 180 // [cm]
     private var m = 80 // [kg]
     private val G = 0.01f
-    private var k = 0.42 // walk = 0.42, run = 0.6    //0.415 // men = 0.415, women = 0.413
+    private var k = 0.42 // walk = 0.42, run = 0.6
     private var stepSize = (k * h / 100).toFloat() // [m]
 
     // variables to save steps, distance and calories
-    private var currentSteps = 0
-    private var totalSteps = 0
-    private var totalDistance = 0
-    private var totalCalories = 0f
+    private var currentSteps = 0 // steps in this session before calling computeStats()
+    private var totalSteps = 0 // steps in this session
+    private var totalDistance = 0f // distance in this session
+    private var totalCalories = 0f // calories in this session
 
+    // when the training started
     private lateinit var startTime: LocalTime
 
-    lateinit var trainingType: String
+    lateinit var trainingType: String // "Corsa" or "Camminata"
 
+    // saves instance of TrainingFragmentCallback
     private lateinit var tfCallback: TrainingFragmentCallback
 
-
-    //traccia del servizio (misura il tempo di attività del servizio)
-    private lateinit var serviceTrace : Trace
-
-    // Binder given to clients
-    private val binder = LocalBinder()
-
-    inner class LocalBinder : Binder() {
-
-        // Returns this instance of CaloriesService so clients can call public methods
-        fun getService(): CaloriesService = this@CaloriesService
-    }
-
+    // sets instance of TrainingFragmentCallback so the service can call TrainingFragment methods
     fun setTrainingFragmentCallback(callback: TrainingFragmentCallback) {
         tfCallback = callback
     }
 
-    fun setIsTrainingPaused(paused: Boolean){
-        isTrainingPaused = paused
+    // binder given to clients (TrainingFragment)
+    private val binder = LocalBinder()
+
+    inner class LocalBinder : Binder() {
+
+        // returns this instance of CaloriesService so clients can call public methods
+        fun getService(): CaloriesService = this@CaloriesService
     }
+
+    //traccia del servizio (misura il tempo di attività del servizio)
+    // TODO: cambiare commento
+    private lateinit var serviceTrace : Trace
 
     override fun onCreate() {
         super.onCreate()
 
+        // TODO: cambiare commenti
         serviceTrace = FirebasePerformance.getInstance().newTrace("CaloriesServiceTrace")
-
         serviceTrace.start()
 
         // Misura il tempo di CPU utilizzato dal servizio
@@ -176,6 +177,7 @@ class CaloriesService : Service(), SensorEventListener {
 
     // Detects user steps
     override fun onSensorChanged(event: SensorEvent?) {
+        // we don't count steps if the training is paused
         if (!isTrainingPaused) {
             currentSteps++
 
@@ -189,6 +191,10 @@ class CaloriesService : Service(), SensorEventListener {
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
     }
 
+    /* The coroutine checks for changes every "computingTime" milliseconds.
+       If no steps are detected, it is stopped to save resources.
+       A lock is used to avoid race conditions with the code inside registerTraining().
+     */
     private fun startCoroutineCalories() {
         job = CoroutineScope(Dispatchers.Default).launch {
             while (isActive) {
@@ -210,7 +216,7 @@ class CaloriesService : Service(), SensorEventListener {
         }
     }
 
-    // Updates stats
+    // Calculates distance and calories and makes a call to update the UI.
     private fun computeStats(){
         val (distance, calories) = computeCalories()
 
@@ -225,7 +231,7 @@ class CaloriesService : Service(), SensorEventListener {
     }
 
     // Computes calories based on the time interval. Returns distance and calories.
-    private fun computeCalories(): Pair<Int, Float> {
+    private fun computeCalories(): Pair<Float, Float> {
         val interval_in_seconds = computingTime / 1000f // [s]
         val d = currentSteps * stepSize // [m]
         val S = (d / interval_in_seconds) * 60 // [m / min]
@@ -233,7 +239,8 @@ class CaloriesService : Service(), SensorEventListener {
         var calories = ((VO2 * m) / 1000) * 5 // [kcal / min]
         calories = calories * interval_in_seconds / 60 // [kcal]
 
-        return Pair(d.toInt(), calories.toFloat())
+        //return Pair(d.toInt(), calories.toFloat())
+        return Pair(d, calories.toFloat())
     }
 
     // Locally saves stats
@@ -243,10 +250,11 @@ class CaloriesService : Service(), SensorEventListener {
         sharedPref?.edit()?.apply {
             val currentDate = LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
 
+            // this object saves the current session that will be present in the activities list
             val trainingObj = TrainingObject(trainingType, currentDate, startTime.format(DateTimeFormatter.ofPattern("HH:mm")),
                 totalSteps, totalDistance, totalCalories, tfCallback.getTrainingTime())
 
-            // take older trainings (if any) and add last training
+            // take older trainings (if any) and add this training
             var json = sharedPref.getString("trainingList", null)
             val gson = Gson()
             if (json != null) {
@@ -255,33 +263,33 @@ class CaloriesService : Service(), SensorEventListener {
                 pastTraining.add(0, trainingObj)
                 json = gson.toJson(pastTraining)
             }
-            else{ // last training is the first training
+            else{ // this training is the first training
                 val trainingList = mutableListOf(trainingObj)
                 json = gson.toJson(trainingList)
             }
             putString("trainingList", json)
             putString("currentDate", currentDate)
 
-            val ts = totalSteps + sharedPref.getInt("totalSteps", 0)
+            // TODO: variabili inserite dopo, forse eliminare queste
+            /*val ts = totalSteps + sharedPref.getInt("totalSteps", 0)
             val td = totalDistance + sharedPref.getInt("totalDistance", 0)
-            val tc = totalCalories + sharedPref.getFloat("totalCalories", 0f)
-            // old values are added to new values
-            putInt("totalSteps", ts)
-            putInt("totalDistance", td)
-            putFloat("totalCalories", tc)
-            apply()
+            val tc = totalCalories + sharedPref.getFloat("totalCalories", 0f)*/
 
+            // old values are added to new values and the stats are locally saved
+            putInt("totalSteps", totalSteps + sharedPref.getInt("totalSteps", 0))
+            putFloat("totalDistance", totalDistance + sharedPref.getFloat("totalDistance", 0f))
+            putFloat("totalCalories", totalCalories + sharedPref.getFloat("totalCalories", 0f))
+            apply()
         }
     }
 
-
-
-    // Stops the service
+    /* The user pressed the stop button => if necessary, new stats are computed and saved.
+       A lock avoid race conditions because also the coroutine can access "currentSteps" and call computeStats().
+     */
     fun registerTraining() {
         try {
             statsLock.lock()
             if (currentSteps != 0){
-                isComputing = true
                 computeStats()
                 job?.cancel()
             }

@@ -65,7 +65,7 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         val sharedPref = requireContext().getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
         if (sharedPref != null) {
-            val layoutManager = LinearLayoutManager(requireContext())
+            //val layoutManager = LinearLayoutManager(requireContext())
             val adapter: TrainingAdapter
 
             val json = sharedPref.getString("trainingList", null)
@@ -74,38 +74,41 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
                 val listType = object : TypeToken<MutableList<TrainingObject>>() {}.type
                 val pastTraining = gson.fromJson<MutableList<TrainingObject>>(json, listType)
 
+                // pass training list to show trainings in the UI
                 adapter = TrainingAdapter(pastTraining)
             }
             else{
+                // pass empty list because there are no previous trainings
                 adapter = TrainingAdapter(listOf())
             }
-            rv_activities.layoutManager = layoutManager
+            rv_activities.layoutManager = LinearLayoutManager(requireContext())
             rv_activities.adapter = adapter
 
-            updateStatsUI(sharedPref.getInt("totalSteps", 0), sharedPref.getInt("totalDistance", 0), sharedPref.getFloat("totalCalories", 0f))
+            // update text view and circular progress bars
+            updateStatsUI(sharedPref.getInt("totalSteps", 0), sharedPref.getFloat("totalDistance", 0f), sharedPref.getFloat("totalCalories", 0f))
             updateTVColor(tv_steps_progress, ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.steps)))
             updateTVColor(tv_distance_progress, ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.distance)))
             updateTVColor(tv_calories_progress, ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.calories)))
         }
     }
 
-    private fun updateStatsUI(steps: Int, distance: Int, calories: Float) {
+    // Updates text views with locally saved stats and colors circular progress bars
+    private fun updateStatsUI(steps: Int, distance: Float, calories: Float) {
         pb_steps.progress = (steps.toFloat() / stepsGoal.toFloat() * 100).toInt()
-        pb_distance.progress = (distance.toFloat() / distanceGoal.toFloat() * 100).toInt()
+        pb_distance.progress = (distance / distanceGoal.toFloat() * 100).toInt()
         pb_calories.progress = (calories / caloriesGoal.toFloat() * 100).toInt()
         tv_steps_progress.text = "$steps / $stepsGoal passi"
-        tv_distance_progress.text = "$distance / $distanceGoal m"
+        tv_distance_progress.text = "${distance.roundToInt()} / $distanceGoal m"
         tv_calories_progress.text = "${calories.roundToInt()} / $caloriesGoal kcal"
     }
 
-    // Changes the color of part of the statistics texts
+    // Changes the color of part of the stats text views
     private fun updateTVColor(tv: TextView, color: ForegroundColorSpan) {
         val txt = tv.text
         val spannableString = SpannableString(txt)
         spannableString.setSpan(color, 0, txt.indexOf("/"), Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
         tv.text = spannableString
     }
-
 
     private fun trackFragment(analytics : FirebaseAnalytics, fragName: String) {
         val bundle = Bundle()

@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import kotlin.math.roundToInt
 
+// Adapter class to manage the training list
 class TrainingAdapter(private val dataList: List<TrainingObject>) : RecyclerView.Adapter<TrainingAdapter.TrainingItemHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrainingItemHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.training_item, parent, false)
@@ -27,19 +28,22 @@ class TrainingAdapter(private val dataList: List<TrainingObject>) : RecyclerView
         return if (dataList.isEmpty()) 1 else dataList.size
     }
 
+    // Class to handle the training item
     inner class TrainingItemHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tv_act_sum_1: TextView = itemView.findViewById(R.id.tv_activity_summary_1)
         private val tv_act_sum_2: TextView = itemView.findViewById(R.id.tv_activity_summary_2)
         private val imgv_activity: ImageView = itemView.findViewById(R.id.imgv_activity_icon)
 
         fun bind(itemData: TrainingObject) {
+            // update text views and images
             tv_act_sum_1.text = "${itemData.type} | ${itemData.date} | ${itemData.startTime}"
-            tv_act_sum_2.text = "${itemData.steps} passi | ${itemData.distance} m | ${itemData.calories.roundToInt()} kcal" + " | ${itemData.duration}"
+            tv_act_sum_2.text = "${itemData.steps} passi | ${itemData.distance.roundToInt()} m | ${itemData.calories.roundToInt()} kcal" + " | ${itemData.duration}"
 
             if (itemData.type == "Camminata") imgv_activity.setImageResource(R.drawable.walk)
             else imgv_activity.setImageResource(R.drawable.run)
         }
 
+        // there are no trainings => show a specific text
         fun showEmptyState() {
             val tv_act_empty: TextView = itemView.findViewById(R.id.tv_activity_empty)
 

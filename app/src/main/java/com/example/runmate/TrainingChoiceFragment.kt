@@ -10,11 +10,12 @@ import com.google.firebase.analytics.FirebaseAnalytics
 
 class TrainingChoiceFragment : Fragment() {
 
-    val bundle = Bundle()
+    private val bundle = Bundle()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?{
         val view = inflater.inflate(R.layout.fragment_training_choice, container, false)
 
+        // handle buttons click events: start training fragment with appropriate training type
         val btn_walk = view.findViewById<ImageButton>(R.id.btn_walk)
         btn_walk.setOnClickListener {
             startTrainingFragment("Camminata")
@@ -30,6 +31,7 @@ class TrainingChoiceFragment : Fragment() {
         return view
     }
 
+    // Instantiates training fragment and pass training type
     private fun startTrainingFragment(type: String){
         val fragment = TrainingFragment()
         bundle.putString("trainingType", type)
