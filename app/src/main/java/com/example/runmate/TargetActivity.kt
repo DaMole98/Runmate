@@ -42,15 +42,15 @@ class TargetActivity: AppCompatActivity() {
         //Nel caso in cui esistano dei valori salvati allora vengono mostrati al posto dei valori di default
 
 
-            height_edit.setText(sharedPreferences.getInt("Height",0).toString())
-            weight_edit.setText(sharedPreferences.getInt("Weight",0).toString())
-            steps_edit.setText(sharedPreferences.getInt("Steps",0).toString())
-            kcal_edit.setText(sharedPreferences.getInt("Calories",0).toString())
-            meters_edit.setText(sharedPreferences.getInt("Meters",0).toString())
-            gender.check(R.id.male)
-            val g = sharedPreferences.getString("Gender", "")
-            if(g == "" || g == "Male") gender.check(R.id.male)
-            else gender.check(R.id.female)
+        height_edit.setText(sharedPreferences.getInt("Height",0).toString())
+        weight_edit.setText(sharedPreferences.getInt("Weight",0).toString())
+        steps_edit.setText(sharedPreferences.getInt("Steps",0).toString())
+        kcal_edit.setText(sharedPreferences.getInt("Calories",0).toString())
+        meters_edit.setText(sharedPreferences.getInt("Meters",0).toString())
+        gender.check(R.id.male)
+        val g = sharedPreferences.getString("Gender", "")
+        if(g == "" || g == "Male") gender.check(R.id.male)
+        else gender.check(R.id.female)
         //}
 
         //Premere reset porta tutti i valori numerici a 0 e annulla la selezione del gender

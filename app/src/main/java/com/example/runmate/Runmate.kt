@@ -8,8 +8,6 @@ class Runmate : Application() {
 
     private lateinit var analytics: FirebaseAnalytics
 
-    //private lateinit var database : FirebaseDatabase
-
     override fun onCreate() {
         super.onCreate()
 
