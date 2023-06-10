@@ -39,8 +39,8 @@ class TargetActivity: AppCompatActivity() {
         //val sharedPreferences = getSharedPreferences("PREFERENCE",Context.MODE_PRIVATE)
         val allEntries: Map<String,*> = sharedPreferences.all
 
-        //Nel caso in cui esistano dei valori salvati allora vengono mostrati al posto dei valori di default
-
+        //If there are any saved data, they are loaded.
+        //Otherwise, they are set to 0 (gender field default value is "Male")
 
         height_edit.setText(sharedPreferences.getInt("Height",0).toString())
         weight_edit.setText(sharedPreferences.getInt("Weight",0).toString())
@@ -53,7 +53,7 @@ class TargetActivity: AppCompatActivity() {
         else gender.check(R.id.female)
         //}
 
-        //Premere reset porta tutti i valori numerici a 0 e annulla la selezione del gender
+        //Reset button sets each field to 0 and resets gender field
 
         reset_btn.setOnClickListener {
             height_edit.setText("0")
@@ -64,8 +64,9 @@ class TargetActivity: AppCompatActivity() {
             gender.clearCheck()
         }
 
-        //Controllo sul valore "Altezza"
+        //Character-by-character field validation
 
+        //Height
         height_edit.addTextChangedListener(object : TextWatcher
         {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -79,6 +80,7 @@ class TargetActivity: AppCompatActivity() {
                 val value = s.toString().toIntOrNull()
                 if(value !=null && s != null && value > 349)
                 {
+                    //Notify the user, then block any value that would exceed the limit
                     Toast.makeText(applicationContext, "Altezza non valida, inserisci un valore tra 1 e 350", Toast.LENGTH_SHORT).show()
                     height_edit.text =(s.subSequence(0,s.length-1) as Editable)
                     height_edit.setSelection(s.length-1)
@@ -86,8 +88,7 @@ class TargetActivity: AppCompatActivity() {
             }
         })
 
-        //Controllo sul valore "Peso"
-
+        //Weight
         weight_edit.addTextChangedListener(object : TextWatcher
         {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -108,8 +109,7 @@ class TargetActivity: AppCompatActivity() {
             }
         })
 
-        //Controllo sul valore "Metri giornalieri"
-
+        //Steps per day
         steps_edit.addTextChangedListener(object : TextWatcher
         {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -130,8 +130,7 @@ class TargetActivity: AppCompatActivity() {
             }
         })
 
-        //Controllo sul valore "Calorie giornaliere"
-
+        //Calories per day
         kcal_edit.addTextChangedListener(object : TextWatcher
         {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -152,8 +151,7 @@ class TargetActivity: AppCompatActivity() {
             }
         })
 
-        //Controllo sul valore "Metri giornalieri"
-
+        //Meters per day
         meters_edit.addTextChangedListener(object : TextWatcher
         {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -174,29 +172,28 @@ class TargetActivity: AppCompatActivity() {
             }
         })
 
-
-        //Premere il tasto conferma salva tutti i valori nelle sharedPreferences e riporta alla schermata principale
+        //When the 'Confirm' button is pressed, each field is checked.
+        //If a field is empty or equal to 0, it will be flagged, and the user will be prompted to enter a valid value.
+        //Otherwise, the values are saved, and the user is redirected back to the initial page.
 
         confirm_btn.setOnClickListener {
 
-            //Controllo sui campi vuoti
-
+            //Empty field check
             if(height_edit.text.isEmpty() || weight_edit.text.isEmpty() || steps_edit.text.isEmpty() || kcal_edit.text.isEmpty() || meters_edit.text.isEmpty() || (gender.checkedRadioButtonId != R.id.male && gender.checkedRadioButtonId != R.id.female))
                 check=6
             else{
-                //Controllo sulla validità dei dati
-                if(Integer.parseInt(meters_edit.text.toString()) <= 0 || Integer.parseInt(meters_edit.text.toString()) > 50000)
+                //Check for field equal to 0
+                if(Integer.parseInt(meters_edit.text.toString()) == 0)
                     check=1
-                if(Integer.parseInt(kcal_edit.text.toString()) <= 0 || Integer.parseInt(kcal_edit.text.toString()) > 5000)
+                if(Integer.parseInt(kcal_edit.text.toString()) == 0)
                     check=2
-                if(Integer.parseInt(steps_edit.text.toString()) <= 0 || Integer.parseInt(steps_edit.text.toString()) > 50000)
+                if(Integer.parseInt(steps_edit.text.toString()) == 0)
                     check=3
-                if(Integer.parseInt(weight_edit.text.toString()) <= 0 || Integer.parseInt(weight_edit.text.toString()) > 350)
+                if(Integer.parseInt(weight_edit.text.toString()) == 0)
                     check=4
-                if(Integer.parseInt(height_edit.text.toString()) <= 0 || Integer.parseInt(height_edit.text.toString()) > 350)
+                if(Integer.parseInt(height_edit.text.toString()) == 0)
                     check=5
             }
-            //Utilizzo il when per far apparire un allert alla volta
 
             when(check){
                 0 -> {

@@ -43,10 +43,15 @@ class Registration : AppCompatActivity() {
         val fbPer = FirebasePerformance.getInstance()
         val regTrace = fbPer.newTrace(" user_registration_trace")
 
+        //Go back to Login page.
+
         back_btn.setOnClickListener {
             intent = Intent(applicationContext, Login::class.java)
             startActivity(intent)
         }
+
+        //If every field is correctly compiled, an account will be created.
+        //Thus the user will be redirected to TargetActivity.
 
         register_btn.setOnClickListener {
             val email = editEmail.text.toString()
