@@ -1,6 +1,5 @@
 package com.example.runmate
 
-import android.content.Context
 import com.example.runmate.utils.*
 import android.content.Intent
 import android.os.Bundle
@@ -32,10 +31,11 @@ class Login : AppCompatActivity() {
         editPassword = findViewById<EditText>(R.id.password)
         loginBtn = findViewById(R.id.btn_login)
 
+        //check if the user is already logged in
         if(checkCurrentUser(mAuth)) {
             Toast.makeText(baseContext, "Benvenuto", Toast.LENGTH_LONG).show()
             val analytics = FirebaseAnalytics.getInstance(applicationContext)
-            setUserProperties(applicationContext, analytics)
+            setUserProperties(applicationContext, analytics) //set analytics user's parameters
             loadMainActivity()
         }
 
@@ -43,8 +43,9 @@ class Login : AppCompatActivity() {
 
     }
 
-
-
+    /*
+    Load login view
+    */
     private fun Loadlogin(){
 
         registerBtn = findViewById(R.id.btn_register)
@@ -63,10 +64,11 @@ class Login : AppCompatActivity() {
             }
             else{
 
+                //Sign in with Google Firebase Authentication
                 mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         Toast.makeText(baseContext, "Benvenuto in Runmate!", Toast.LENGTH_SHORT).show()
-
+                        // load analytics and set user properties
                         val analytics = FirebaseAnalytics.getInstance(applicationContext)
                         setUserProperties(applicationContext, analytics)
                         loadMainActivity()
@@ -80,6 +82,11 @@ class Login : AppCompatActivity() {
 
         }
     }
+
+    /*
+    load main activity. Annotation is used to trace the performance of the funciton call,
+    including nested functions.
+     */
     @AddTrace(name = "loadMainFromLoginTrace, enabled = true")
     private fun loadMainActivity(){
         val intent = Intent(this, MainActivity::class.java)

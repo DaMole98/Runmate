@@ -3,7 +3,10 @@ import com.example.runmate.utils.*
 import android.app.Application
 import com.google.firebase.analytics.FirebaseAnalytics
 
-
+/*
+Application class instantiated when the App starts.
+It instantiates an analytics object that tracks the device tipe
+ */
 class Runmate : Application() {
 
     private lateinit var analytics: FirebaseAnalytics

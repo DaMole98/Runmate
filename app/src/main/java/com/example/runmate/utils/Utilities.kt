@@ -7,6 +7,12 @@ import android.os.Bundle
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 
+
+/*
+check if there is a user currently logged in
+@param {FirebaseAuth} mAuth authentication object (singleton)
+@return true if a user is logged, false otherwise
+ */
 fun checkCurrentUser(mAuth: FirebaseAuth): Boolean {
     val currentUser = mAuth.currentUser
     return if (currentUser != null) {
@@ -16,6 +22,11 @@ fun checkCurrentUser(mAuth: FirebaseAuth): Boolean {
     else false
 }
 
+/*
+Takes some data stored in Shared preferences and uses them to create the user properties.
+This is used to create users' segmentation in Google Analytics.
+Called when the user sets the profile in TargetActivity
+ */
 fun setUserProperties(context: Context, analytics: FirebaseAnalytics){
 
     val uid = FirebaseAuth.getInstance().currentUser!!.uid
@@ -31,6 +42,9 @@ fun setUserProperties(context: Context, analytics: FirebaseAnalytics){
 
 }
 
+/*
+Called by the Application class. Tracks device type, OS and language.
+ */
 fun trackDevice(resources: Resources, analytics : FirebaseAnalytics) {
     val deviceModel = Build.MODEL
     val osVersion = Build.VERSION.RELEASE

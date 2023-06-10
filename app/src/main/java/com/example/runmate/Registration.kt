@@ -40,8 +40,11 @@ class Registration : AppCompatActivity() {
         register_btn = findViewById(R.id.btn_register)
         back_btn = findViewById(R.id.btn_back)
 
+        /*get instance of Firebase Performance object. Used to trace performance of code snippets.
+          Smimilar to @addTrace annotation but used to trace code snippets that are not necessarily a function
+         */
         val fbPer = FirebasePerformance.getInstance()
-        val regTrace = fbPer.newTrace(" user_registration_trace")
+        val regTrace = fbPer.newTrace("user_registration_trace")
 
         //Go back to Login page.
 
@@ -89,8 +92,7 @@ class Registration : AppCompatActivity() {
             }
             else {
 
-
-                regTrace.start()
+                regTrace.start() //Trace the time needed by the (async) call to Firebase authentication
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this)
                 { task ->
                     if (task.isSuccessful) {
@@ -114,6 +116,9 @@ class Registration : AppCompatActivity() {
         }
     }
 
+    /*
+    Save user account into preferences.
+     */
     private fun saveUserData( uid: String, username : String, email : String){
 
 
