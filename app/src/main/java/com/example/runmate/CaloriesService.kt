@@ -84,29 +84,25 @@ class CaloriesService : Service(), SensorEventListener {
         fun getService(): CaloriesService = this@CaloriesService
     }
 
-    //traccia del servizio (misura il tempo di attività del servizio)
-    // TODO: cambiare commento
     private lateinit var serviceTrace : Trace
 
     override fun onCreate() {
         super.onCreate()
 
-        // TODO: cambiare commenti
         serviceTrace = FirebasePerformance.getInstance().newTrace("CaloriesServiceTrace")
         serviceTrace.start()
 
-        // Misura il tempo di CPU utilizzato dal servizio
+        // Measure CPU time used by the service
         val cpuTime = Debug.threadCpuTimeNanos()
 
-        // Ottieni le informazioni sulla memoria del servizio
+        // Get memory information of the service
         val memoryInfo = Debug.MemoryInfo()
         Debug.getMemoryInfo(memoryInfo)
 
-        // Calcola il consumo di RAM totale del servizio
+        // Calculate the total RAM consumption of the service
         val totalPss = memoryInfo.totalPss
 
-
-        // Registra le metriche di consumo di CPU e RAM nel trace del servizio
+        // Record CPU and RAM consumption metrics in the service trace
         serviceTrace?.putMetric("cpu_time", cpuTime)
         serviceTrace?.putMetric("total_pss", totalPss.toLong())
 

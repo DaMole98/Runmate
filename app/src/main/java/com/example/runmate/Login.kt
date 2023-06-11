@@ -1,5 +1,6 @@
 package com.example.runmate
 
+
 import com.example.runmate.utils.*
 import android.content.Intent
 import android.os.Bundle
@@ -87,7 +88,7 @@ class Login : AppCompatActivity() {
     load main activity. Annotation is used to trace the performance of the funciton call,
     including nested functions.
      */
-    @AddTrace(name = "loadMainFromLoginTrace, enabled = true")
+    @AddTrace(name = "loadMainFromLoginTrace", enabled = true)
     private fun loadMainActivity(){
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
