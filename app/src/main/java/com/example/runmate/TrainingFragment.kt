@@ -105,7 +105,8 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
                 context?.bindService(intentService, connection, Context.BIND_AUTO_CREATE)
 
                 // reset UI
-                updateUI(0, 0f, 0f)
+                // chiamata superflua?
+                //updateUI(0, 0f, 0f)
             }
 
             if (!isPlayed) { // the play button is pressed
@@ -141,10 +142,6 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
             if (isServiceStarted){  // stop the service if it is running
                 isServiceStarted = false
 
-                // reset UI
-                updateUI(0, 0f, 0f)
-                chronometer.text = "00:00:00"
-
                 // register the current training
                 cService.registerTraining()
 
@@ -157,6 +154,10 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
                 pauseOffset = 0
                 btn_play_pause.setImageResource(R.drawable.play_circle)
                 chronometer.stop()
+
+                // reset UI
+                updateUI(0, 0f, 0f)
+                chronometer.text = "00:00:00"
             }
             isTraining = false
         }
