@@ -1,6 +1,7 @@
 package com.example.runmate
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Spannable
 import android.text.SpannableString
@@ -37,6 +38,16 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_stats, container, false)
 
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val sharedPref = requireContext().getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
+
+        //Go to the 'User Details' page if no details and goals were defined during the registration phase.
+        if(sharedPref.getInt("Height",0) == 0)
+        {
+            val intent = Intent(context,TargetActivity::class.java)
+            startActivity(intent)
+        }
+
         analytics = FirebaseAnalytics.getInstance(requireContext())
 
         trackFragment(analytics, "Statistics Fragment")
@@ -49,8 +60,6 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
         tv_calories_progress = view.findViewById(R.id.tv_calories_stats)
         rv_activities = view.findViewById(R.id.rv_activities)
 
-        val uid = FirebaseAuth.getInstance().currentUser!!.uid
-        val sharedPref = requireContext().getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
         stepsGoal = sharedPref.getInt("Steps", 10000)
         distanceGoal = sharedPref.getInt("Meters", 8000)
         caloriesGoal = sharedPref.getInt("Calories", 1000)
