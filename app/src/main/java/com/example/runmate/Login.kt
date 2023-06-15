@@ -1,6 +1,7 @@
 package com.example.runmate
 
 
+import android.content.Context
 import com.example.runmate.utils.*
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -34,10 +36,20 @@ class Login : AppCompatActivity() {
 
         //check if the user is already logged in
         if(checkCurrentUser(mAuth)) {
+            val uid = FirebaseAuth.getInstance().currentUser!!.uid
+            val sharedPref = getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
             Toast.makeText(baseContext, "Benvenuto", Toast.LENGTH_LONG).show()
             val analytics = FirebaseAnalytics.getInstance(applicationContext)
             setUserProperties(applicationContext, analytics) //set analytics user's parameters
-            loadMainActivity()
+            //Go to the 'User Details' page if no details and goals were defined during the registration phase.
+            if(sharedPref.getInt("Height",0) == 0)
+            {
+                val intent = Intent(applicationContext,TargetActivity::class.java)
+                startActivity(intent)
+            }
+            else {
+                loadMainActivity()
+            }
         }
 
         else Loadlogin()

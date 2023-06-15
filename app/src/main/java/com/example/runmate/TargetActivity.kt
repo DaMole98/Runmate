@@ -233,5 +233,9 @@ class TargetActivity: AppCompatActivity() {
             check = 0
         }
     }
-
+    override fun onBackPressed() {
+        if(true)
+            return
+        super.onBackPressed()
+    }
 }

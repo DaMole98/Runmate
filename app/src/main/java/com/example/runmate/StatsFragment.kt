@@ -41,13 +41,6 @@ class StatsFragment:Fragment(R.layout.fragment_stats) {
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         val sharedPref = requireContext().getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
 
-        //Go to the 'User Details' page if no details and goals were defined during the registration phase.
-        if(sharedPref.getInt("Height",0) == 0)
-        {
-            val intent = Intent(context,TargetActivity::class.java)
-            startActivity(intent)
-        }
-
         analytics = FirebaseAnalytics.getInstance(requireContext())
 
         trackFragment(analytics, "Statistics Fragment")
