@@ -194,8 +194,8 @@
 
     <ImageButton
         android:id="@+id/btn_play_pause_train"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="@id/v_chrono"
@@ -207,8 +207,8 @@
 
     <ImageButton
         android:id="@+id/btn_stop_train"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:background="@android:color/transparent"
         android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="@id/v_chrono"

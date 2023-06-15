@@ -4,7 +4,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.os.IBinder
 import android.os.SystemClock
@@ -20,7 +19,6 @@ import kotlin.math.roundToInt
 
 class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCallback {
     private lateinit var cService: CaloriesService
-    //private lateinit var intentService: Intent
     private var isServiceBounded: Boolean = false
 
     private lateinit var tv_totalSteps: TextView
@@ -71,8 +69,6 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
 
         firebaseAnalytics = FirebaseAnalytics.getInstance(requireContext())
 
-        //val tv_training_type = view.findViewById<TextView>(R.id.tv_training_type)
-        //tv_training_type.text = trainingType
         view.findViewById<TextView>(R.id.tv_training_type).text = trainingType
         tv_totalSteps = view.findViewById(R.id.tv_steps_train)
         tv_totalDistance = view.findViewById(R.id.tv_distance_train)
@@ -103,10 +99,6 @@ class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCal
                 // bind to CaloriesService
                 intentService.putExtra("trainingType", trainingType)
                 context?.bindService(intentService, connection, Context.BIND_AUTO_CREATE)
-
-                // reset UI
-                // chiamata superflua?
-                //updateUI(0, 0f, 0f)
             }
 
             if (!isPlayed) { // the play button is pressed

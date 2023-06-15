@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import com.example.runmate.utils.setUserProperties
 import com.google.firebase.analytics.FirebaseAnalytics
@@ -232,10 +233,13 @@ class TargetActivity: AppCompatActivity() {
 
             check = 0
         }
-    }
-    override fun onBackPressed() {
-        if(true)
-            return
-        super.onBackPressed()
+
+        // overrides default back button behavior
+        val onBackPressedCallback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                return
+            }
+        }
+        onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 }

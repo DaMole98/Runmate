@@ -132,6 +132,9 @@ class CaloriesService : Service(), SensorEventListener {
         if (stepSensor != null) {
             sensorManager?.registerListener(this, stepSensor, SensorManager.SENSOR_DELAY_UI)
         }
+        else{
+            Toast.makeText(baseContext, "Sensore \"step detector\" non rilevato", Toast.LENGTH_SHORT).show()
+        }
 
         // get user data
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
