@@ -125,23 +125,25 @@ class StatsFragment:Fragment(R.layout.fragment_stats), TrainingItemClickListener
 
     // Updates text views with locally saved stats and colors circular progress bars
     private fun updateStatsUI(steps: Int, distance: Float, calories: Float) {
-        pb_steps.progress = (steps.toFloat() / stepsGoal.toFloat() * 100).toInt()
-        pb_distance.progress = (distance / distanceGoal.toFloat() * 100).toInt()
-        pb_calories.progress = (calories / caloriesGoal.toFloat() * 100).toInt()
+        pb_steps.post { pb_steps.progress = (steps.toFloat() / stepsGoal.toFloat() * 100).toInt() }
+        pb_distance.post { pb_distance.progress = (distance / distanceGoal.toFloat() * 100).toInt() }
+        pb_calories.post { pb_calories.progress = (calories / caloriesGoal.toFloat() * 100).toInt() }
         tv_steps_progress.text = "$steps / $stepsGoal passi"
         tv_distance_progress.text = "${distance.roundToInt()} / $distanceGoal m"
         tv_calories_progress.text = "${calories.roundToInt()} / $caloriesGoal kcal"
 
-        updateTVColor(tv_steps_progress, ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.steps)))
-        updateTVColor(tv_distance_progress, ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.distance)))
-        updateTVColor(tv_calories_progress, ForegroundColorSpan(ContextCompat.getColor(requireContext(), R.color.calories)))
+        updateTVColor(tv_steps_progress, R.color.steps)
+        updateTVColor(tv_distance_progress, R.color.distance)
+        updateTVColor(tv_calories_progress, R.color.calories)
     }
 
     // Changes the color of part of the stats text views
-    private fun updateTVColor(tv: TextView, color: ForegroundColorSpan) {
+    private fun updateTVColor(tv: TextView, color: Int) {
+        var c = color
         val txt = tv.text
+        if (txt.substring(0, txt.indexOf("/")) == "0 ") c = R.color.default_stats
         val spannableString = SpannableString(txt)
-        spannableString.setSpan(color, 0, txt.indexOf("/"), Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+        spannableString.setSpan(ForegroundColorSpan(ContextCompat.getColor(requireContext(), c)), 0, txt.indexOf("/"), Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
         tv.text = spannableString
     }
 
