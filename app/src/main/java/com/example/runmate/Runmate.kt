@@ -1,4 +1,5 @@
 package com.example.runmate
+
 import com.example.runmate.utils.*
 import android.app.Application
 import com.google.firebase.analytics.FirebaseAnalytics

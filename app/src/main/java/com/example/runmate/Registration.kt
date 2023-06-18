@@ -1,13 +1,11 @@
 package com.example.runmate
 
-
 import android.content.Context
 import com.google.firebase.perf.FirebasePerformance
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -25,7 +23,6 @@ class Registration : AppCompatActivity() {
     private lateinit var register_btn: Button
     private lateinit var mAuth: FirebaseAuth
     private lateinit var back_btn : Button
-    private lateinit var textView: TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -91,7 +88,6 @@ class Registration : AppCompatActivity() {
                 return@setOnClickListener
             }
             else {
-
                 regTrace.start() //Trace the time needed by the (async) call to Firebase authentication
                 mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this)
                 { task ->

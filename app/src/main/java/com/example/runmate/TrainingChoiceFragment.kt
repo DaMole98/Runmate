@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import com.google.firebase.analytics.FirebaseAnalytics
 
+// Class of the fragment to select the training type
 class TrainingChoiceFragment : Fragment() {
 
     private val bundle = Bundle()
@@ -48,5 +49,4 @@ class TrainingChoiceFragment : Fragment() {
         params.putString("trainingType", trainingType)
         analytics.logEvent("training_selected", params)
     }
-
 }

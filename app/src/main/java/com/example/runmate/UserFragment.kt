@@ -19,7 +19,8 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import java.io.File
 
-class UserFragment : Fragment(R.layout.fragment_user), OnUsernameChangedListener { //implements the listener in order to change the UI whe username changes
+// Class of the fragment of the Profile section
+class UserFragment : Fragment(R.layout.fragment_user), OnUsernameChangedListener { //implements the listener in order to change the UI when username changes
 
     private lateinit var logoutBtn: Button
     private lateinit var usernameBtn: Button
@@ -70,6 +71,7 @@ class UserFragment : Fragment(R.layout.fragment_user), OnUsernameChangedListener
 
         return view
     }
+
     /*
        implementation of OnUsernameChangedListener interface.
        This callback is called when username changes in order to update the UI
@@ -84,14 +86,14 @@ class UserFragment : Fragment(R.layout.fragment_user), OnUsernameChangedListener
         val dialogBuilder = AlertDialog.Builder(requireContext())
         dialogBuilder.setTitle("Conferma eliminazione account")
         dialogBuilder.setMessage("Sei sicuro di voler eliminare il tuo account?")
-        dialogBuilder.setPositiveButton("Conferma") { dialog, which ->
+        dialogBuilder.setPositiveButton("Conferma") { _, _ ->
             reauthenticateUser()
         }
         dialogBuilder.setNegativeButton("Annulla", null)
         dialogBuilder.show()
     }
 
-    // Reauthenticate the user before deleting the account
+    // Re-authenticate the user before deleting the account
     private fun reauthenticateUser() {
         val dialogBuilder = AlertDialog.Builder(requireContext())
         dialogBuilder.setTitle("Reinserisci le credenziali")

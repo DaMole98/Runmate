@@ -25,6 +25,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import kotlin.math.roundToInt
 
+// Class of the fragment of the Statistic section
 class StatsFragment:Fragment(R.layout.fragment_stats), TrainingItemClickListener {
     private lateinit var pb_steps: ProgressBar
     private lateinit var pb_distance: ProgressBar
@@ -80,7 +81,7 @@ class StatsFragment:Fragment(R.layout.fragment_stats), TrainingItemClickListener
         rv_activities.layoutManager = LinearLayoutManager(requireContext())
         rv_activities.adapter = TrainingAdapter(trainingList, this)
 
-        // update text view and circular progress bars
+        // update text views and circular progress bars
         updateStatsUI(sharedPref.getInt("totalSteps", 0), sharedPref.getFloat("totalDistance", 0f), sharedPref.getFloat("totalCalories", 0f))
 
         return view

@@ -238,7 +238,6 @@ class CaloriesService : Service(), SensorEventListener {
         var calories = ((VO2 * m) / 1000) * 5 // [kcal / min]
         calories = calories * interval_in_seconds / 60 // [kcal]
 
-        //return Pair(d.toInt(), calories.toFloat())
         return Pair(d, calories.toFloat())
     }
 
@@ -268,11 +267,6 @@ class CaloriesService : Service(), SensorEventListener {
             }
             putString("trainingList", json)
             putString("currentDate", currentDate)
-
-            // TODO: variabili inserite dopo, forse eliminare queste
-            /*val ts = totalSteps + sharedPref.getInt("totalSteps", 0)
-            val td = totalDistance + sharedPref.getInt("totalDistance", 0)
-            val tc = totalCalories + sharedPref.getFloat("totalCalories", 0f)*/
 
             // old values are added to new values and the stats are locally saved
             putInt("totalSteps", totalSteps + sharedPref.getInt("totalSteps", 0))

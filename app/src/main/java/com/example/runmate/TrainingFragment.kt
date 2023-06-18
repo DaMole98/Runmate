@@ -7,7 +7,6 @@ import android.content.ServiceConnection
 import android.os.Bundle
 import android.os.IBinder
 import android.os.SystemClock
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,12 +15,9 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.google.firebase.analytics.FirebaseAnalytics
-import java.text.DateFormat
-import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
-import java.util.concurrent.TimeUnit
 import kotlin.math.roundToInt
 
+// Class of the fragment of the Training section
 class TrainingFragment:Fragment(R.layout.fragment_training), TrainingFragmentCallback {
     private lateinit var cService: CaloriesService
     private var isServiceBounded: Boolean = false
