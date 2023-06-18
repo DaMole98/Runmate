@@ -34,20 +34,11 @@ class Login : AppCompatActivity() {
 
         //check if the user is already logged in
         if(checkCurrentUser(mAuth)) {
-            val uid = FirebaseAuth.getInstance().currentUser!!.uid
-            val sharedPref = getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
             Toast.makeText(baseContext, "Benvenuto", Toast.LENGTH_LONG).show()
             val analytics = FirebaseAnalytics.getInstance(applicationContext)
             setUserProperties(applicationContext, analytics) //set analytics user's parameters
-            //Go to the 'User Details' page if no details and goals were defined during the registration phase.
-            if(sharedPref.getInt("Height",0) == 0)
-            {
-                val intent = Intent(applicationContext,TargetActivity::class.java)
-                startActivity(intent)
-            }
-            else {
-                loadMainActivity()
-            }
+
+            loadTargetActivity()
         }
         else loadlogin()
     }
@@ -80,8 +71,8 @@ class Login : AppCompatActivity() {
                         // load analytics and set user properties
                         val analytics = FirebaseAnalytics.getInstance(applicationContext)
                         setUserProperties(applicationContext, analytics)
-                        loadMainActivity()
 
+                        loadTargetActivity()
                     } else {
                         Toast.makeText(baseContext, "Email o password non corretti", Toast.LENGTH_LONG)
                             .show()
@@ -100,5 +91,24 @@ class Login : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
+    }
+
+    /*
+     Load TargetActivity to allow the user to insert their data after the registration or
+     after the first login if the application was previously uninstalled and the account not cancelled.
+     */
+    private fun loadTargetActivity(){
+        val uid = FirebaseAuth.getInstance().currentUser!!.uid
+        val sharedPref = getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
+
+        //Go to the 'User Details' page if no details and goals were defined during the registration phase.
+        if(sharedPref.getInt("Height",0) == 0)
+        {
+            val intent = Intent(applicationContext,TargetActivity::class.java)
+            startActivity(intent)
+        }
+        else {
+            loadMainActivity()
+        }
     }
 }

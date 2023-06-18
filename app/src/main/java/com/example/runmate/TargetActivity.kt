@@ -71,7 +71,7 @@ class TargetActivity: AppCompatActivity() {
             override fun afterTextChanged(s: Editable?)
             {
                 val value = s.toString().toIntOrNull()
-                if(value !=null && s != null && value > 349)
+                if(value !=null && s != null && value > 350)
                 {
                     //Notify the user, then block any value that would exceed the limit
                     Toast.makeText(applicationContext, "Altezza non valida, inserisci un valore tra 1 e 350", Toast.LENGTH_SHORT).show()
@@ -91,7 +91,7 @@ class TargetActivity: AppCompatActivity() {
             override fun afterTextChanged(s: Editable?)
             {
                 val value = s.toString().toIntOrNull()
-                if(value !=null && s != null && value > 349)
+                if(value !=null && s != null && value > 350)
                 {
                     Toast.makeText(applicationContext, "Peso non valido, inserisci un valore tra 1 e 350", Toast.LENGTH_SHORT).show()
                     weight_edit.text =(s.subSequence(0,s.length-1) as Editable)
@@ -110,7 +110,7 @@ class TargetActivity: AppCompatActivity() {
             override fun afterTextChanged(s: Editable?)
             {
                 val value = s.toString().toIntOrNull()
-                if(value !=null && s != null && value > 49999)
+                if(value !=null && s != null && value > 50000)
                 {
                     Toast.makeText(applicationContext, "Numero di passi non valido, inserisci un valore tra 1 e 50000", Toast.LENGTH_SHORT).show()
                     steps_edit.text =(s.subSequence(0,s.length-1) as Editable)
@@ -129,7 +129,7 @@ class TargetActivity: AppCompatActivity() {
             override fun afterTextChanged(s: Editable?)
             {
                 val value = s.toString().toIntOrNull()
-                if(value !=null && s != null && value > 4999)
+                if(value !=null && s != null && value > 5000)
                 {
                     Toast.makeText(applicationContext, "Numero di calorie non valido, inserisci un valore tra 1 e 5000", Toast.LENGTH_SHORT).show()
                     kcal_edit.text =(s.subSequence(0,s.length-1) as Editable)
@@ -148,7 +148,7 @@ class TargetActivity: AppCompatActivity() {
             override fun afterTextChanged(s: Editable?)
             {
                 val value = s.toString().toIntOrNull()
-                if(value !=null && s != null && value > 29999)
+                if(value !=null && s != null && value > 30000)
                 {
                     Toast.makeText(applicationContext, "Numero di metri non valido, inserisci un valore tra 1 e 30000", Toast.LENGTH_SHORT).show()
                     meters_edit.text =(s.subSequence(0,s.length-1) as Editable)
@@ -207,7 +207,7 @@ class TargetActivity: AppCompatActivity() {
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 }
-                1 -> Toast.makeText(this, "Numero di metri non valido, inserisci un valore tra 1 e 50000", Toast.LENGTH_SHORT).show()
+                1 -> Toast.makeText(this, "Numero di metri non valido, inserisci un valore tra 1 e 30000", Toast.LENGTH_SHORT).show()
                 2 -> Toast.makeText(this, "Numero di calorie non valido, inserisci un valore tra 1 e 5000", Toast.LENGTH_SHORT).show()
                 3 -> Toast.makeText(this, "Numero di passi non valido, inserisci un valore tra 1 e 50000", Toast.LENGTH_SHORT).show()
                 4 -> Toast.makeText(this, "Peso non valido, inserisci un valore tra 1 e 350", Toast.LENGTH_SHORT).show()

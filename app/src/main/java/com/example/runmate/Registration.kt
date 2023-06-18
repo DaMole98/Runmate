@@ -24,7 +24,6 @@ class Registration : AppCompatActivity() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var back_btn : Button
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
