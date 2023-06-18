@@ -5,7 +5,7 @@ import com.google.firebase.analytics.FirebaseAnalytics
 
 /*
 Application class instantiated when the App starts.
-It instantiates an analytics object that tracks the device tipe
+It instantiates an analytics object that tracks the device type
  */
 class Runmate : Application() {
 

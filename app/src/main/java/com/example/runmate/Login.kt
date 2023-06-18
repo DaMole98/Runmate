@@ -9,7 +9,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -24,14 +23,13 @@ class Login : AppCompatActivity() {
     private lateinit var registerBtn: Button
     private lateinit var mAuth: FirebaseAuth
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_loginscreen)
 
         mAuth = Firebase.auth
-        editEmail = findViewById<EditText>(R.id.email)
-        editPassword = findViewById<EditText>(R.id.password)
+        editEmail = findViewById(R.id.email)
+        editPassword = findViewById(R.id.password)
         loginBtn = findViewById(R.id.btn_login)
 
         //check if the user is already logged in
@@ -51,15 +49,13 @@ class Login : AppCompatActivity() {
                 loadMainActivity()
             }
         }
-
-        else Loadlogin()
-
+        else loadlogin()
     }
 
     /*
     Load login view
     */
-    private fun Loadlogin(){
+    private fun loadlogin(){
 
         registerBtn = findViewById(R.id.btn_register)
         registerBtn.setOnClickListener{ view ->
@@ -92,12 +88,11 @@ class Login : AppCompatActivity() {
                     }
                 }
             }
-
         }
     }
 
     /*
-    load main activity. Annotation is used to trace the performance of the funciton call,
+    load main activity. Annotation is used to trace the performance of the function call,
     including nested functions.
      */
     @AddTrace(name = "loadMainFromLoginTrace", enabled = true)
@@ -106,6 +101,4 @@ class Login : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
-
-
 }

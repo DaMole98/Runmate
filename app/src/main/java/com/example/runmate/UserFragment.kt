@@ -35,16 +35,16 @@ class UserFragment : Fragment(R.layout.fragment_user), OnUsernameChangedListener
     ): View? {
         val view = inflater.inflate(R.layout.fragment_user, container, false)
         val user_view = view.findViewById<TextView>(R.id.user_view)
-        logoutBtn = view.findViewById<Button>(R.id.btn_logout)
-        usernameBtn = view.findViewById<Button>(R.id.btn_username)
-        targetBtn = view.findViewById<Button>(R.id.btn_target)
+        logoutBtn = view.findViewById(R.id.btn_logout)
+        usernameBtn = view.findViewById(R.id.btn_username)
+        targetBtn = view.findViewById(R.id.btn_target)
 
         // Retrieve username from SharedPreferences and display it in the user view
         val sPref = requireContext().getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
         val username = sPref.getString("username", "")
         user_view.text = "Ciao $username"
 
-        deleteAccountBtn = view.findViewById<Button>(R.id.btn_delete_account)
+        deleteAccountBtn = view.findViewById(R.id.btn_delete_account)
         deleteAccountBtn.setOnClickListener {
             showDeleteConfirmationDialog()
         }
@@ -58,7 +58,7 @@ class UserFragment : Fragment(R.layout.fragment_user), OnUsernameChangedListener
         usernameBtn.setOnClickListener {
             val dialog = ChangeUNDialogFragment()
             dialog.setOnUsernameChangedListener(this) // Set the listener to this fragment
-            dialog.show(requireFragmentManager(), "change username dialog")
+            dialog.show(parentFragmentManager, "change username dialog")
         }
 
         logoutBtn.setOnClickListener {
@@ -83,7 +83,7 @@ class UserFragment : Fragment(R.layout.fragment_user), OnUsernameChangedListener
     private fun showDeleteConfirmationDialog() {
         val dialogBuilder = AlertDialog.Builder(requireContext())
         dialogBuilder.setTitle("Conferma eliminazione account")
-        dialogBuilder.setMessage("Sei sicuro di voler elminiare il tuo account?")
+        dialogBuilder.setMessage("Sei sicuro di voler eliminare il tuo account?")
         dialogBuilder.setPositiveButton("Conferma") { dialog, which ->
             reauthenticateUser()
         }
@@ -94,25 +94,31 @@ class UserFragment : Fragment(R.layout.fragment_user), OnUsernameChangedListener
     // Reauthenticate the user before deleting the account
     private fun reauthenticateUser() {
         val dialogBuilder = AlertDialog.Builder(requireContext())
-        dialogBuilder.setTitle("Reinserisci le credenzaili")
+        dialogBuilder.setTitle("Reinserisci le credenziali")
         dialogBuilder.setMessage("Per eliminare l'account, per favore digita la password")
 
         val rootView = requireActivity().layoutInflater.inflate(R.layout.delete_dialog, null)
         val passwordEditText = rootView.findViewById<EditText>(R.id.passwordEditText)
         dialogBuilder.setView(rootView)
 
-        dialogBuilder.setPositiveButton("Conferma") { dialog, which ->
+        dialogBuilder.setPositiveButton("Conferma") { _, _ ->
             val password = passwordEditText.text.toString()
-            val credentials = EmailAuthProvider.getCredential(currentUser?.email!!, password)
 
-            currentUser?.reauthenticate(credentials)
-                ?.addOnSuccessListener {
-                    deleteAccount()
-                }
-                ?.addOnFailureListener { exception ->
-                    Log.e(TAG, "Errore durante la re-autenticazione", exception)
-                    Toast.makeText(requireContext(), "Password errata", Toast.LENGTH_LONG).show()
-                }
+            if (password.isNotBlank()) {
+                val credentials = EmailAuthProvider.getCredential(currentUser?.email!!, password)
+
+                currentUser.reauthenticate(credentials)
+                    ?.addOnSuccessListener {
+                        deleteAccount()
+                    }
+                    ?.addOnFailureListener { exception ->
+                        Log.e(TAG, "Errore durante la re-autenticazione", exception)
+                        Toast.makeText(requireContext(), "Password errata", Toast.LENGTH_LONG).show()
+                    }
+            }
+            else{
+                Toast.makeText(requireContext(), "Password errata", Toast.LENGTH_LONG).show()
+            }
         }
 
         dialogBuilder.setNegativeButton("Annulla", null)
@@ -123,7 +129,7 @@ class UserFragment : Fragment(R.layout.fragment_user), OnUsernameChangedListener
     private fun deleteAccount() {
         currentUser?.delete()
             ?.addOnSuccessListener {
-                deleteUserDataFromDatabase(currentUser?.uid)
+                deleteUserDataFromDatabase()
                 navigateToLogin()
             }
             ?.addOnFailureListener { exception ->
@@ -132,17 +138,11 @@ class UserFragment : Fragment(R.layout.fragment_user), OnUsernameChangedListener
     }
 
     // Delete user data from the database
-    private fun deleteUserDataFromDatabase(userId: String?) {
+    private fun deleteUserDataFromDatabase() {
         // Delete local data stored in SharedPreferences
         val filename = "${uid}UserPrefs"
         val spFile = File(requireContext().applicationContext.filesDir.parent, "shared_prefs/$filename.xml")
         spFile.delete()
-        //val sPref = requireContext().getSharedPreferences(filename, Context.MODE_PRIVATE)
-        //sPref.edit().apply {
-        //    clear()
-        //    apply()
-        //}
-
     }
 
     // Navigate to the login screen

@@ -33,15 +33,15 @@ class Registration : AppCompatActivity() {
         setContentView(R.layout.activity_registration)
 
         mAuth = Firebase.auth
-        editUsername = findViewById<EditText>(R.id.username)
-        editEmail = findViewById<EditText>(R.id.email)
-        editPassword = findViewById<EditText>(R.id.password)
-        editConfirmPassword = findViewById<EditText>(R.id.confirm_password)
+        editUsername = findViewById(R.id.username)
+        editEmail = findViewById(R.id.email)
+        editPassword = findViewById(R.id.password)
+        editConfirmPassword = findViewById(R.id.confirm_password)
         register_btn = findViewById(R.id.btn_register)
         back_btn = findViewById(R.id.btn_back)
 
         /*get instance of Firebase Performance object. Used to trace performance of code snippets.
-          Smimilar to @addTrace annotation but used to trace code snippets that are not necessarily a function
+          Similar to @addTrace annotation but used to trace code snippets that are not necessarily a function
          */
         val fbPer = FirebasePerformance.getInstance()
         val regTrace = fbPer.newTrace("user_registration_trace")
@@ -120,14 +120,11 @@ class Registration : AppCompatActivity() {
     Save user account into preferences.
      */
     private fun saveUserData( uid: String, username : String, email : String){
-
-
         val sPref = getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
         val editor = sPref.edit()
         editor.putString("username", username)
         editor.putString("email", email)
         editor.putString("uid", uid)
         editor.apply()
-
     }
 }

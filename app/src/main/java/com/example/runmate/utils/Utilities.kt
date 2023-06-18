@@ -35,11 +35,9 @@ fun setUserProperties(context: Context, analytics: FirebaseAnalytics){
     val height = tPref.getInt("Height", 0)
     val gender = tPref.getString("Gender", "Male")
 
-
     analytics.setUserProperty("Weight", weight.toString())
     analytics.setUserProperty("Height", height.toString())
     analytics.setUserProperty("Gender", gender.toString())
-
 }
 
 /*

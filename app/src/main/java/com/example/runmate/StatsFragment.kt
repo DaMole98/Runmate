@@ -49,7 +49,7 @@ class StatsFragment:Fragment(R.layout.fragment_stats), TrainingItemClickListener
 
         analytics = FirebaseAnalytics.getInstance(requireContext())
 
-        trackFragment(analytics, "Statistics Fragment")
+        trackFragment(analytics)
 
         pb_steps = view.findViewById(R.id.pb_steps_foreground)
         pb_distance = view.findViewById(R.id.pb_distance_foreground)
@@ -147,9 +147,9 @@ class StatsFragment:Fragment(R.layout.fragment_stats), TrainingItemClickListener
         tv.text = spannableString
     }
 
-    private fun trackFragment(analytics : FirebaseAnalytics, fragName: String) {
+    private fun trackFragment(analytics : FirebaseAnalytics) {
         val bundle = Bundle()
-        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, fragName)
+        bundle.putString(FirebaseAnalytics.Param.SCREEN_NAME, "Statistics Fragment")
         bundle.putString(FirebaseAnalytics.Param.SCREEN_CLASS, "StatsFragment")
         analytics.logEvent(FirebaseAnalytics.Event.SCREEN_VIEW, bundle)
     }
