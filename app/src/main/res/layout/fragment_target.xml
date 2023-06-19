@@ -7,7 +7,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MainActivity">
 
-    <!-- Use of Guidelines to make components sizing easier -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineBottom"
         android:layout_width="wrap_content"
@@ -213,6 +212,5 @@
         app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
         app:layout_constraintStart_toEndOf="@id/confirm_target_button"
         app:layout_constraintTop_toBottomOf="@+id/editTargetMeter" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

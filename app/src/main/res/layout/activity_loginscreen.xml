@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Login">
 
-    <!-- Use of Guidelines to make components sizing easier -->
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guidelineBottom"
         android:layout_width="wrap_content"
