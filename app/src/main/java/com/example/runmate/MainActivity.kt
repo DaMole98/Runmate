@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -19,8 +18,6 @@ import java.time.format.DateTimeFormatter
 class MainActivity : AppCompatActivity() {
 
     private val bundle = Bundle()
-
-    private var selectedItemId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +63,6 @@ class MainActivity : AppCompatActivity() {
         // set navigation of app sections
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.setOnItemSelectedListener { item ->
-            selectedItemId = item.itemId
 
             // get instance of TrainingFragment (if any) and handle user navigation between fragments
             val tfInstance = supportFragmentManager.findFragmentByTag("TrainingFragment") as? TrainingFragment

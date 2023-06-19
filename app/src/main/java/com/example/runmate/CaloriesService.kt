@@ -49,7 +49,6 @@ class CaloriesService : Service(), SensorEventListener {
     // variables for calories computation
     private var horizontalComponent = 0.1
     private var verticalComponent = 1.8
-    private var gender = "Male" // "Female"
     private var h = 180 // [cm]
     private var m = 80 // [kg]
     private val G = 0.01f
@@ -65,7 +64,7 @@ class CaloriesService : Service(), SensorEventListener {
     // when the training started
     private lateinit var startTime: LocalTime
 
-    lateinit var trainingType: String // "Corsa" or "Camminata"
+    private lateinit var trainingType: String // "Corsa" or "Camminata"
 
     // saves instance of TrainingFragmentCallback
     private lateinit var tfCallback: TrainingFragmentCallback
@@ -139,7 +138,6 @@ class CaloriesService : Service(), SensorEventListener {
         // get user data
         val uid = FirebaseAuth.getInstance().currentUser!!.uid
         val sharedPref = getSharedPreferences("${uid}UserPrefs", Context.MODE_PRIVATE)
-        gender = sharedPref.getString("Gender", "Male").toString()
         h = sharedPref.getInt("Height", 180)
         m = sharedPref.getInt("Weight", 80)
 
