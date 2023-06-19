@@ -21,7 +21,7 @@
         android:id="@+id/tv_training_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Camminata"
+        android:text="@string/camminata"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/v_training_type"
         app:layout_constraintEnd_toEndOf="@+id/v_training_type"
@@ -29,12 +29,11 @@
         app:layout_constraintTop_toTopOf="@+id/v_training_type" />
 
     <TextView
-        android:id="@+id/steps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:fontFamily="@font/rubik_medium"
-        android:text="Passi"
+        android:text="@string/passi"
         android:textColor="@color/black"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/tv_steps_train"
@@ -43,11 +42,10 @@
         app:layout_constraintTop_toTopOf="@+id/stepsCircle" />
 
     <TextView
-        android:id="@+id/distance"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/rubik_medium"
-        android:text="Distanza"
+        android:text="@string/distanza"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/distanceCircle"
@@ -57,11 +55,10 @@
         app:layout_constraintVertical_bias="0.3" />
 
     <TextView
-        android:id="@+id/calories"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/rubik_medium"
-        android:text="Calorie"
+        android:text="@string/calorie"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/caloriesCircle"
@@ -76,7 +73,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="30dp"
         android:fontFamily="@font/rubik_medium"
-        android:text="0"
+        android:text="@string/_0"
         android:textColor="@color/black"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="@+id/stepsCircle"
@@ -88,7 +85,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/rubik_medium"
-        android:text="0"
+        android:text="@string/_0"
         android:textColor="@color/black"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@+id/distanceCircle"
@@ -98,7 +95,6 @@
         app:layout_constraintVertical_bias="0.6" />
 
     <TextView
-        android:id="@+id/tv_distance_unit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/rubik_medium"
@@ -116,7 +112,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/rubik_medium"
-        android:text="0"
+        android:text="@string/_0"
         android:textColor="@color/black"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@+id/caloriesCircle"
@@ -126,11 +122,10 @@
         app:layout_constraintVertical_bias="0.6" />
 
     <TextView
-        android:id="@+id/tv_calories_unit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/rubik_medium"
-        android:text="kcal"
+        android:text="@string/kcal"
         android:textColor="@color/black"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="@+id/caloriesCircle"
@@ -147,7 +142,8 @@
         android:background="@drawable/training_circle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:importantForAccessibility="no" />
 
     <ImageView
         android:id="@+id/distanceCircle"
@@ -157,7 +153,8 @@
         android:background="@drawable/training_circle"
         app:layout_constraintEnd_toStartOf="@+id/caloriesCircle"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/stepsCircle" />
+        app:layout_constraintTop_toBottomOf="@+id/stepsCircle"
+        android:importantForAccessibility="no" />
 
     <ImageView
         android:id="@+id/caloriesCircle"
@@ -168,7 +165,8 @@
         android:background="@drawable/training_circle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/distanceCircle"
-        app:layout_constraintTop_toBottomOf="@+id/stepsCircle" />
+        app:layout_constraintTop_toBottomOf="@+id/stepsCircle"
+        android:importantForAccessibility="no" />
 
     <View
         android:id="@+id/v_chrono"
@@ -203,7 +201,8 @@
         app:layout_constraintHorizontal_bias="0.7"
         app:layout_constraintStart_toStartOf="@id/v_chrono"
         app:layout_constraintTop_toTopOf="@id/v_chrono"
-        app:srcCompat="@drawable/play_circle" />
+        app:srcCompat="@drawable/play_circle"
+        android:importantForAccessibility="no" />
 
     <ImageButton
         android:id="@+id/btn_stop_train"
@@ -216,6 +215,7 @@
         app:layout_constraintHorizontal_bias="0.3"
         app:layout_constraintStart_toEndOf="@+id/chronometer_train"
         app:layout_constraintTop_toTopOf="@id/v_chrono"
-        app:srcCompat="@drawable/stop_circle" />
+        app:srcCompat="@drawable/stop_circle"
+        android:importantForAccessibility="no" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -41,7 +41,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/guidelineTop2"
-        app:srcCompat="@drawable/runmate_low_resolution_logo_color_on_transparent_background" />
+        app:srcCompat="@drawable/runmate_low_resolution_logo_color_on_transparent_background"
+        android:importantForAccessibility="no" />
 
     <EditText
         android:id="@+id/username"
@@ -51,7 +52,8 @@
         app:layout_constraintBottom_toTopOf="@id/email"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/logo" />
+        app:layout_constraintTop_toBottomOf="@id/logo"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/email"
@@ -61,7 +63,8 @@
         app:layout_constraintBottom_toTopOf="@id/password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/username" />
+        app:layout_constraintTop_toBottomOf="@id/username"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/password"
@@ -71,7 +74,8 @@
         app:layout_constraintBottom_toTopOf="@id/confirm_password"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/email" />
+        app:layout_constraintTop_toBottomOf="@id/email"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/confirm_password"
@@ -80,7 +84,8 @@
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/password" />
+        app:layout_constraintTop_toBottomOf="@id/password"
+        android:importantForAutofill="no" />
 
     <Button
         android:id="@+id/btn_back"
@@ -88,7 +93,7 @@
         android:layout_height="50dp"
         android:backgroundTint="#33B5B5"
         android:fontFamily="@font/rubik"
-        android:text="Indietro"
+        android:text="@string/indietro"
         app:layout_constraintBottom_toTopOf="@+id/guidelineBottom2"
         app:layout_constraintEnd_toStartOf="@+id/btn_register"
         app:layout_constraintStart_toEndOf="@+id/guidelineStart2" />
@@ -98,7 +103,7 @@
         android:layout_width="120dp"
         android:layout_height="50dp"
         android:backgroundTint="#33B5B5"
-        android:text="Registrati"
+        android:text="@string/registrati"
         android:fontFamily="@font/rubik"
         app:layout_constraintBottom_toTopOf="@+id/guidelineBottom2"
         app:layout_constraintEnd_toStartOf="@+id/guidelineEnd2"

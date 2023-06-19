@@ -40,7 +40,7 @@
         android:layout_height="50dp"
         android:backgroundTint="#33B5B5"
         android:fontFamily="@font/rubik"
-        android:text="Login"
+        android:text="@string/login"
         app:layout_constraintBottom_toBottomOf="@id/guidelineBottom"
         app:layout_constraintEnd_toStartOf="@id/btn_register"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"
@@ -52,7 +52,7 @@
         android:layout_height="50dp"
         android:backgroundTint="#33B5B5"
         android:fontFamily="@font/rubik"
-        android:text="Registrati"
+        android:text="@string/registrati"
         app:layout_constraintBottom_toBottomOf="@id/guidelineBottom"
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
         app:layout_constraintStart_toEndOf="@+id/btn_login" />
@@ -64,29 +64,32 @@
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"
         app:layout_constraintTop_toTopOf="@id/guidelineTop"
-        app:srcCompat="@drawable/runmate_low_resolution_logo_color_on_transparent_background" />
+        app:srcCompat="@drawable/runmate_low_resolution_logo_color_on_transparent_background"
+        android:importantForAccessibility="no" />
 
     <EditText
         android:id="@+id/email"
         android:layout_width="200dp"
         android:layout_height="60dp"
         android:ems="10"
-        android:hint="E-mail"
+        android:hint="@string/e_mail"
         android:inputType="textEmailAddress"
         app:layout_constraintBottom_toTopOf="@id/password"
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"
-        app:layout_constraintTop_toBottomOf="@id/imageView2" />
+        app:layout_constraintTop_toBottomOf="@id/imageView2"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/password"
         android:layout_width="200dp"
         android:layout_height="60dp"
         android:ems="10"
-        android:hint="Password"
+        android:hint="@string/password"
         android:inputType="textPassword"
         app:layout_constraintEnd_toEndOf="@id/guidelineEnd"
         app:layout_constraintStart_toStartOf="@id/guidelineStart"
-        app:layout_constraintTop_toBottomOf="@id/email" />
+        app:layout_constraintTop_toBottomOf="@id/email"
+        android:importantForAutofill="no" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
